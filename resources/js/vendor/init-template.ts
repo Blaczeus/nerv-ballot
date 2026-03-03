@@ -11,6 +11,7 @@ declare global {
 
     interface HTMLElement {
         __templateSwiper?: { destroy: (deleteInstance?: boolean, cleanStyles?: boolean) => void };
+        __templateCountdownIntervalId?: number;
     }
 }
 
@@ -71,6 +72,14 @@ const initGoTop = ($: JQueryLike) => {
     });
 
     updateVisibility();
+};
+
+const initTemplateThemeVars = () => {
+    const templateRoot = document.querySelector<HTMLElement>('.preload-wrapper');
+    if (!templateRoot) return;
+
+    // Avoid collision with app-level design tokens (e.g. Tailwind/shadcn --primary)
+    templateRoot.style.setProperty('--primary', '#e43131');
 };
 
 const createOrReplaceSwiper = (
@@ -139,6 +148,51 @@ const initSlideshow = (SwiperCtor: new (el: Element, opts: Record<string, unknow
         }
 
         createOrReplaceSwiper(element, options, SwiperCtor);
+    });
+};
+
+const initCollection = (SwiperCtor: new (el: Element, opts: Record<string, unknown>) => any) => {
+    document.querySelectorAll<HTMLElement>('.tf-sw-collection').forEach((element) => {
+        const ds = element.dataset;
+
+        createOrReplaceSwiper(
+            element,
+            {
+                slidesPerView: toNumber(ds.mobile, 1),
+                spaceBetween: toNumber(ds.space, 0),
+                speed: 1000,
+                observer: true,
+                observeParents: true,
+                pagination: {
+                    el: '.sw-pagination-collection',
+                    clickable: true,
+                },
+                slidesPerGroup: toNumber(ds.pagination, 1),
+                navigation: {
+                    clickable: true,
+                    nextEl: '.nav-next-collection',
+                    prevEl: '.nav-prev-collection',
+                },
+                breakpoints: {
+                    575: {
+                        slidesPerView: toNumber(ds.mobileSm, toNumber(ds.mobile, 1)),
+                        spaceBetween: toNumber(ds.space, 0),
+                        slidesPerGroup: toNumber(ds.pagination, 1),
+                    },
+                    768: {
+                        slidesPerView: toNumber(ds.tablet, toNumber(ds.mobile, 1)),
+                        spaceBetween: toNumber(ds.spaceMd, toNumber(ds.space, 0)),
+                        slidesPerGroup: toNumber(ds.paginationMd, 1),
+                    },
+                    1200: {
+                        slidesPerView: toNumber(ds.preview, toNumber(ds.tablet, 1)),
+                        spaceBetween: toNumber(ds.spaceLg, toNumber(ds.spaceMd, toNumber(ds.space, 0))),
+                        slidesPerGroup: toNumber(ds.paginationLg, 1),
+                    },
+                },
+            },
+            SwiperCtor,
+        );
     });
 };
 
@@ -321,6 +375,82 @@ const initIconbox = (SwiperCtor: new (el: Element, opts: Record<string, unknown>
     });
 };
 
+const initCountdowns = () => {
+    // Let template's native count-down.js handle first page load.
+    // Our custom init should only fill gaps after Inertia navigations.
+    if (document.readyState !== 'complete') return;
+
+    const countdownElements = document.querySelectorAll<HTMLElement>('.js-countdown');
+    if (!countdownElements.length) return;
+
+    countdownElements.forEach((element) => {
+        // Already initialized (either by template script or previous custom init)
+        if (element.querySelector('.countdown__timer')) return;
+
+        const labels = (element.dataset.labels ?? '')
+            .split(',')
+            .map((label) => label.trim())
+            .filter((label) => label.length > 0);
+
+        const wrapper = document.createElement('div');
+        wrapper.setAttribute('aria-hidden', 'true');
+        wrapper.className = 'countdown__timer';
+
+        const values: HTMLElement[] = [];
+        for (let i = 0; i < 4; i += 1) {
+            const item = document.createElement('span');
+            item.className = 'countdown__item';
+
+            const value = document.createElement('span');
+            value.className = `countdown__value countdown__value--${i} js-countdown__value--${i}`;
+            item.appendChild(value);
+            values.push(value);
+
+            if (labels[i]) {
+                const label = document.createElement('span');
+                label.className = 'countdown__label';
+                label.textContent = labels[i];
+                item.appendChild(label);
+            }
+
+            wrapper.appendChild(item);
+        }
+
+        element.prepend(wrapper);
+
+        let endTime = Number.NaN;
+        if (element.dataset.timer) {
+            endTime = Number(element.dataset.timer) * 1000 + Date.now();
+        } else if (element.dataset.countdown) {
+            endTime = new Date(element.dataset.countdown).getTime();
+        }
+
+        if (!Number.isFinite(endTime)) return;
+
+        const update = () => {
+            let remaining = Math.floor((endTime - Date.now()) / 1000);
+            if (!Number.isFinite(remaining) || remaining < 0) {
+                remaining = 0;
+            }
+
+            const days = Math.floor(remaining / 86400);
+            remaining %= 86400;
+            const hours = Math.floor(remaining / 3600);
+            remaining %= 3600;
+            const mins = Math.floor(remaining / 60);
+            const secs = remaining % 60;
+
+            values[0].textContent = String(days);
+            values[1].textContent = String(hours).padStart(2, '0');
+            values[2].textContent = String(mins).padStart(2, '0');
+            values[3].textContent = String(secs).padStart(2, '0');
+        };
+
+        update();
+        element.__templateCountdownIntervalId = window.setInterval(update, 1000);
+    });
+};
+
 const initPreloader = () => {
     const preloader = document.querySelector<HTMLElement>('.preload.preload-container');
     if (!preloader) return;
@@ -336,12 +466,15 @@ const runTemplateInit = () => {
     if (!$) return false;
 
     $(function () {
+        initTemplateThemeVars();
         initImageSelect($);
         initGoTop($);
         initPreloader();
+        initCountdowns();
 
         if (window.Swiper) {
             initSlideshow(window.Swiper);
+            initCollection(window.Swiper);
             initCategories(window.Swiper);
             initRecent(window.Swiper);
             initShopGallery(window.Swiper);

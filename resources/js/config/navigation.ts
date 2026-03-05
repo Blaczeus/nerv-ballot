@@ -24,31 +24,13 @@ export const navigation: NavItem[] = [
         visibleFor: ['guest', 'user', 'nominee', 'admin'],
     },
     {
-        label: 'Categories',
-        url: '#categories',
-        children: [
-            { label: 'National Awards', url: '#categories-national' },
-            { label: 'Global Awards', url: '#categories-global' },
-        ],
+        label: 'Contestants',
+        route: 'contestants',
         visibleFor: ['guest', 'user', 'nominee', 'admin'],
     },
     {
-        label: 'Nominees',
-        url: '#nominees',
-        children: [
-            { label: 'Top Nominees', url: '#nominees-top' },
-            { label: 'New Nominees', url: '#nominees-new' },
-        ],
-        visibleFor: ['guest', 'user', 'nominee', 'admin'],
-    },
-    {
-        label: 'Vote',
-        url: '#vote',
-        visibleFor: ['guest', 'user', 'nominee', 'admin'],
-    },
-    {
-        label: 'Results',
-        url: '#results',
+        label: 'How It Works',
+        route: 'howItWorks',
         visibleFor: ['guest', 'user', 'nominee', 'admin'],
     },
     {

@@ -1,14 +1,14 @@
 <script setup lang="ts">
-import { computed } from 'vue';
 import { usePage } from '@inertiajs/vue3';
+import { computed, useSlots } from 'vue';
 import Footer from '@/components/Footer.vue';
 import Header from '@/components/Header.vue';
-import {
-    navigation,
-    type NavItem,
-    type NavRole,
-    type ResolvedNavItem,
-} from '@/config/navigation';
+import CartModal from '@/components/modals/CartModal.vue';
+import FilterModal from '@/components/modals/FilterModal.vue';
+import QuickViewModal from '@/components/modals/QuickViewModal.vue';
+import { useGlobalModals } from '@/composables/useGlobalModals';
+import { navigation } from '@/config/navigation';
+import type {NavItem,NavRole,ResolvedNavItem,} from '@/config/navigation';
 import * as routeRegistry from '@/routes';
 
 type AuthUser = Record<string, unknown> | null;
@@ -18,6 +18,9 @@ const page = usePage<{
         user?: AuthUser;
     };
 }>();
+const slots = useSlots();
+const hasOverlaySlot = computed(() => Boolean(slots.overlays));
+const { state: modalState } = useGlobalModals();
 
 const user = computed<AuthUser>(() => {
     return (page.props.auth?.user ?? null) as AuthUser;
@@ -136,6 +139,10 @@ const navItems = computed<ResolvedNavItem[]>(() => resolveNavItems(navigation));
             <slot />
             <Footer />
         </div>
+        <!-- Global Modals -->
+        <QuickViewModal v-if="!hasOverlaySlot" :contestant="modalState.contestant" />
+        <CartModal v-if="!hasOverlaySlot" :contestant="modalState.contestant" />
+        <FilterModal v-if="!hasOverlaySlot" />
         <slot name="overlays" />
     </div>
 </template>

@@ -3575,7 +3575,7 @@ import Layout from '@/layouts/Layout.vue';
                             </div>
                             <div>
                                 <div class="tf-product-info-by-btn mb_10">
-                                    <a class="btn-style-2 flex-grow-1 text-btn-uppercase fw-6 show-shopping-cart"><span>Add to cart -&nbsp;</span><span class="tf-qty-price total-price">$79.99</span></a>
+                                    <a class="btn-style-2 grow text-btn-uppercase fw-6 show-shopping-cart"><span>Add to cart -&nbsp;</span><span class="tf-qty-price total-price">$79.99</span></a>
                                     <a href="#compare" data-bs-toggle="offcanvas" aria-controls="compare" class="box-icon hover-tooltip compare btn-icon-action show-compare">
                                         <span class="icon icon-gitDiff"></span>
                                         <span class="tooltip text-caption-2">Compare</span>
@@ -3691,7 +3691,7 @@ import Layout from '@/layouts/Layout.vue';
                         </div>
                     </div>
                 </div>
-                <div class="d-flex flex-column flex-grow-1 h-100">
+                <div class="d-flex flex-column grow h-100">
                     <div class="header">
                         <h5 class="title">Shopping Cart</h5>
                         <span class="icon-close icon-close-popup" data-bs-dismiss="modal"></span>
@@ -3715,7 +3715,7 @@ import Layout from '@/layouts/Layout.vue';
                                             <div class="tf-mini-cart-image">
                                                 <img class="lazyload" data-src="/tmp/images/products/womens/women-19.jpg" src="/tmp/images/products/womens/women-19.jpg" alt="">
                                             </div>
-                                            <div class="tf-mini-cart-info flex-grow-1">
+                                            <div class="tf-mini-cart-info grow">
                                                 <div class="mb_12 d-flex align-items-center justify-content-between flex-wrap gap-12">
                                                     <div class="text-title"><a href="product-detail.html" class="link text-line-clamp-1">Contrasting sheepskin</a></div>
                                                     <div class="text-button tf-btn-remove remove">Remove</div>
@@ -3730,7 +3730,7 @@ import Layout from '@/layouts/Layout.vue';
                                             <div class="tf-mini-cart-image">
                                                 <img class="lazyload" data-src="/tmp/images/products/womens/women-1.jpg" src="/tmp/images/products/womens/women-1.jpg" alt="">
                                             </div>
-                                            <div class="tf-mini-cart-info flex-grow-1">
+                                            <div class="tf-mini-cart-info grow">
                                                 <div class="mb_12 d-flex align-items-center justify-content-between flex-wrap gap-12">
                                                     <div class="text-title"><a href="product-detail.html" class="link text-line-clamp-1">Suede leggings</a></div>
                                                     <div class="text-button tf-btn-remove remove">Remove</div>
@@ -3745,7 +3745,7 @@ import Layout from '@/layouts/Layout.vue';
                                             <div class="tf-mini-cart-image">
                                                 <img class="lazyload" data-src="/tmp/images/products/womens/women-2.jpg" src="/tmp/images/products/womens/women-2.jpg" alt="">
                                             </div>
-                                            <div class="tf-mini-cart-info flex-grow-1">
+                                            <div class="tf-mini-cart-info grow">
                                                 <div class="mb_12 d-flex align-items-center justify-content-between flex-wrap gap-12">
                                                     <div class="text-title"><a href="product-detail.html" class="link text-line-clamp-1">Faux-leather trousers</a></div>
                                                     <div class="text-button tf-btn-remove remove">Remove</div>
@@ -3760,7 +3760,7 @@ import Layout from '@/layouts/Layout.vue';
                                             <div class="tf-mini-cart-image">
                                                 <img class="lazyload" data-src="/tmp/images/products/womens/women-3.jpg" src="/tmp/images/products/womens/women-3.jpg" alt="">
                                             </div>
-                                            <div class="tf-mini-cart-info flex-grow-1">
+                                            <div class="tf-mini-cart-info grow">
                                                 <div class="mb_12 d-flex align-items-center justify-content-between flex-wrap gap-12">
                                                     <div class="text-title"><a href="product-detail.html" class="link text-line-clamp-1">Biker-style leggings</a></div>
                                                     <div class="text-button tf-btn-remove remove">Remove</div>
@@ -3775,7 +3775,7 @@ import Layout from '@/layouts/Layout.vue';
                                             <div class="tf-mini-cart-image">
                                                 <img class="lazyload" data-src="/tmp/images/products/womens/women-4.jpg" src="/tmp/images/products/womens/women-4.jpg" alt="">
                                             </div>
-                                            <div class="tf-mini-cart-info flex-grow-1">
+                                            <div class="tf-mini-cart-info grow">
                                                 <div class="mb_12 d-flex align-items-center justify-content-between flex-wrap gap-12">
                                                     <div class="text-title"><a href="product-detail.html" class="link text-line-clamp-1">Jacquard fluid trousers</a></div>
                                                     <div class="text-button tf-btn-remove remove">Remove</div>
@@ -4037,7 +4037,7 @@ import Layout from '@/layouts/Layout.vue';
                                         <div class="tf-mini-cart-image">
                                             <img class="lazyload" data-src="/tmp/images/products/womens/women-19.jpg" src="/tmp/images/products/womens/women-19.jpg" alt="">
                                         </div>
-                                        <div class="tf-mini-cart-info flex-grow-1">
+                                        <div class="tf-mini-cart-info grow">
                                             <div class="mb_12 d-flex align-items-center justify-content-between flex-wrap gap-12">
                                                 <div class="text-title"><a href="product-detail.html" class="link text-line-clamp-1">Contrasting sheepskin</a></div>
                                                 <div class="text-button tf-btn-remove remove">Remove</div>
@@ -4052,7 +4052,7 @@ import Layout from '@/layouts/Layout.vue';
                                         <div class="tf-mini-cart-image">
                                             <img class="lazyload" data-src="/tmp/images/products/womens/women-1.jpg" src="/tmp/images/products/womens/women-1.jpg" alt="">
                                         </div>
-                                        <div class="tf-mini-cart-info flex-grow-1">
+                                        <div class="tf-mini-cart-info grow">
                                             <div class="mb_12 d-flex align-items-center justify-content-between flex-wrap gap-12">
                                                 <div class="text-title"><a href="product-detail.html" class="link text-line-clamp-1">Suede leggings</a></div>
                                                 <div class="text-button tf-btn-remove remove">Remove</div>
@@ -4067,7 +4067,7 @@ import Layout from '@/layouts/Layout.vue';
                                         <div class="tf-mini-cart-image">
                                             <img class="lazyload" data-src="/tmp/images/products/womens/women-2.jpg" src="/tmp/images/products/womens/women-2.jpg" alt="">
                                         </div>
-                                        <div class="tf-mini-cart-info flex-grow-1">
+                                        <div class="tf-mini-cart-info grow">
                                             <div class="mb_12 d-flex align-items-center justify-content-between flex-wrap gap-12">
                                                 <div class="text-title"><a href="product-detail.html" class="link text-line-clamp-1">Faux-leather trousers</a></div>
                                                 <div class="text-button tf-btn-remove remove">Remove</div>
@@ -4082,7 +4082,7 @@ import Layout from '@/layouts/Layout.vue';
                                         <div class="tf-mini-cart-image">
                                             <img class="lazyload" data-src="/tmp/images/products/womens/women-3.jpg" src="/tmp/images/products/womens/women-3.jpg" alt="">
                                         </div>
-                                        <div class="tf-mini-cart-info flex-grow-1">
+                                        <div class="tf-mini-cart-info grow">
                                             <div class="mb_12 d-flex align-items-center justify-content-between flex-wrap gap-12">
                                                 <div class="text-title"><a href="product-detail.html" class="link text-line-clamp-1">Biker-style leggings</a></div>
                                                 <div class="text-button tf-btn-remove remove">Remove</div>
@@ -4097,7 +4097,7 @@ import Layout from '@/layouts/Layout.vue';
                                         <div class="tf-mini-cart-image">
                                             <img class="lazyload" data-src="/tmp/images/products/womens/women-4.jpg" src="/tmp/images/products/womens/women-4.jpg" alt="">
                                         </div>
-                                        <div class="tf-mini-cart-info flex-grow-1">
+                                        <div class="tf-mini-cart-info grow">
                                             <div class="mb_12 d-flex align-items-center justify-content-between flex-wrap gap-12">
                                                 <div class="text-title"><a href="product-detail.html" class="link text-line-clamp-1">Jacquard fluid trousers</a></div>
                                                 <div class="text-button tf-btn-remove remove">Remove</div>
@@ -4454,7 +4454,7 @@ import Layout from '@/layouts/Layout.vue';
                             </div>
                             <div>
                                 <div class="tf-product-info-by-btn mb_10">
-                                    <a class="btn-style-2 flex-grow-1 text-btn-uppercase fw-6 show-shopping-cart"><span>Add to cart -&nbsp;</span><span class="tf-qty-price total-price">$79.99</span></a>
+                                    <a class="btn-style-2 grow text-btn-uppercase fw-6 show-shopping-cart"><span>Add to cart -&nbsp;</span><span class="tf-qty-price total-price">$79.99</span></a>
                                     <a href="#compare" data-bs-toggle="offcanvas" aria-controls="compare" class="box-icon hover-tooltip compare btn-icon-action show-compare">
                                         <span class="icon icon-gitDiff"></span>
                                         <span class="tooltip text-caption-2">Compare</span>

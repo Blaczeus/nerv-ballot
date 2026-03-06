@@ -21,17 +21,14 @@ export const navigation: NavItem[] = [
     {
         label: 'Home',
         route: 'home',
-        visibleFor: ['guest', 'user', 'nominee', 'admin'],
     },
     {
         label: 'Contestants',
         route: 'contestants',
-        visibleFor: ['guest', 'user', 'nominee', 'admin'],
     },
     {
         label: 'How It Works',
         route: 'howItWorks',
-        visibleFor: ['guest', 'user', 'nominee', 'admin'],
     },
     {
         label: 'Dashboard',

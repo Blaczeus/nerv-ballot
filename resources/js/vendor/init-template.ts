@@ -74,6 +74,25 @@ const initGoTop = ($: JQueryLike) => {
     updateVisibility();
 };
 
+const initCartSuccess = ($: JQueryLike) => {
+    const cartSuccess = $('.tf-add-cart-success');
+    if (!cartSuccess.length) return;
+
+    cartSuccess.removeClass('active');
+
+    $(document)
+        .off('click.templateCartSuccess', '.btn-add-to-cart')
+        .on('click.templateCartSuccess', '.btn-add-to-cart', () => {
+            cartSuccess.addClass('active');
+        });
+
+    $(document)
+        .off('click.templateCartSuccessClose', '.tf-add-cart-success .tf-add-cart-close')
+        .on('click.templateCartSuccessClose', '.tf-add-cart-success .tf-add-cart-close', () => {
+            cartSuccess.removeClass('active');
+        });
+};
+
 const initTemplateThemeVars = () => {
     const templateRoot = document.querySelector<HTMLElement>('.preload-wrapper');
     if (!templateRoot) return;
@@ -469,6 +488,7 @@ const runTemplateInit = () => {
         initTemplateThemeVars();
         initImageSelect($);
         initGoTop($);
+        initCartSuccess($);
         initPreloader();
         initCountdowns();
 

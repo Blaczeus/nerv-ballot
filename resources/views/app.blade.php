@@ -41,6 +41,8 @@
         <link rel="stylesheet" href="/tmp/fonts/fonts.css">
         <link rel="stylesheet" href="/tmp/fonts/font-icons.css">
         <link rel="stylesheet" href="/tmp/css/bootstrap.min.css">
+        <link rel="stylesheet" href="/tmp/css/drift-basic.min.css">
+        <link rel="stylesheet" href="/tmp/css/photoswipe.css">
         <link rel="stylesheet" href="/tmp/css/swiper-bundle.min.css">
         <link rel="stylesheet" href="/tmp/css/animate.css">
         <link rel="stylesheet" href="https://sibforms.com/forms/end-form/build/sib-styles.css">
@@ -59,6 +61,7 @@
         <script type="text/javascript" src="/tmp/js/lazysize.min.js"></script>
         <script type="text/javascript" src="/tmp/js/count-down.js"></script>
         <script type="text/javascript" src="/tmp/js/wow.min.js"></script>
+        <script type="text/javascript" src="/tmp/js/drift.min.js"></script>
         <script type="text/javascript" src="/tmp/js/multiple-modal.js"></script>
         <script type="text/javascript" src="/tmp/js/carousel.js"></script>
         <script type="text/javascript" src="/tmp/js/main.js"></script>
@@ -83,5 +86,7 @@
 
             var AUTOHIDE = Boolean(0);
         </script>
+        <script type="module" src="/tmp/js/model-viewer.min.js"></script>
+        <script type="module" src="/tmp/js/zoom.js"></script>
     </body>
 </html>

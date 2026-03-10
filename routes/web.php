@@ -6,6 +6,10 @@ use Illuminate\Support\Facades\Route;
 Route::inertia('/', 'Home')->name('home');
 Route::inertia('/contestants', 'Contestants/Index')->name('contestants');
 Route::inertia('/how-it-works', 'HowItWorks')->name('howItWorks');
+Route::inertia('/cart', 'Cart')->name('cart');
+Route::inertia('/checkout', 'Checkout')->name('checkout');
+Route::inertia('/vote-success', 'VoteSuccess')->name('voteSuccess');
+Route::inertia('/leaderboard', 'Leaderboard')->name('leaderboard');
 Route::get('/contestants/{slug}', function (string $slug) {
     $contestants = [
         'john-doe' => [

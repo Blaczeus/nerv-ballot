@@ -61,6 +61,22 @@
     --color-sidebar-ring: var(--sidebar-ring);
 }
 
+@layer utilities {
+    .collapse,
+    .collapsing {
+        visibility: visible !important;
+    }
+
+    .collapse:not(.show) {
+        display: none !important;
+    }
+
+    .collapse.show,
+    .collapsing {
+        display: block !important;
+    }
+}
+
 /*
   The default border color has changed to `currentColor` in Tailwind CSS v4,
   so we've added these compatibility styles to make sure everything still

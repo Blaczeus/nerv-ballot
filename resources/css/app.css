@@ -62,18 +62,8 @@
 }
 
 @layer utilities {
-    .collapse,
-    .collapsing {
-        visibility: visible !important;
-    }
-
-    .collapse:not(.show) {
-        display: none !important;
-    }
-
-    .collapse.show,
-    .collapsing {
-        display: block !important;
+    .collapse {
+        visibility: visible;
     }
 }
 

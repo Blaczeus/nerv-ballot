@@ -1,15 +1,17 @@
 <script setup lang="ts">
 import { usePage } from '@inertiajs/vue3';
-import { computed, useSlots } from 'vue';
+import { computed, onMounted, useSlots, watch } from 'vue';
 import Footer from '@/components/Footer.vue';
 import Header from '@/components/Header.vue';
 import CartModal from '@/components/modals/CartModal.vue';
 import FilterModal from '@/components/modals/FilterModal.vue';
 import QuickViewModal from '@/components/modals/QuickViewModal.vue';
+import ScrollToTop from '@/components/ui/ScrollToTop.vue';
 import { useGlobalModals } from '@/composables/useGlobalModals';
 import { navigation } from '@/config/navigation';
 import type {NavItem,NavRole,ResolvedNavItem,} from '@/config/navigation';
 import * as routeRegistry from '@/routes';
+import { initTemplatePlugins } from '@/vendor/init-template';
 
 type AuthUser = Record<string, unknown> | null;
 
@@ -130,10 +132,28 @@ const resolveNavItems = (items: NavItem[], depth = 0): ResolvedNavItem[] => {
 };
 
 const navItems = computed<ResolvedNavItem[]>(() => resolveNavItems(navigation));
+
+const scheduleTemplateInit = () => {
+    window.setTimeout(() => {
+        initTemplatePlugins();
+    }, 50);
+};
+
+onMounted(() => {
+    scheduleTemplateInit();
+});
+
+watch(
+    () => page.url,
+    () => {
+        scheduleTemplateInit();
+    },
+);
 </script>
 
 <template>
     <div class="preload-wrapper popup-loader">
+        <ScrollToTop />
         <div id="wrapper">
             <Header :items="navItems" />
             <slot />

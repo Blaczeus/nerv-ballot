@@ -2,6 +2,11 @@ type JQueryLike = ((selector?: unknown) => any) & {
     fn?: Record<string, unknown>;
 };
 
+type SwiperInstance = {
+    destroy: (deleteInstance?: boolean, cleanStyles?: boolean) => void;
+    update?: () => void;
+};
+
 declare global {
     interface Window {
         jQuery?: JQueryLike;
@@ -10,7 +15,7 @@ declare global {
     }
 
     interface HTMLElement {
-        __templateSwiper?: { destroy: (deleteInstance?: boolean, cleanStyles?: boolean) => void };
+        __templateSwiper?: SwiperInstance;
         __templateCountdownIntervalId?: number;
     }
 }
@@ -93,6 +98,20 @@ const initCartSuccess = ($: JQueryLike) => {
         });
 };
 
+const initStaggerWrap = () => {
+    const wraps = document.querySelectorAll<HTMLElement>('.stagger-wrap');
+    if (!wraps.length) return;
+
+    const items = document.querySelectorAll<HTMLElement>('.stagger-item');
+    if (!items.length) return;
+
+    let time = 0.2;
+    items.forEach((item, index) => {
+        item.style.transitionDelay = `${time * (index + 1)}s`;
+        item.classList.add('stagger-finished');
+    });
+};
+
 const initTemplateThemeVars = () => {
     const templateRoot = document.querySelector<HTMLElement>('.preload-wrapper');
     if (!templateRoot) return;
@@ -105,12 +124,14 @@ const createOrReplaceSwiper = (
     element: HTMLElement,
     options: Record<string, unknown>,
     SwiperCtor: new (el: Element, opts: Record<string, unknown>) => any,
-) => {
+): SwiperInstance => {
     if (element.__templateSwiper) {
         element.__templateSwiper.destroy(true, true);
     }
 
-    element.__templateSwiper = new SwiperCtor(element, options);
+    element.__templateSwiper = new SwiperCtor(element, options) as SwiperInstance;
+
+    return element.__templateSwiper;
 };
 
 const initSlideshow = (SwiperCtor: new (el: Element, opts: Record<string, unknown>) => any) => {
@@ -394,6 +415,66 @@ const initIconbox = (SwiperCtor: new (el: Element, opts: Record<string, unknown>
     });
 };
 
+const initProductGallery = (SwiperCtor: new (el: Element, opts: Record<string, unknown>) => any) => {
+    const thumbsEl = document.querySelector<HTMLElement>('.tf-product-media-thumbs');
+    const mainEl = document.querySelector<HTMLElement>('.tf-product-media-main');
+    if (!thumbsEl || !mainEl) return;
+
+    const direction = thumbsEl.dataset.direction ?? 'vertical';
+
+    const thumbs = createOrReplaceSwiper(
+        thumbsEl,
+        {
+            spaceBetween: 10,
+            slidesPerView: 'auto',
+            freeMode: true,
+            direction: 'vertical',
+            watchSlidesProgress: true,
+            observer: true,
+            observeParents: true,
+            breakpoints: {
+                0: {
+                    direction: 'horizontal',
+                },
+                1200: {
+                    direction,
+                },
+            },
+        },
+        SwiperCtor,
+    );
+
+    const main = createOrReplaceSwiper(
+        mainEl,
+        {
+            spaceBetween: 0,
+            observer: true,
+            observeParents: true,
+            navigation: {
+                nextEl: '.thumbs-next',
+                prevEl: '.thumbs-prev',
+            },
+            thumbs: {
+                swiper: thumbs,
+            },
+        },
+        SwiperCtor,
+    );
+
+    const update = () => {
+        if (thumbs && typeof thumbs.update === 'function') {
+            thumbs.update();
+        }
+        if (main && typeof main.update === 'function') {
+            main.update();
+        }
+    };
+
+    requestAnimationFrame(update);
+    window.setTimeout(update, 100);
+    window.setTimeout(update, 300);
+};
+
 const initCountdowns = () => {
     // Let template's native count-down.js handle first page load.
     // Our custom init should only fill gaps after Inertia navigations.
@@ -489,6 +570,7 @@ const runTemplateInit = () => {
         initImageSelect($);
         initGoTop($);
         initCartSuccess($);
+        initStaggerWrap();
         initPreloader();
         initCountdowns();
 
@@ -499,6 +581,7 @@ const runTemplateInit = () => {
             initRecent(window.Swiper);
             initShopGallery(window.Swiper);
             initIconbox(window.Swiper);
+            initProductGallery(window.Swiper);
         }
 
         if (window.WOW) {

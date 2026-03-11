@@ -27,8 +27,16 @@ export const navigation: NavItem[] = [
         route: 'contestants',
     },
     {
+        label: 'Leaderboard',
+        route: 'leaderboard',
+    },
+    {
         label: 'How It Works',
         route: 'howItWorks',
+    },
+    {
+        label: 'Cart',
+        route: 'cart',
     },
     {
         label: 'Dashboard',

@@ -561,6 +561,21 @@ const initPreloader = () => {
     }, 100);
 };
 
+const initStickyAtcFooterOffset = () => {
+    const footer = document.querySelector<HTMLElement>('footer');
+    if (!footer) return;
+
+    const stickyAtc = document.querySelector<HTMLElement>('.tf-sticky-btn-atc');
+    const scrollTop = document.querySelector<HTMLElement>('#scroll-top');
+    if (stickyAtc) {
+        footer.classList.add('has-pb');
+        scrollTop?.classList.add('type-1');
+    } else {
+        footer.classList.remove('has-pb');
+        scrollTop?.classList.remove('type-1');
+    }
+};
+
 const runTemplateInit = () => {
     const $ = window.jQuery;
     if (!$) return false;
@@ -572,6 +587,7 @@ const runTemplateInit = () => {
         initCartSuccess($);
         initStaggerWrap();
         initPreloader();
+        initStickyAtcFooterOffset();
         initCountdowns();
 
         if (window.Swiper) {

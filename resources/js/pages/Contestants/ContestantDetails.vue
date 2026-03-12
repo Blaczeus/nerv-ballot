@@ -170,66 +170,66 @@ const breadcrumbNav = {
                     </div>
                 </div>
             </div>
+        </section>
 
-            <div class="tf-sticky-btn-atc">
-                <div class="container">
-                    <div class="row">
-                        <div class="col-12">
-                            <form class="form-sticky-atc">
-                                <div class="tf-sticky-atc-product">
-                                    <div class="image">
-                                        <img class="lazyload" :data-src="contestant.image" :src="contestant.image" alt="sticky-contestant" />
-                                    </div>
-                                    <div class="content">
-                                        <div class="text-title">{{ contestant.name }}</div>
-                                        <div class="text-caption-1 text-secondary-2">Gray, M</div>
-                                        <div class="text-title">{{ contestant.price }}</div>
-                                    </div>
+        <div class="tf-sticky-btn-atc">
+            <div class="container">
+                <div class="row">
+                    <div class="col-12">
+                        <form class="form-sticky-atc">
+                            <div class="tf-sticky-atc-product">
+                                <div class="image">
+                                    <img class="lazyload" :data-src="contestant.image" :src="contestant.image" alt="sticky-contestant" />
                                 </div>
-                                <div class="tf-sticky-atc-infos">
-                                    <div class="tf-sticky-atc-size d-flex gap-12 align-items-center">
-                                        <div class="tf-sticky-atc-infos-title text-title">Size:</div>
-                                        <div class="tf-dropdown-sort style-2" data-bs-toggle="dropdown">
-                                            <div class="btn-select">
-                                                <span class="text-sort-value font-2">M</span>
-                                                <span class="icon icon-arrow-down"></span>
+                                <div class="content">
+                                    <div class="text-title">{{ contestant.name }}</div>
+                                    <div class="text-caption-1 text-secondary-2">Gray, M</div>
+                                    <div class="text-title">{{ contestant.price }}</div>
+                                </div>
+                            </div>
+                            <div class="tf-sticky-atc-infos">
+                                <div class="tf-sticky-atc-size d-flex gap-12 align-items-center">
+                                    <div class="tf-sticky-atc-infos-title text-title">Size:</div>
+                                    <div class="tf-dropdown-sort style-2" data-bs-toggle="dropdown">
+                                        <div class="btn-select">
+                                            <span class="text-sort-value font-2">M</span>
+                                            <span class="icon icon-arrow-down"></span>
+                                        </div>
+                                        <div class="dropdown-menu">
+                                            <div class="select-item">
+                                                <span class="text-value-item">S</span>
                                             </div>
-                                            <div class="dropdown-menu">
-                                                <div class="select-item">
-                                                    <span class="text-value-item">S</span>
-                                                </div>
-                                                <div class="select-item active">
-                                                    <span class="text-value-item">M</span>
-                                                </div>
-                                                <div class="select-item">
-                                                    <span class="text-value-item">L</span>
-                                                </div>
-                                                <div class="select-item">
-                                                    <span class="text-value-item">XL</span>
-                                                </div>
+                                            <div class="select-item active">
+                                                <span class="text-value-item">M</span>
+                                            </div>
+                                            <div class="select-item">
+                                                <span class="text-value-item">L</span>
+                                            </div>
+                                            <div class="select-item">
+                                                <span class="text-value-item">XL</span>
                                             </div>
                                         </div>
                                     </div>
-                                    <div class="tf-sticky-atc-quantity d-flex gap-12 align-items-center">
-                                        <div class="tf-sticky-atc-infos-title text-title">Quantity:</div>
-                                        <div class="wg-quantity style-1">
-                                            <span class="btn-quantity minus-btn">-</span>
-                                            <input type="text" name="number" value="1" />
-                                            <span class="btn-quantity plus-btn">+</span>
-                                        </div>
-                                    </div>
-                                    <div class="tf-sticky-atc-btns">
-                                        <a href="#shoppingCart" data-bs-toggle="modal" class="tf-btn w-100 btn-reset radius-4 btn-add-to-cart">
-                                            <span class="text text-btn-uppercase">Add To Cart</span>
-                                        </a>
+                                </div>
+                                <div class="tf-sticky-atc-quantity d-flex gap-12 align-items-center">
+                                    <div class="tf-sticky-atc-infos-title text-title">Quantity:</div>
+                                    <div class="wg-quantity style-1">
+                                        <span class="btn-quantity minus-btn">-</span>
+                                        <input type="text" name="number" value="1" />
+                                        <span class="btn-quantity plus-btn">+</span>
                                     </div>
                                 </div>
-                            </form>
-                        </div>
+                                <div class="tf-sticky-atc-btns">
+                                    <a href="#shoppingCart" data-bs-toggle="modal" class="tf-btn w-100 btn-reset radius-4 btn-add-to-cart">
+                                        <span class="text text-btn-uppercase">Add To Cart</span>
+                                    </a>
+                                </div>
+                            </div>
+                        </form>
                     </div>
                 </div>
             </div>
-        </section>
+        </div>
         <!-- /Product_Main -->
 
         <ProductTabsSection :contestant="contestant" />

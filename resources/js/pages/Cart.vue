@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { Head } from '@inertiajs/vue3';
+import Breadcrumb from '@/components/ui/Breadcrumb.vue';
 import Layout from '@/layouts/Layout.vue';
 </script>
 
@@ -7,19 +8,16 @@ import Layout from '@/layouts/Layout.vue';
     <Head title="Cart" />
 
     <Layout>
-        <div class="page-title" style="background-image: url(/tmp/images/section/page-title.jpg);">
-            <div class="container">
-                <h3 class="heading text-center">Shopping Cart</h3>
-                <ul class="breadcrumbs d-flex align-items-center justify-content-center">
-                    <li><a class="link" href="/">Homepage</a></li>
-                    <li><i class="icon-arrRight"></i></li>
-                    <li><a class="link" href="/contestants">Shop</a></li>
-                    <li><i class="icon-arrRight"></i></li>
-                    <li>Shopping Cart</li>
-                </ul>
-            </div>
-        </div>
-        <!-- /page-title -->
+        <Breadcrumb
+            :items="[
+                { label: 'Homepage', link: '/' },
+                { label: 'Shop', link: '/contestants' },
+                { label: 'Shopping Cart' },
+            ]"
+            design="image"
+            heading="Shopping Cart"
+            background-image="/tmp/images/section/page-title.jpg"
+        />
         <!-- Section cart -->
         <section class="flat-spacing">
             <div class="container">

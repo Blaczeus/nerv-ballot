@@ -2,6 +2,7 @@
 import { Head, Link } from '@inertiajs/vue3';
 import { computed, ref } from 'vue';
 import ContestantCard from '@/components/contestants/ContestantCard.vue';
+import Breadcrumb from '@/components/ui/Breadcrumb.vue';
 import { useGlobalModals } from '@/composables/useGlobalModals';
 import type { ModalContestant } from '@/composables/useGlobalModals';
 import Layout from '@/layouts/Layout.vue';
@@ -226,6 +227,11 @@ const gridLayoutClass = computed(() => {
 const setLayoutMode = (mode: LayoutMode) => {
     layoutMode.value = mode;
 };
+
+const breadcrumbItems = [
+    { label: 'Homepage', link: '/' },
+    { label: 'Women' },
+];
 </script>
 
 <template>
@@ -233,26 +239,14 @@ const setLayoutMode = (mode: LayoutMode) => {
     <Head title="Shop Default List" />
 
     <Layout>
-        <!-- page-title -->
-        <div class="page-title" style="background-image: url('/tmp/images/section/page-title.jpg')">
-            <div class="container-full">
-                <div class="row">
-                    <div class="col-12">
-                        <h3 class="heading text-center">Women</h3>
-                        <ul class="breadcrumbs d-flex align-items-center justify-content-center">
-                            <li>
-                                <Link class="link" href="/">Homepage</Link>
-                            </li>
-                            <li>
-                                <i class="icon-arrRight"></i>
-                            </li>
-                            <li>Women</li>
-                        </ul>
-                    </div>
-                </div>
-            </div>
-        </div>
-        <!-- /page-title -->
+        <Breadcrumb
+            :items="breadcrumbItems"
+            design="image"
+            heading="Women"
+            background-image="/tmp/images/section/page-title.jpg"
+            container-class="container-full"
+            :use-row="true"
+        />
         <!-- Section product -->
         <section class="flat-spacing">
             <div class="container">

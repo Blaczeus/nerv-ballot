@@ -1,11 +1,11 @@
 <script setup lang="ts">
 import { Head, Link } from '@inertiajs/vue3';
 import { computed } from 'vue';
-import BreadcrumbSection from '@/components/contestant/BreadcrumbSection.vue';
 import GallerySection from '@/components/contestant/GallerySection.vue';
 import ProductInfoSection from '@/components/contestant/ProductInfoSection.vue';
 import ProductModalsSection from '@/components/contestant/ProductModalsSection.vue';
 import ProductTabsSection from '@/components/contestant/ProductTabsSection.vue';
+import Breadcrumb from '@/components/ui/Breadcrumb.vue';
 import type { ModalContestant } from '@/composables/useGlobalModals';
 import { useGlobalModals } from '@/composables/useGlobalModals';
 import Layout from '@/layouts/Layout.vue';
@@ -104,13 +104,25 @@ const copyShareLink = async () => {
 
     await navigator.clipboard.writeText(shareLink.value);
 };
+
+const breadcrumbItems = computed(() => [
+    { label: 'Homepage', link: '/' },
+    { label: 'Contestants', link: '/contestants' },
+    { label: props.contestant.name },
+]);
+
+const breadcrumbNav = {
+    prev: '/contestants',
+    back: '/contestants',
+    next: '/contestants',
+};
 </script>
 
 <template>
     <Head :title="contestant.name" />
 
     <Layout>
-        <BreadcrumbSection :contestant-name="contestant.name" />
+        <Breadcrumb :items="breadcrumbItems" :nav="breadcrumbNav" design="text" />
 
         <!-- tf-add-cart-success -->
         <div class="tf-add-cart-success">

@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { Head } from '@inertiajs/vue3';
+import Breadcrumb from '@/components/ui/Breadcrumb.vue';
 import Layout from '@/layouts/Layout.vue';
 </script>
 
@@ -29,34 +30,18 @@ import Layout from '@/layouts/Layout.vue';
         </div>
         <!-- /tf-add-cart-success -->
 
-        <!-- page-title -->
-        <div class="page-title" style="background-image: url(/tmp/images/section/page-title.jpg);">
-            <div class="container-full">
-                <div class="row">
-                    <div class="col-12">
-                        <h3 class="heading text-center">Payment confirmation</h3>
-                        <ul class="breadcrumbs d-flex align-items-center justify-content-center">
-                            <li>
-                                <a class="link" href="/">Homepage</a>
-                            </li>
-                            <li>
-                                <i class="icon-arrRight"></i>
-                            </li>
-                            <li>
-                                <a class="link" href="#">Pages</a>
-                            </li>
-                            <li>
-                                <i class="icon-arrRight"></i>
-                            </li>
-                            <li>
-                                Payment confirmation
-                            </li>
-                        </ul>
-                    </div>
-                </div>
-            </div>
-        </div>
-        <!-- /page-title -->
+        <Breadcrumb
+            :items="[
+                { label: 'Homepage', link: '/' },
+                { label: 'Pages', link: '#' },
+                { label: 'Payment confirmation' },
+            ]"
+            design="image"
+            heading="Payment confirmation"
+            background-image="/tmp/images/section/page-title.jpg"
+            container-class="container-full"
+            :use-row="true"
+        />
 
         <!-- Payment confirmation -->
         <section class="flat-spacing">

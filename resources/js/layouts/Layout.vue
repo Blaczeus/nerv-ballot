@@ -25,7 +25,14 @@ const hasOverlaySlot = computed(() => Boolean(slots.overlays));
 const { state: modalState } = useGlobalModals();
 
 const user = computed<AuthUser>(() => {
-    return (page.props.auth?.user ?? null) as AuthUser;
+    const authProp = page.props.auth as AuthUser | { user?: AuthUser } | undefined;
+    if (!authProp) return null;
+
+    if (typeof authProp === 'object' && authProp !== null && 'user' in authProp) {
+        return (authProp as { user?: AuthUser }).user ?? null;
+    }
+
+    return authProp as AuthUser;
 });
 
 const allowedRoles: NavRole[] = ['guest', 'user', 'nominee', 'admin'];
@@ -34,20 +41,30 @@ const resolveRole = (authUser: AuthUser): NavRole => {
     if (!authUser) return 'guest';
 
     const roleFromUser = authUser.role;
-    if (
-        typeof roleFromUser === 'string' &&
-        allowedRoles.includes(roleFromUser as NavRole)
-    ) {
+    if (typeof roleFromUser === 'string' && allowedRoles.includes(roleFromUser as NavRole)) {
         return roleFromUser as NavRole;
+    }
+
+    if (roleFromUser && typeof roleFromUser === 'object' && 'name' in roleFromUser) {
+        const roleName = (roleFromUser as { name?: unknown }).name;
+        if (typeof roleName === 'string' && allowedRoles.includes(roleName as NavRole)) {
+            return roleName as NavRole;
+        }
     }
 
     const rolesFromUser = authUser.roles;
     if (Array.isArray(rolesFromUser)) {
         const role = rolesFromUser.find((value): value is NavRole => {
-            return (
-                typeof value === 'string' &&
-                allowedRoles.includes(value as NavRole)
-            );
+            if (typeof value === 'string' && allowedRoles.includes(value as NavRole)) {
+                return true;
+            }
+
+            if (value && typeof value === 'object' && 'name' in value) {
+                const roleName = (value as { name?: unknown }).name;
+                return typeof roleName === 'string' && allowedRoles.includes(roleName as NavRole);
+            }
+
+            return false;
         });
 
         if (role) return role;

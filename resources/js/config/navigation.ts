@@ -31,8 +31,8 @@ export const navigation: NavItem[] = [
         route: 'leaderboard',
     },
     {
-        label: 'How It Works',
-        route: 'howItWorks',
+        label: 'About',
+        route: 'about',
     },
     {
         label: 'Cart',

@@ -14,7 +14,7 @@ defineProps<{
         <div class="container">
             <div class="row">
                 <div class="col-12">
-                    <div class="widget-tabs style-1">
+                    <div class="widget-tabs style-menu-tabs">
                         <ul class="widget-menu-tab">
                             <li class="item-title active">
                                 <span class="inner">Description</span>

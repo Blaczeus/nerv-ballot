@@ -38,12 +38,13 @@ defineProps<{
                                         <p class="text-secondary">This contestant profile mirrors the original product detail layout while preparing dynamic voting content.</p>
                                     </div>
                                     <div class="left">
-                                        <div class="letter-1 text-btn-uppercase mb_12">PROFILE DETAILS</div>
+                                        <div class="letter-1 text-btn-uppercase mb_12">CONTESTANT DETAILS</div>
                                         <ul class="list-text type-disc mb_12 gap-6">
-                                            <li class="font-2">Slug: {{ contestant.slug }}</li>
-                                            <li class="font-2">Brand: {{ contestant.brand }}</li>
-                                            <li class="font-2">Availability: {{ contestant.availability }}</li>
-                                            <li class="font-2">Current price: {{ contestant.price }}</li>
+                                            <li class="font-2">Contest: {{ contestant.contestName }}</li>
+                                            <li class="font-2">Category: {{ contestant.category }}</li>
+                                            <li class="font-2">Location: {{ contestant.location }}</li>
+                                            <li class="font-2">Gender: {{ contestant.gender }}</li>
+                                            <li class="font-2">Votes: {{ contestant.votes }}</li>
                                         </ul>
                                     </div>
                                 </div>
@@ -94,21 +95,21 @@ defineProps<{
                             <div class="widget-content-inner">
                                 <div class="tab-shipping">
                                     <div class="w-100">
-                                        <div class="text-btn-uppercase mb_12">We have got your back</div>
-                                        <p class="mb_12">One delivery fee to most locations (check Orders & Delivery page).</p>
-                                        <p>Free returns within 14 days (excludes final sale items and special categories).</p>
+                                        <div class="text-btn-uppercase mb_12">Voting information</div>
+                                        <p class="mb_12">Votes are processed immediately after confirmation.</p>
+                                        <p>Once submitted, votes are final and cannot be reversed.</p>
                                     </div>
                                 </div>
                             </div>
 
                             <div class="widget-content-inner">
                                 <div class="tab-policies">
-                                    <div class="text-btn-uppercase mb_12">Return Policies</div>
-                                    <p class="mb_12 text-secondary">If you are not fully satisfied, returns are supported within the policy window.</p>
+                                    <div class="text-btn-uppercase mb_12">Voting policies</div>
+                                    <p class="mb_12 text-secondary">Please verify your selections before submitting votes.</p>
                                     <ul class="list-text type-number">
-                                        <li class="text-secondary font-2">Initiate request online.</li>
-                                        <li class="text-secondary font-2">Pack securely with original details.</li>
-                                        <li class="text-secondary font-2">Use approved return channel.</li>
+                                        <li class="text-secondary font-2">Select a contestant and the number of votes.</li>
+                                        <li class="text-secondary font-2">Confirm your vote cart before submitting.</li>
+                                        <li class="text-secondary font-2">Votes are recorded once payment is confirmed.</li>
                                     </ul>
                                 </div>
                             </div>

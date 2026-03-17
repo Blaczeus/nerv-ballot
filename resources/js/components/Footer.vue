@@ -91,6 +91,11 @@
                                             <li class="text-caption-1">
                                                 <a href="#" class="footer-menu_item">My Wishlist</a>
                                             </li>
+                                            <li class="text-caption-1">
+                                                <a href="#ask_question" data-bs-toggle="modal" class="footer-menu_item">
+                                                    Ask a Question
+                                                </a>
+                                            </li>
                                         </ul>
                                     </div>
                                 </div>

@@ -19,6 +19,7 @@ const props = withDefaults(
         items: BreadcrumbItem[];
         design?: 'text' | 'image';
         heading?: string;
+        subtitle?: string;
         backgroundImage?: string;
         containerClass?: string;
         useRow?: boolean;
@@ -82,6 +83,9 @@ const usesAnchorTag = (href: string): boolean =>
             <div v-if="props.useRow" class="row">
                 <div class="col-12">
                     <h3 class="heading text-center">{{ props.heading ?? props.items[props.items.length - 1]?.label }}</h3>
+                    <p v-if="props.subtitle" class="text-caption-1 text-secondary text-center">
+                        {{ props.subtitle }}
+                    </p>
                     <ul class="breadcrumbs d-flex align-items-center justify-content-center">
                         <template v-for="(item, index) in props.items" :key="`${item.label}-${index}`">
                             <li v-if="item.link">
@@ -99,6 +103,9 @@ const usesAnchorTag = (href: string): boolean =>
             </div>
             <template v-else>
                 <h3 class="heading text-center">{{ props.heading ?? props.items[props.items.length - 1]?.label }}</h3>
+                <p v-if="props.subtitle" class="text-caption-1 text-secondary text-center">
+                    {{ props.subtitle }}
+                </p>
                 <ul class="breadcrumbs d-flex align-items-center justify-content-center">
                     <template v-for="(item, index) in props.items" :key="`${item.label}-${index}`">
                         <li v-if="item.link">

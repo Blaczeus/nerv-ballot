@@ -1,9 +1,16 @@
 <script setup lang="ts">
+import { computed } from 'vue';
 import type { ModalContestant } from '@/composables/useGlobalModals';
 
-defineProps<{
+const props = defineProps<{
     contestant: ModalContestant | null;
 }>();
+
+const voteFormatter = new Intl.NumberFormat('en-US');
+const formattedVotes = computed(() => {
+    if (!props.contestant) return '0 Votes';
+    return `${voteFormatter.format(props.contestant.votes)} Votes`;
+});
 </script>
 
 <template>
@@ -34,13 +41,13 @@ defineProps<{
                 </div>
                 <div class="wrap">
                     <div class="header">
-                        <h5 class="title">Quick View</h5>
+                        <h5 class="title">Contestant Preview</h5>
                         <span class="icon-close icon-close-popup" data-bs-dismiss="modal"></span>
                     </div>
                     <div class="tf-product-info-list">
                         <div class="tf-product-info-heading">
                             <div class="tf-product-info-name">
-                                <div class="text text-btn-uppercase">Clothing</div>
+                                <div class="text text-btn-uppercase">{{ contestant?.contestName ?? 'Contestant' }}</div>
                                 <h3 class="name">{{ contestant?.name ?? 'Stretch Strap Top' }}</h3>
                                 <div class="sub">
                                     <div class="tf-product-info-rate">
@@ -55,19 +62,16 @@ defineProps<{
                                     </div>
                                     <div class="tf-product-info-sold">
                                         <i class="icon icon-lightning"></i>
-                                        <div class="text text-caption-1">18 sold in last 32 hours</div>
+                                        <div class="text text-caption-1">18 votes in last 32 hours</div>
                                     </div>
                                 </div>
                             </div>
                             <div class="tf-product-info-desc">
                                 <div class="tf-product-info-price">
-                                    <h5 class="price-on-sale font-2">{{ contestant?.price ?? '$79.99' }}</h5>
-                                    <div class="compare-at-price font-2">{{ contestant?.oldPrice ?? '$98.99' }}</div>
-                                    <div class="badges-on-sale text-btn-uppercase">
-                                        -25%
-                                    </div>
+                                    <h5 class="price-on-sale font-2">{{ formattedVotes }}</h5>
+                                    <div class="compare-at-price font-2">Vote Cost: {{ formattedVotes }}</div>
                                 </div>
-                                <p>The garments labelled as Committed are products that have been produced using sustainable fibres or processes, reducing their environmental impact.</p>
+                                <p>This preview highlights the contestant profile and key voting details for quick review.</p>
                                 <div class="tf-product-info-liveview">
                                     <i class="icon icon-eye"></i>
                                     <p class="text-caption-1"><span class="liveview-count">28</span> people are viewing this right now</p>
@@ -124,7 +128,7 @@ defineProps<{
                                 </div>
                             </div>
                             <div class="tf-product-info-quantity">
-                                <div class="title mb_12">Quantity:</div>
+                                <div class="title mb_12">Number of Votes:</div>
                                 <div class="wg-quantity">
                                     <span class="btn-quantity btn-decrease">-</span>
                                     <input class="quantity-product" type="text" name="number" value="1">
@@ -133,7 +137,7 @@ defineProps<{
                             </div>
                             <div>
                                 <div class="tf-product-info-by-btn mb_10">
-                                    <a class="btn-style-2 flex-grow-1 text-btn-uppercase fw-6 show-shopping-cart"><span>Add to cart -&nbsp;</span><span class="tf-qty-price total-price">{{ contestant?.price ?? '$79.99' }}</span></a>
+                                    <a class="btn-style-2 flex-grow-1 text-btn-uppercase fw-6 show-shopping-cart"><span>Add votes -&nbsp;</span><span class="tf-qty-price total-price">{{ formattedVotes }}</span></a>
                                     <a href="#compare" data-bs-toggle="offcanvas" aria-controls="compare" class="box-icon hover-tooltip compare btn-icon-action show-compare">
                                         <span class="icon icon-gitDiff"></span>
                                         <span class="tooltip text-caption-2">Compare</span>
@@ -143,7 +147,7 @@ defineProps<{
                                         <span class="tooltip text-caption-2">Wishlist</span>
                                     </a>
                                 </div>
-                                <a href="#" class="btn-style-3 text-btn-uppercase">Buy it now</a>
+                                <a href="#" class="btn-style-3 text-btn-uppercase">Vote now</a>
                             </div>
                         </div>
                             
@@ -153,3 +157,4 @@ defineProps<{
         </div>
     </div>
 </template>
+

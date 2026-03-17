@@ -181,5 +181,40 @@ watch(
         <CartModal v-if="!hasOverlaySlot" :contestant="modalState.contestant" />
         <FilterModal v-if="!hasOverlaySlot" />
         <slot name="overlays" />
+        <!-- modal ask_question -->
+        <div class="modal modalCentered fade tf-product-modal modal-part-content" id="ask_question">
+            <div class="modal-dialog modal-dialog-centered">
+                <div class="modal-content">
+                    <div class="header">
+                        <div class="demo-title">Ask a question</div>
+                        <span class="icon-close icon-close-popup" data-bs-dismiss="modal"></span>
+                    </div>
+                    <div class="overflow-y-auto">
+                        <form @submit.prevent>
+                            <fieldset>
+                                <label>Name *</label>
+                                <input type="text" required />
+                            </fieldset>
+                            <fieldset>
+                                <label>Email *</label>
+                                <input type="email" required />
+                            </fieldset>
+                            <fieldset>
+                                <label>Phone number</label>
+                                <input type="number" />
+                            </fieldset>
+                            <fieldset>
+                                <label>Message</label>
+                                <textarea name="message" rows="4" required></textarea>
+                            </fieldset>
+                            <button type="submit" class="btn-style-2 w-100">
+                                <span class="text">Send</span>
+                            </button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- /modal ask_question -->
     </div>
 </template>

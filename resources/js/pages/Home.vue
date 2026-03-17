@@ -28,11 +28,12 @@ import Layout from '@/layouts/Layout.vue';
                             <div class="box-content">
                                 <div class="content-slider">
                                     <div class="box-title-slider">
-                                        <p class="fade-item fade-item-1 subheading text-btn-uppercase text-white">BIKINIS & SWIMSUITS</p>
-                                        <div class="fade-item fade-item-2 heading text-white title-display">Flash Sale Madness</div>
+                                        <p class="fade-item fade-item-1 subheading text-btn-uppercase text-white">FEATURED COMPETITIONS</p>
+                                        <div class="fade-item fade-item-2 heading text-white title-display">Vote. Celebrate. Crown the Winner.</div>
+                                        <p class="fade-item fade-item-3 text-white">Discover exciting competitions happening around you. Support your favorite contestants and help decide the winners.</p>
                                     </div>
-                                    <div class="fade-item fade-item-3 box-btn-slider">
-                                        <a href="shop-default-grid.html" class="tf-btn btn-fill btn-white"><span class="text">Explore Collection</span><i class="icon icon-arrowUpRight"></i></a>
+                                    <div class="fade-item fade-item-4 box-btn-slider">
+                                        <a href="/contestants" class="tf-btn btn-fill btn-white"><span class="text">View Active Contests</span><i class="icon icon-arrowUpRight"></i></a>
                                     </div>
                                 </div>
                             </div>
@@ -44,11 +45,29 @@ import Layout from '@/layouts/Layout.vue';
                             <div class="box-content">
                                 <div class="content-slider">
                                     <div class="box-title-slider">
-                                        <p class="fade-item fade-item-1 subheading text-btn-uppercase text-white">BIKINIS & SWIMSUITS</p>
-                                        <div class="fade-item fade-item-2 heading text-white title-display">Find Your <br> Signature Style</div>
+                                        <p class="fade-item fade-item-1 subheading text-btn-uppercase text-white">COMMUNITY VOTING</p>
+                                        <div class="fade-item fade-item-2 heading text-white title-display">Every Vote Tells a Story</div>
+                                        <p class="fade-item fade-item-3 text-white">From campus competitions to global talent showcases, your vote gives contestants the spotlight they deserve.</p>
                                     </div>
-                                    <div class="fade-item fade-item-3 box-btn-slider">
-                                        <a href="shop-default-grid.html" class="tf-btn btn-fill btn-white"><span class="text">Explore Collection</span><i class="icon icon-arrowUpRight"></i></a>
+                                    <div class="fade-item fade-item-4 box-btn-slider">
+                                        <a href="/contestants" class="tf-btn btn-fill btn-white"><span class="text">Explore Contests</span><i class="icon icon-arrowUpRight"></i></a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="swiper-slide">
+                        <div class="wrap-slider">
+                            <img src="/tmp/images/slider/slider-fashion-main1.jpg" alt="voting-slideshow">
+                            <div class="box-content">
+                                <div class="content-slider">
+                                    <div class="box-title-slider">
+                                        <p class="fade-item fade-item-1 subheading text-btn-uppercase text-white">HOST A CONTEST</p>
+                                        <div class="fade-item fade-item-2 heading text-white title-display">Launch Your Own Contest</div>
+                                        <p class="fade-item fade-item-3 text-white">Create professional voting competitions for schools, communities, brands, or talent shows with ease.</p>
+                                    </div>
+                                    <div class="fade-item fade-item-4 box-btn-slider">
+                                        <a href="/about" class="tf-btn btn-fill btn-white"><span class="text">Start a Contest</span><i class="icon icon-arrowUpRight"></i></a>
                                     </div>
                                 </div>
                             </div>
@@ -67,8 +86,8 @@ import Layout from '@/layouts/Layout.vue';
         <section class="flat-spacing-2 pb_0">
             <div class="container">
                 <div class="heading-section-2 wow fadeInUp">
-                    <h3>Categories you might like</h3>
-                    <a href="shop-collection.html" class="btn-line">View All Collection</a>
+                    <h3>Contest Categories</h3>
+                    <a href="/contestants" class="btn-line">View All Contests</a>
                 </div>
                 <div class="flat-collection-circle wow fadeInUp" data-wow-delay="0.1s">
                     <div dir="ltr" class="swiper tf-sw-collection" data-preview="5" data-tablet="3" data-mobile="2" data-space-lg="20" data-space-md="20" data-space="15" data-pagination="1" data-pagination-md="1" data-pagination-lg="1">
@@ -82,11 +101,11 @@ import Layout from '@/layouts/Layout.vue';
                                     <div class="collection-content text-center">
                                         <div>
                                             <a href="shop-collection.html" class="cls-title">
-                                                <h6 class="text">New in</h6>
+                                                <h6 class="text">Campus Competitions</h6>
                                                 <i class="icon icon-arrowUpRight"></i>    
                                             </a>
                                         </div>
-                                        <div class="count text-secondary">12 items</div>
+                                        <div class="count text-secondary">12 active contests</div>
                                     </div>
                                 </div>
                             </div>
@@ -99,11 +118,11 @@ import Layout from '@/layouts/Layout.vue';
                                     <div class="collection-content text-center">
                                         <div>
                                             <a href="shop-collection.html" class="cls-title">
-                                                <h6 class="text">Promotion</h6>
+                                                <h6 class="text">Talent Shows</h6>
                                                 <i class="icon icon-arrowUpRight"></i>    
                                             </a>
                                         </div>
-                                        <div class="count text-secondary">12 items</div>
+                                        <div class="count text-secondary">9 active contests</div>
                                     </div>
                                 </div>
                             </div>
@@ -116,11 +135,11 @@ import Layout from '@/layouts/Layout.vue';
                                     <div class="collection-content text-center">
                                         <div>
                                             <a href="shop-collection.html" class="cls-title">
-                                                <h6 class="text">Clothing</h6>
+                                                <h6 class="text">Beauty Pageants</h6>
                                                 <i class="icon icon-arrowUpRight"></i>    
                                             </a>
                                         </div>
-                                        <div class="count text-secondary">12 items</div>
+                                        <div class="count text-secondary">8 active contests</div>
                                     </div>
                                 </div>
                             </div>
@@ -133,11 +152,11 @@ import Layout from '@/layouts/Layout.vue';
                                     <div class="collection-content text-center">
                                         <div>
                                             <a href="shop-collection.html" class="cls-title">
-                                                <h6 class="text">Shoes</h6>
+                                                <h6 class="text">Brand Campaigns</h6>
                                                 <i class="icon icon-arrowUpRight"></i>    
                                             </a>
                                         </div>
-                                        <div class="count text-secondary">12 items</div>
+                                        <div class="count text-secondary">6 active contests</div>
                                     </div>
                                 </div>
                             </div>
@@ -150,11 +169,11 @@ import Layout from '@/layouts/Layout.vue';
                                     <div class="collection-content text-center">
                                         <div>
                                             <a href="shop-collection.html" class="cls-title">
-                                                <h6 class="text">Bags</h6>
+                                                <h6 class="text">Community Awards</h6>
                                                 <i class="icon icon-arrowUpRight"></i>    
                                             </a>
                                         </div>
-                                        <div class="count text-secondary">12 items</div>
+                                        <div class="count text-secondary">10 active contests</div>
                                     </div>
                                 </div>
                             </div>
@@ -167,12 +186,12 @@ import Layout from '@/layouts/Layout.vue';
                                     <div class="collection-content text-center">
                                         <div>
                                             <a href="shop-collection.html" class="cls-title">
-                                                <h6 class="text">New in</h6>
+                                                <h6 class="text">Online Challenges</h6>
                                                 <i class="icon icon-arrowUpRight"></i>    
                                             </a>
                                         </div>
                                         
-                                        <div class="count text-secondary">12 items</div>
+                                        <div class="count text-secondary">7 active contests</div>
                                     </div>
                                 </div>
                             </div>
@@ -191,13 +210,13 @@ import Layout from '@/layouts/Layout.vue';
                 <div class="flat-animate-tab">
                     <ul class="tab-product justify-content-sm-center" role="tablist">
                         <li class="nav-tab-item" role="presentation">
-                            <a href="#newArrivals" class="active" data-bs-toggle="tab">New Arrivals</a>
+                            <a href="#newArrivals" class="active" data-bs-toggle="tab">Trending Contestants</a>
                         </li>
                         <li class="nav-tab-item" role="presentation">
-                            <a href="#bestSeller" data-bs-toggle="tab">Best Seller</a>
+                            <a href="#bestSeller" data-bs-toggle="tab">Top Ranked</a>
                         </li>
                         <li class="nav-tab-item" role="presentation">
-                            <a href="#onSale" data-bs-toggle="tab">On Sale</a>
+                            <a href="#onSale" data-bs-toggle="tab">Recently Added</a>
                         </li>
                     </ul>
                     <div class="tab-content">
@@ -213,24 +232,24 @@ import Layout from '@/layouts/Layout.vue';
                                         <div class="list-product-btn">
                                             <a href="javascript:void(0);" class="box-icon wishlist btn-icon-action">
                                                 <span class="icon icon-heart"></span>
-                                                <span class="tooltip">Wishlist</span>
+                                                <span class="tooltip">Favorite</span>
                                             </a>
                                             <a href="#compare" data-bs-toggle="offcanvas" aria-controls="compare" class="box-icon compare btn-icon-action">
                                                 <span class="icon icon-gitDiff"></span>
-                                                <span class="tooltip">Compare</span>
+                                                <span class="tooltip">Share</span>
                                             </a>
                                             <a href="#quickView" data-bs-toggle="modal" class="box-icon quickview tf-btn-loading">
                                                 <span class="icon icon-eye"></span>
-                                                <span class="tooltip">Quick View</span>
+                                                <span class="tooltip">View Profile</span>
                                             </a>
                                         </div>
                                         <div class="list-btn-main">
-                                            <a href="#shoppingCart" data-bs-toggle="modal" class="btn-main-product">Add To cart</a>
+                                            <a href="#shoppingCart" data-bs-toggle="modal" class="btn-main-product">Vote</a>
                                         </div> 
                                     </div>
                                     <div class="card-product-info">
-                                        <a href="product-detail.html" class="title link">V-neck cotton T-shirt</a>
-                                        <span class="price">$59.99</span>
+                                        <a href="product-detail.html" class="title link">Contestant Name</a>
+                                        <span class="price">1,245 votes</span>
                                     </div>
                                 </div>
                                 <!-- card product 2 -->
@@ -314,24 +333,24 @@ import Layout from '@/layouts/Layout.vue';
                                         <div class="list-product-btn">
                                             <a href="javascript:void(0);" class="box-icon wishlist btn-icon-action">
                                                 <span class="icon icon-heart"></span>
-                                                <span class="tooltip">Wishlist</span>
+                                                <span class="tooltip">Favorite</span>
                                             </a>
                                             <a href="#compare" data-bs-toggle="offcanvas" aria-controls="compare" class="box-icon compare btn-icon-action">
                                                 <span class="icon icon-gitDiff"></span>
-                                                <span class="tooltip">Compare</span>
+                                                <span class="tooltip">Share</span>
                                             </a>
                                             <a href="#quickView" data-bs-toggle="modal" class="box-icon quickview tf-btn-loading">
                                                 <span class="icon icon-eye"></span>
-                                                <span class="tooltip">Quick View</span>
+                                                <span class="tooltip">View Profile</span>
                                             </a>
                                         </div>
                                         <div class="list-btn-main">
-                                            <a href="#shoppingCart" data-bs-toggle="modal" class="btn-main-product">Add To cart</a>
+                                            <a href="#shoppingCart" data-bs-toggle="modal" class="btn-main-product">Vote</a>
                                         </div> 
                                     </div>
                                     <div class="card-product-info">
-                                        <a href="product-detail.html" class="title link">Polarized sunglasses</a>
-                                        <span class="price"><span class="old-price">$98.00</span> $79.99</span>
+                                        <a href="product-detail.html" class="title link">Contestant Name</a>
+                                        <span class="price"><span class="old-price">1,245 votes</span> 1,245 votes</span>
                                         <ul class="list-color-product">
                                             <li class="list-color-item color-swatch active line">
                                                 <span class="swatch-value bg-light-blue"></span>
@@ -367,24 +386,24 @@ import Layout from '@/layouts/Layout.vue';
                                         <div class="list-product-btn">
                                             <a href="javascript:void(0);" class="box-icon wishlist btn-icon-action">
                                                 <span class="icon icon-heart"></span>
-                                                <span class="tooltip">Wishlist</span>
+                                                <span class="tooltip">Favorite</span>
                                             </a>
                                             <a href="#compare" data-bs-toggle="offcanvas" aria-controls="compare" class="box-icon compare btn-icon-action">
                                                 <span class="icon icon-gitDiff"></span>
-                                                <span class="tooltip">Compare</span>
+                                                <span class="tooltip">Share</span>
                                             </a>
                                             <a href="#quickView" data-bs-toggle="modal" class="box-icon quickview tf-btn-loading">
                                                 <span class="icon icon-eye"></span>
-                                                <span class="tooltip">Quick View</span>
+                                                <span class="tooltip">View Profile</span>
                                             </a>
                                         </div>
                                         <div class="list-btn-main">
-                                            <a href="#quickAdd" data-bs-toggle="modal" class="btn-main-product">Quick Add</a>
+                                            <a href="#quickAdd" data-bs-toggle="modal" class="btn-main-product">Quick Vote</a>
                                         </div> 
                                     </div>
                                     <div class="card-product-info">
-                                        <a href="product-detail.html" class="title link">Ramie shirt with pockets </a>
-                                        <span class="price"><span class="old-price">$98.00</span> $89.99</span>
+                                        <a href="product-detail.html" class="title link">Contestant Name</a>
+                                        <span class="price"><span class="old-price">1,245 votes</span> 1,245 votes</span>
                                         <ul class="list-color-product">
                                             <li class="list-color-item color-swatch active line">
                                                 <span class="swatch-value bg-light-orange"></span>
@@ -408,24 +427,24 @@ import Layout from '@/layouts/Layout.vue';
                                         <div class="list-product-btn">
                                             <a href="javascript:void(0);" class="box-icon wishlist btn-icon-action">
                                                 <span class="icon icon-heart"></span>
-                                                <span class="tooltip">Wishlist</span>
+                                                <span class="tooltip">Favorite</span>
                                             </a>
                                             <a href="#compare" data-bs-toggle="offcanvas" aria-controls="compare" class="box-icon compare btn-icon-action">
                                                 <span class="icon icon-gitDiff"></span>
-                                                <span class="tooltip">Compare</span>
+                                                <span class="tooltip">Share</span>
                                             </a>
                                             <a href="#quickView" data-bs-toggle="modal" class="box-icon quickview tf-btn-loading">
                                                 <span class="icon icon-eye"></span>
-                                                <span class="tooltip">Quick View</span>
+                                                <span class="tooltip">View Profile</span>
                                             </a>
                                         </div>
                                         <div class="list-btn-main">
-                                            <a href="#shoppingCart" data-bs-toggle="modal" class="btn-main-product">Add To cart</a>
+                                            <a href="#shoppingCart" data-bs-toggle="modal" class="btn-main-product">Vote</a>
                                         </div> 
                                     </div>
                                     <div class="card-product-info">
-                                        <a href="product-detail.html" class="title link">Ribbed cotton-blend top</a>
-                                        <span class="price">$69.99</span>
+                                        <a href="product-detail.html" class="title link">Contestant Name</a>
+                                        <span class="price">1,245 votes</span>
                                         <ul class="list-color-product">
                                             <li class="list-color-item color-swatch active line">
                                                 <span class="swatch-value bg-dark-grey"></span>
@@ -460,24 +479,24 @@ import Layout from '@/layouts/Layout.vue';
                                         <div class="list-product-btn">
                                             <a href="javascript:void(0);" class="box-icon wishlist btn-icon-action">
                                                 <span class="icon icon-heart"></span>
-                                                <span class="tooltip">Wishlist</span>
+                                                <span class="tooltip">Favorite</span>
                                             </a>
                                             <a href="#compare" data-bs-toggle="offcanvas" aria-controls="compare" class="box-icon compare btn-icon-action">
                                                 <span class="icon icon-gitDiff"></span>
-                                                <span class="tooltip">Compare</span>
+                                                <span class="tooltip">Share</span>
                                             </a>
                                             <a href="#quickView" data-bs-toggle="modal" class="box-icon quickview tf-btn-loading">
                                                 <span class="icon icon-eye"></span>
-                                                <span class="tooltip">Quick View</span>
+                                                <span class="tooltip">View Profile</span>
                                             </a>
                                         </div>
                                         <div class="list-btn-main">
-                                            <a href="#quickAdd" data-bs-toggle="modal" class="btn-main-product">Quick Add</a>
+                                            <a href="#quickAdd" data-bs-toggle="modal" class="btn-main-product">Quick Vote</a>
                                         </div> 
                                     </div>
                                     <div class="card-product-info">
-                                        <a href="product-detail.html" class="title link">Ribbed cotton-blend top</a>
-                                        <span class="price">$39.99</span>
+                                        <a href="product-detail.html" class="title link">Contestant Name</a>
+                                        <span class="price">1,245 votes</span>
                                     </div>
                                 </div>
                                 <!-- card product 6 -->
@@ -491,24 +510,24 @@ import Layout from '@/layouts/Layout.vue';
                                         <div class="list-product-btn">
                                             <a href="javascript:void(0);" class="box-icon wishlist btn-icon-action">
                                                 <span class="icon icon-heart"></span>
-                                                <span class="tooltip">Wishlist</span>
+                                                <span class="tooltip">Favorite</span>
                                             </a>
                                             <a href="#compare" data-bs-toggle="offcanvas" aria-controls="compare" class="box-icon compare btn-icon-action">
                                                 <span class="icon icon-gitDiff"></span>
-                                                <span class="tooltip">Compare</span>
+                                                <span class="tooltip">Share</span>
                                             </a>
                                             <a href="#quickView" data-bs-toggle="modal" class="box-icon quickview tf-btn-loading">
                                                 <span class="icon icon-eye"></span>
-                                                <span class="tooltip">Quick View</span>
+                                                <span class="tooltip">View Profile</span>
                                             </a>
                                         </div>
                                         <div class="list-btn-main">
-                                            <a href="#quickAdd" data-bs-toggle="modal" class="btn-main-product">Quick Add</a>
+                                            <a href="#quickAdd" data-bs-toggle="modal" class="btn-main-product">Quick Vote</a>
                                         </div> 
                                     </div>
                                     <div class="card-product-info">
-                                        <a href="product-detail.html" class="title link">Faux-leather trousers</a>
-                                        <span class="price">$79.99</span>
+                                        <a href="product-detail.html" class="title link">Contestant Name</a>
+                                        <span class="price">1,245 votes</span>
                                         <ul class="list-color-product">
                                             <li class="list-color-item color-swatch active">
                                                 <span class="swatch-value bg-orange"></span>
@@ -540,24 +559,24 @@ import Layout from '@/layouts/Layout.vue';
                                         <div class="list-product-btn">
                                             <a href="javascript:void(0);" class="box-icon wishlist btn-icon-action">
                                                 <span class="icon icon-heart"></span>
-                                                <span class="tooltip">Wishlist</span>
+                                                <span class="tooltip">Favorite</span>
                                             </a>
                                             <a href="#compare" data-bs-toggle="offcanvas" aria-controls="compare" class="box-icon compare btn-icon-action">
                                                 <span class="icon icon-gitDiff"></span>
-                                                <span class="tooltip">Compare</span>
+                                                <span class="tooltip">Share</span>
                                             </a>
                                             <a href="#quickView" data-bs-toggle="modal" class="box-icon quickview tf-btn-loading">
                                                 <span class="icon icon-eye"></span>
-                                                <span class="tooltip">Quick View</span>
+                                                <span class="tooltip">View Profile</span>
                                             </a>
                                         </div>
                                         <div class="list-btn-main">
-                                            <a href="#quickAdd" data-bs-toggle="modal" class="btn-main-product">Quick Add</a>
+                                            <a href="#quickAdd" data-bs-toggle="modal" class="btn-main-product">Quick Vote</a>
                                         </div> 
                                     </div>
                                     <div class="card-product-info">
-                                        <a href="product-detail.html" class="title link">Belt wrap dress</a>
-                                        <span class="price"><span class="old-price">$98.00</span>$129.99</span>
+                                        <a href="product-detail.html" class="title link">Contestant Name</a>
+                                        <span class="price"><span class="old-price">1,245 votes</span>1,245 votes</span>
                                         <ul class="list-color-product">
                                             <li class="list-color-item color-swatch active">
                                                 <span class="swatch-value bg-light-green"></span>
@@ -593,24 +612,24 @@ import Layout from '@/layouts/Layout.vue';
                                         <div class="list-product-btn">
                                             <a href="javascript:void(0);" class="box-icon wishlist btn-icon-action">
                                                 <span class="icon icon-heart"></span>
-                                                <span class="tooltip">Wishlist</span>
+                                                <span class="tooltip">Favorite</span>
                                             </a>
                                             <a href="#compare" data-bs-toggle="offcanvas" aria-controls="compare" class="box-icon compare btn-icon-action">
                                                 <span class="icon icon-gitDiff"></span>
-                                                <span class="tooltip">Compare</span>
+                                                <span class="tooltip">Share</span>
                                             </a>
                                             <a href="#quickView" data-bs-toggle="modal" class="box-icon quickview tf-btn-loading">
                                                 <span class="icon icon-eye"></span>
-                                                <span class="tooltip">Quick View</span>
+                                                <span class="tooltip">View Profile</span>
                                             </a>
                                         </div>
                                         <div class="list-btn-main">
-                                            <a href="#quickAdd" data-bs-toggle="modal" class="btn-main-product">Quick Add</a>
+                                            <a href="#quickAdd" data-bs-toggle="modal" class="btn-main-product">Quick Vote</a>
                                         </div> 
                                     </div>
                                     <div class="card-product-info">
-                                        <a href="product-detail.html" class="title link">Double-button trench coat</a>
-                                        <span class="price"><span class="old-price">$98.00</span>$219.99</span>
+                                        <a href="product-detail.html" class="title link">Contestant Name</a>
+                                        <span class="price"><span class="old-price">1,245 votes</span>1,245 votes</span>
                                         <ul class="list-color-product">
                                             <li class="list-color-item color-swatch active">
                                                 <span class="swatch-value bg-grey-2"></span>
@@ -629,7 +648,7 @@ import Layout from '@/layouts/Layout.vue';
                                 </div>
                             </div>
                             <div class="sec-btn text-center">
-                                <a href="shop-default-grid.html" class="btn-line">View All Products</a>
+                                <a href="/contestants" class="btn-line">View All Contestants</a>
                             </div>
                         </div>
                         <div class="tab-pane" id="bestSeller" role="tabpanel">
@@ -644,24 +663,24 @@ import Layout from '@/layouts/Layout.vue';
                                         <div class="list-product-btn">
                                             <a href="javascript:void(0);" class="box-icon wishlist btn-icon-action">
                                                 <span class="icon icon-heart"></span>
-                                                <span class="tooltip">Wishlist</span>
+                                                <span class="tooltip">Favorite</span>
                                             </a>
                                             <a href="#compare" data-bs-toggle="offcanvas" aria-controls="compare" class="box-icon compare btn-icon-action">
                                                 <span class="icon icon-gitDiff"></span>
-                                                <span class="tooltip">Compare</span>
+                                                <span class="tooltip">Share</span>
                                             </a>
                                             <a href="#quickView" data-bs-toggle="modal" class="box-icon quickview tf-btn-loading">
                                                 <span class="icon icon-eye"></span>
-                                                <span class="tooltip">Quick View</span>
+                                                <span class="tooltip">View Profile</span>
                                             </a>
                                         </div>
                                         <div class="list-btn-main">
-                                            <a href="#shoppingCart" data-bs-toggle="modal" class="btn-main-product">Add To cart</a>
+                                            <a href="#shoppingCart" data-bs-toggle="modal" class="btn-main-product">Vote</a>
                                         </div> 
                                     </div>
                                     <div class="card-product-info">
-                                        <a href="product-detail.html" class="title link">V-neck cotton T-shirt</a>
-                                        <span class="price">$59.99</span>
+                                        <a href="product-detail.html" class="title link">Contestant Name</a>
+                                        <span class="price">1,245 votes</span>
                                         
                                     </div>
                                 </div>
@@ -746,24 +765,24 @@ import Layout from '@/layouts/Layout.vue';
                                         <div class="list-product-btn">
                                             <a href="javascript:void(0);" class="box-icon wishlist btn-icon-action">
                                                 <span class="icon icon-heart"></span>
-                                                <span class="tooltip">Wishlist</span>
+                                                <span class="tooltip">Favorite</span>
                                             </a>
                                             <a href="#compare" data-bs-toggle="offcanvas" aria-controls="compare" class="box-icon compare btn-icon-action">
                                                 <span class="icon icon-gitDiff"></span>
-                                                <span class="tooltip">Compare</span>
+                                                <span class="tooltip">Share</span>
                                             </a>
                                             <a href="#quickView" data-bs-toggle="modal" class="box-icon quickview tf-btn-loading">
                                                 <span class="icon icon-eye"></span>
-                                                <span class="tooltip">Quick View</span>
+                                                <span class="tooltip">View Profile</span>
                                             </a>
                                         </div>
                                         <div class="list-btn-main">
-                                            <a href="#shoppingCart" data-bs-toggle="modal" class="btn-main-product">Add To cart</a>
+                                            <a href="#shoppingCart" data-bs-toggle="modal" class="btn-main-product">Vote</a>
                                         </div> 
                                     </div>
                                     <div class="card-product-info">
-                                        <a href="product-detail.html" class="title link">Polarized sunglasses</a>
-                                        <span class="price"><span class="old-price">$98.00</span> $79.99</span>
+                                        <a href="product-detail.html" class="title link">Contestant Name</a>
+                                        <span class="price"><span class="old-price">1,245 votes</span> 1,245 votes</span>
                                         <ul class="list-color-product">
                                             <li class="list-color-item color-swatch active line">
                                                 <span class="swatch-value bg-light-blue"></span>
@@ -799,24 +818,24 @@ import Layout from '@/layouts/Layout.vue';
                                         <div class="list-product-btn">
                                             <a href="javascript:void(0);" class="box-icon wishlist btn-icon-action">
                                                 <span class="icon icon-heart"></span>
-                                                <span class="tooltip">Wishlist</span>
+                                                <span class="tooltip">Favorite</span>
                                             </a>
                                             <a href="#compare" data-bs-toggle="offcanvas" aria-controls="compare" class="box-icon compare btn-icon-action">
                                                 <span class="icon icon-gitDiff"></span>
-                                                <span class="tooltip">Compare</span>
+                                                <span class="tooltip">Share</span>
                                             </a>
                                             <a href="#quickView" data-bs-toggle="modal" class="box-icon quickview tf-btn-loading">
                                                 <span class="icon icon-eye"></span>
-                                                <span class="tooltip">Quick View</span>
+                                                <span class="tooltip">View Profile</span>
                                             </a>
                                         </div>
                                         <div class="list-btn-main">
-                                            <a href="#quickAdd" data-bs-toggle="modal" class="btn-main-product">Quick Add</a>
+                                            <a href="#quickAdd" data-bs-toggle="modal" class="btn-main-product">Quick Vote</a>
                                         </div> 
                                     </div>
                                     <div class="card-product-info">
-                                        <a href="product-detail.html" class="title link">Ramie shirt with pockets </a>
-                                        <span class="price"><span class="old-price">$98.00</span> $89.99</span>
+                                        <a href="product-detail.html" class="title link">Contestant Name</a>
+                                        <span class="price"><span class="old-price">1,245 votes</span> 1,245 votes</span>
                                         <ul class="list-color-product">
                                             <li class="list-color-item color-swatch active line">
                                                 <span class="swatch-value bg-light-orange"></span>
@@ -840,24 +859,24 @@ import Layout from '@/layouts/Layout.vue';
                                         <div class="list-product-btn">
                                             <a href="javascript:void(0);" class="box-icon wishlist btn-icon-action">
                                                 <span class="icon icon-heart"></span>
-                                                <span class="tooltip">Wishlist</span>
+                                                <span class="tooltip">Favorite</span>
                                             </a>
                                             <a href="#compare" data-bs-toggle="offcanvas" aria-controls="compare" class="box-icon compare btn-icon-action">
                                                 <span class="icon icon-gitDiff"></span>
-                                                <span class="tooltip">Compare</span>
+                                                <span class="tooltip">Share</span>
                                             </a>
                                             <a href="#quickView" data-bs-toggle="modal" class="box-icon quickview tf-btn-loading">
                                                 <span class="icon icon-eye"></span>
-                                                <span class="tooltip">Quick View</span>
+                                                <span class="tooltip">View Profile</span>
                                             </a>
                                         </div>
                                         <div class="list-btn-main">
-                                            <a href="#shoppingCart" data-bs-toggle="modal" class="btn-main-product">Add To cart</a>
+                                            <a href="#shoppingCart" data-bs-toggle="modal" class="btn-main-product">Vote</a>
                                         </div> 
                                     </div>
                                     <div class="card-product-info">
-                                        <a href="product-detail.html" class="title link">Ribbed cotton-blend top</a>
-                                        <span class="price">$69.99</span>
+                                        <a href="product-detail.html" class="title link">Contestant Name</a>
+                                        <span class="price">1,245 votes</span>
                                         <ul class="list-color-product">
                                             <li class="list-color-item color-swatch active line">
                                                 <span class="swatch-value bg-dark-grey"></span>
@@ -892,24 +911,24 @@ import Layout from '@/layouts/Layout.vue';
                                         <div class="list-product-btn">
                                             <a href="javascript:void(0);" class="box-icon wishlist btn-icon-action">
                                                 <span class="icon icon-heart"></span>
-                                                <span class="tooltip">Wishlist</span>
+                                                <span class="tooltip">Favorite</span>
                                             </a>
                                             <a href="#compare" data-bs-toggle="offcanvas" aria-controls="compare" class="box-icon compare btn-icon-action">
                                                 <span class="icon icon-gitDiff"></span>
-                                                <span class="tooltip">Compare</span>
+                                                <span class="tooltip">Share</span>
                                             </a>
                                             <a href="#quickView" data-bs-toggle="modal" class="box-icon quickview tf-btn-loading">
                                                 <span class="icon icon-eye"></span>
-                                                <span class="tooltip">Quick View</span>
+                                                <span class="tooltip">View Profile</span>
                                             </a>
                                         </div>
                                         <div class="list-btn-main">
-                                            <a href="#quickAdd" data-bs-toggle="modal" class="btn-main-product">Quick Add</a>
+                                            <a href="#quickAdd" data-bs-toggle="modal" class="btn-main-product">Quick Vote</a>
                                         </div> 
                                     </div>
                                     <div class="card-product-info">
-                                        <a href="product-detail.html" class="title link">Ribbed cotton-blend top</a>
-                                        <span class="price">$39.99</span>
+                                        <a href="product-detail.html" class="title link">Contestant Name</a>
+                                        <span class="price">1,245 votes</span>
                                     </div>
                                 </div>
                                 <!-- card product 6 -->
@@ -923,24 +942,24 @@ import Layout from '@/layouts/Layout.vue';
                                         <div class="list-product-btn">
                                             <a href="javascript:void(0);" class="box-icon wishlist btn-icon-action">
                                                 <span class="icon icon-heart"></span>
-                                                <span class="tooltip">Wishlist</span>
+                                                <span class="tooltip">Favorite</span>
                                             </a>
                                             <a href="#compare" data-bs-toggle="offcanvas" aria-controls="compare" class="box-icon compare btn-icon-action">
                                                 <span class="icon icon-gitDiff"></span>
-                                                <span class="tooltip">Compare</span>
+                                                <span class="tooltip">Share</span>
                                             </a>
                                             <a href="#quickView" data-bs-toggle="modal" class="box-icon quickview tf-btn-loading">
                                                 <span class="icon icon-eye"></span>
-                                                <span class="tooltip">Quick View</span>
+                                                <span class="tooltip">View Profile</span>
                                             </a>
                                         </div>
                                         <div class="list-btn-main">
-                                            <a href="#quickAdd" data-bs-toggle="modal" class="btn-main-product">Quick Add</a>
+                                            <a href="#quickAdd" data-bs-toggle="modal" class="btn-main-product">Quick Vote</a>
                                         </div> 
                                     </div>
                                     <div class="card-product-info">
-                                        <a href="product-detail.html" class="title link">Faux-leather trousers</a>
-                                        <span class="price">$79.99</span>
+                                        <a href="product-detail.html" class="title link">Contestant Name</a>
+                                        <span class="price">1,245 votes</span>
                                         <ul class="list-color-product">
                                             <li class="list-color-item color-swatch active">
                                                 <span class="swatch-value bg-orange"></span>
@@ -972,24 +991,24 @@ import Layout from '@/layouts/Layout.vue';
                                         <div class="list-product-btn">
                                             <a href="javascript:void(0);" class="box-icon wishlist btn-icon-action">
                                                 <span class="icon icon-heart"></span>
-                                                <span class="tooltip">Wishlist</span>
+                                                <span class="tooltip">Favorite</span>
                                             </a>
                                             <a href="#compare" data-bs-toggle="offcanvas" aria-controls="compare" class="box-icon compare btn-icon-action">
                                                 <span class="icon icon-gitDiff"></span>
-                                                <span class="tooltip">Compare</span>
+                                                <span class="tooltip">Share</span>
                                             </a>
                                             <a href="#quickView" data-bs-toggle="modal" class="box-icon quickview tf-btn-loading">
                                                 <span class="icon icon-eye"></span>
-                                                <span class="tooltip">Quick View</span>
+                                                <span class="tooltip">View Profile</span>
                                             </a>
                                         </div>
                                         <div class="list-btn-main">
-                                            <a href="#quickAdd" data-bs-toggle="modal" class="btn-main-product">Quick Add</a>
+                                            <a href="#quickAdd" data-bs-toggle="modal" class="btn-main-product">Quick Vote</a>
                                         </div> 
                                     </div>
                                     <div class="card-product-info">
-                                        <a href="product-detail.html" class="title link">Belt wrap dress</a>
-                                        <span class="price"><span class="old-price">$98.00</span>$129.99</span>
+                                        <a href="product-detail.html" class="title link">Contestant Name</a>
+                                        <span class="price"><span class="old-price">1,245 votes</span>1,245 votes</span>
                                         <ul class="list-color-product">
                                             <li class="list-color-item color-swatch active">
                                                 <span class="swatch-value bg-light-green"></span>
@@ -1025,24 +1044,24 @@ import Layout from '@/layouts/Layout.vue';
                                         <div class="list-product-btn">
                                             <a href="javascript:void(0);" class="box-icon wishlist btn-icon-action">
                                                 <span class="icon icon-heart"></span>
-                                                <span class="tooltip">Wishlist</span>
+                                                <span class="tooltip">Favorite</span>
                                             </a>
                                             <a href="#compare" data-bs-toggle="offcanvas" aria-controls="compare" class="box-icon compare btn-icon-action">
                                                 <span class="icon icon-gitDiff"></span>
-                                                <span class="tooltip">Compare</span>
+                                                <span class="tooltip">Share</span>
                                             </a>
                                             <a href="#quickView" data-bs-toggle="modal" class="box-icon quickview tf-btn-loading">
                                                 <span class="icon icon-eye"></span>
-                                                <span class="tooltip">Quick View</span>
+                                                <span class="tooltip">View Profile</span>
                                             </a>
                                         </div>
                                         <div class="list-btn-main">
-                                            <a href="#quickAdd" data-bs-toggle="modal" class="btn-main-product">Quick Add</a>
+                                            <a href="#quickAdd" data-bs-toggle="modal" class="btn-main-product">Quick Vote</a>
                                         </div> 
                                     </div>
                                     <div class="card-product-info">
-                                        <a href="product-detail.html" class="title link">Double-button trench coat</a>
-                                        <span class="price"><span class="old-price">$98.00</span>$219.99</span>
+                                        <a href="product-detail.html" class="title link">Contestant Name</a>
+                                        <span class="price"><span class="old-price">1,245 votes</span>1,245 votes</span>
                                         <ul class="list-color-product">
                                             <li class="list-color-item color-swatch active">
                                                 <span class="swatch-value bg-grey-2"></span>
@@ -1061,7 +1080,7 @@ import Layout from '@/layouts/Layout.vue';
                                 </div>
                             </div>
                             <div class="sec-btn text-center">
-                                <a href="shop-default-grid.html" class="btn-line">View All Products</a>
+                                <a href="shop-default-grid.html" class="btn-line">View All Contestants</a>
                             </div>
                         </div>
                         <div class="tab-pane" id="onSale" role="tabpanel">
@@ -1076,24 +1095,24 @@ import Layout from '@/layouts/Layout.vue';
                                         <div class="list-product-btn">
                                             <a href="javascript:void(0);" class="box-icon wishlist btn-icon-action">
                                                 <span class="icon icon-heart"></span>
-                                                <span class="tooltip">Wishlist</span>
+                                                <span class="tooltip">Favorite</span>
                                             </a>
                                             <a href="#compare" data-bs-toggle="offcanvas" aria-controls="compare" class="box-icon compare btn-icon-action">
                                                 <span class="icon icon-gitDiff"></span>
-                                                <span class="tooltip">Compare</span>
+                                                <span class="tooltip">Share</span>
                                             </a>
                                             <a href="#quickView" data-bs-toggle="modal" class="box-icon quickview tf-btn-loading">
                                                 <span class="icon icon-eye"></span>
-                                                <span class="tooltip">Quick View</span>
+                                                <span class="tooltip">View Profile</span>
                                             </a>
                                         </div>
                                         <div class="list-btn-main">
-                                            <a href="#shoppingCart" data-bs-toggle="modal" class="btn-main-product">Add To cart</a>
+                                            <a href="#shoppingCart" data-bs-toggle="modal" class="btn-main-product">Vote</a>
                                         </div> 
                                     </div>
                                     <div class="card-product-info">
-                                        <a href="product-detail.html" class="title link">V-neck cotton T-shirt</a>
-                                        <span class="price">$59.99</span>
+                                        <a href="product-detail.html" class="title link">Contestant Name</a>
+                                        <span class="price">1,245 votes</span>
                                         
                                     </div>
                                 </div>
@@ -1178,24 +1197,24 @@ import Layout from '@/layouts/Layout.vue';
                                         <div class="list-product-btn">
                                             <a href="javascript:void(0);" class="box-icon wishlist btn-icon-action">
                                                 <span class="icon icon-heart"></span>
-                                                <span class="tooltip">Wishlist</span>
+                                                <span class="tooltip">Favorite</span>
                                             </a>
                                             <a href="#compare" data-bs-toggle="offcanvas" aria-controls="compare" class="box-icon compare btn-icon-action">
                                                 <span class="icon icon-gitDiff"></span>
-                                                <span class="tooltip">Compare</span>
+                                                <span class="tooltip">Share</span>
                                             </a>
                                             <a href="#quickView" data-bs-toggle="modal" class="box-icon quickview tf-btn-loading">
                                                 <span class="icon icon-eye"></span>
-                                                <span class="tooltip">Quick View</span>
+                                                <span class="tooltip">View Profile</span>
                                             </a>
                                         </div>
                                         <div class="list-btn-main">
-                                            <a href="#shoppingCart" data-bs-toggle="modal" class="btn-main-product">Add To cart</a>
+                                            <a href="#shoppingCart" data-bs-toggle="modal" class="btn-main-product">Vote</a>
                                         </div> 
                                     </div>
                                     <div class="card-product-info">
-                                        <a href="product-detail.html" class="title link">Polarized sunglasses</a>
-                                        <span class="price"><span class="old-price">$98.00</span> $79.99</span>
+                                        <a href="product-detail.html" class="title link">Contestant Name</a>
+                                        <span class="price"><span class="old-price">1,245 votes</span> 1,245 votes</span>
                                         <ul class="list-color-product">
                                             <li class="list-color-item color-swatch active line">
                                                 <span class="swatch-value bg-light-blue"></span>
@@ -1231,24 +1250,24 @@ import Layout from '@/layouts/Layout.vue';
                                         <div class="list-product-btn">
                                             <a href="javascript:void(0);" class="box-icon wishlist btn-icon-action">
                                                 <span class="icon icon-heart"></span>
-                                                <span class="tooltip">Wishlist</span>
+                                                <span class="tooltip">Favorite</span>
                                             </a>
                                             <a href="#compare" data-bs-toggle="offcanvas" aria-controls="compare" class="box-icon compare btn-icon-action">
                                                 <span class="icon icon-gitDiff"></span>
-                                                <span class="tooltip">Compare</span>
+                                                <span class="tooltip">Share</span>
                                             </a>
                                             <a href="#quickView" data-bs-toggle="modal" class="box-icon quickview tf-btn-loading">
                                                 <span class="icon icon-eye"></span>
-                                                <span class="tooltip">Quick View</span>
+                                                <span class="tooltip">View Profile</span>
                                             </a>
                                         </div>
                                         <div class="list-btn-main">
-                                            <a href="#quickAdd" data-bs-toggle="modal" class="btn-main-product">Quick Add</a>
+                                            <a href="#quickAdd" data-bs-toggle="modal" class="btn-main-product">Quick Vote</a>
                                         </div> 
                                     </div>
                                     <div class="card-product-info">
-                                        <a href="product-detail.html" class="title link">Ramie shirt with pockets </a>
-                                        <span class="price"><span class="old-price">$98.00</span> $89.99</span>
+                                        <a href="product-detail.html" class="title link">Contestant Name</a>
+                                        <span class="price"><span class="old-price">1,245 votes</span> 1,245 votes</span>
                                         <ul class="list-color-product">
                                             <li class="list-color-item color-swatch active line">
                                                 <span class="swatch-value bg-light-orange"></span>
@@ -1272,24 +1291,24 @@ import Layout from '@/layouts/Layout.vue';
                                         <div class="list-product-btn">
                                             <a href="javascript:void(0);" class="box-icon wishlist btn-icon-action">
                                                 <span class="icon icon-heart"></span>
-                                                <span class="tooltip">Wishlist</span>
+                                                <span class="tooltip">Favorite</span>
                                             </a>
                                             <a href="#compare" data-bs-toggle="offcanvas" aria-controls="compare" class="box-icon compare btn-icon-action">
                                                 <span class="icon icon-gitDiff"></span>
-                                                <span class="tooltip">Compare</span>
+                                                <span class="tooltip">Share</span>
                                             </a>
                                             <a href="#quickView" data-bs-toggle="modal" class="box-icon quickview tf-btn-loading">
                                                 <span class="icon icon-eye"></span>
-                                                <span class="tooltip">Quick View</span>
+                                                <span class="tooltip">View Profile</span>
                                             </a>
                                         </div>
                                         <div class="list-btn-main">
-                                            <a href="#shoppingCart" data-bs-toggle="modal" class="btn-main-product">Add To cart</a>
+                                            <a href="#shoppingCart" data-bs-toggle="modal" class="btn-main-product">Vote</a>
                                         </div> 
                                     </div>
                                     <div class="card-product-info">
-                                        <a href="product-detail.html" class="title link">Ribbed cotton-blend top</a>
-                                        <span class="price">$69.99</span>
+                                        <a href="product-detail.html" class="title link">Contestant Name</a>
+                                        <span class="price">1,245 votes</span>
                                         <ul class="list-color-product">
                                             <li class="list-color-item color-swatch active line">
                                                 <span class="swatch-value bg-dark-grey"></span>
@@ -1324,24 +1343,24 @@ import Layout from '@/layouts/Layout.vue';
                                         <div class="list-product-btn">
                                             <a href="javascript:void(0);" class="box-icon wishlist btn-icon-action">
                                                 <span class="icon icon-heart"></span>
-                                                <span class="tooltip">Wishlist</span>
+                                                <span class="tooltip">Favorite</span>
                                             </a>
                                             <a href="#compare" data-bs-toggle="offcanvas" aria-controls="compare" class="box-icon compare btn-icon-action">
                                                 <span class="icon icon-gitDiff"></span>
-                                                <span class="tooltip">Compare</span>
+                                                <span class="tooltip">Share</span>
                                             </a>
                                             <a href="#quickView" data-bs-toggle="modal" class="box-icon quickview tf-btn-loading">
                                                 <span class="icon icon-eye"></span>
-                                                <span class="tooltip">Quick View</span>
+                                                <span class="tooltip">View Profile</span>
                                             </a>
                                         </div>
                                         <div class="list-btn-main">
-                                            <a href="#quickAdd" data-bs-toggle="modal" class="btn-main-product">Quick Add</a>
+                                            <a href="#quickAdd" data-bs-toggle="modal" class="btn-main-product">Quick Vote</a>
                                         </div> 
                                     </div>
                                     <div class="card-product-info">
-                                        <a href="product-detail.html" class="title link">Ribbed cotton-blend top</a>
-                                        <span class="price">$39.99</span>
+                                        <a href="product-detail.html" class="title link">Contestant Name</a>
+                                        <span class="price">1,245 votes</span>
                                     </div>
                                 </div>
                                 <!-- card product 6 -->
@@ -1355,24 +1374,24 @@ import Layout from '@/layouts/Layout.vue';
                                         <div class="list-product-btn">
                                             <a href="javascript:void(0);" class="box-icon wishlist btn-icon-action">
                                                 <span class="icon icon-heart"></span>
-                                                <span class="tooltip">Wishlist</span>
+                                                <span class="tooltip">Favorite</span>
                                             </a>
                                             <a href="#compare" data-bs-toggle="offcanvas" aria-controls="compare" class="box-icon compare btn-icon-action">
                                                 <span class="icon icon-gitDiff"></span>
-                                                <span class="tooltip">Compare</span>
+                                                <span class="tooltip">Share</span>
                                             </a>
                                             <a href="#quickView" data-bs-toggle="modal" class="box-icon quickview tf-btn-loading">
                                                 <span class="icon icon-eye"></span>
-                                                <span class="tooltip">Quick View</span>
+                                                <span class="tooltip">View Profile</span>
                                             </a>
                                         </div>
                                         <div class="list-btn-main">
-                                            <a href="#quickAdd" data-bs-toggle="modal" class="btn-main-product">Quick Add</a>
+                                            <a href="#quickAdd" data-bs-toggle="modal" class="btn-main-product">Quick Vote</a>
                                         </div> 
                                     </div>
                                     <div class="card-product-info">
-                                        <a href="product-detail.html" class="title link">Faux-leather trousers</a>
-                                        <span class="price">$79.99</span>
+                                        <a href="product-detail.html" class="title link">Contestant Name</a>
+                                        <span class="price">1,245 votes</span>
                                         <ul class="list-color-product">
                                             <li class="list-color-item color-swatch active">
                                                 <span class="swatch-value bg-orange"></span>
@@ -1404,24 +1423,24 @@ import Layout from '@/layouts/Layout.vue';
                                         <div class="list-product-btn">
                                             <a href="javascript:void(0);" class="box-icon wishlist btn-icon-action">
                                                 <span class="icon icon-heart"></span>
-                                                <span class="tooltip">Wishlist</span>
+                                                <span class="tooltip">Favorite</span>
                                             </a>
                                             <a href="#compare" data-bs-toggle="offcanvas" aria-controls="compare" class="box-icon compare btn-icon-action">
                                                 <span class="icon icon-gitDiff"></span>
-                                                <span class="tooltip">Compare</span>
+                                                <span class="tooltip">Share</span>
                                             </a>
                                             <a href="#quickView" data-bs-toggle="modal" class="box-icon quickview tf-btn-loading">
                                                 <span class="icon icon-eye"></span>
-                                                <span class="tooltip">Quick View</span>
+                                                <span class="tooltip">View Profile</span>
                                             </a>
                                         </div>
                                         <div class="list-btn-main">
-                                            <a href="#quickAdd" data-bs-toggle="modal" class="btn-main-product">Quick Add</a>
+                                            <a href="#quickAdd" data-bs-toggle="modal" class="btn-main-product">Quick Vote</a>
                                         </div> 
                                     </div>
                                     <div class="card-product-info">
-                                        <a href="product-detail.html" class="title link">Belt wrap dress</a>
-                                        <span class="price"><span class="old-price">$98.00</span>$129.99</span>
+                                        <a href="product-detail.html" class="title link">Contestant Name</a>
+                                        <span class="price"><span class="old-price">1,245 votes</span>1,245 votes</span>
                                         <ul class="list-color-product">
                                             <li class="list-color-item color-swatch active">
                                                 <span class="swatch-value bg-light-green"></span>
@@ -1457,24 +1476,24 @@ import Layout from '@/layouts/Layout.vue';
                                         <div class="list-product-btn">
                                             <a href="javascript:void(0);" class="box-icon wishlist btn-icon-action">
                                                 <span class="icon icon-heart"></span>
-                                                <span class="tooltip">Wishlist</span>
+                                                <span class="tooltip">Favorite</span>
                                             </a>
                                             <a href="#compare" data-bs-toggle="offcanvas" aria-controls="compare" class="box-icon compare btn-icon-action">
                                                 <span class="icon icon-gitDiff"></span>
-                                                <span class="tooltip">Compare</span>
+                                                <span class="tooltip">Share</span>
                                             </a>
                                             <a href="#quickView" data-bs-toggle="modal" class="box-icon quickview tf-btn-loading">
                                                 <span class="icon icon-eye"></span>
-                                                <span class="tooltip">Quick View</span>
+                                                <span class="tooltip">View Profile</span>
                                             </a>
                                         </div>
                                         <div class="list-btn-main">
-                                            <a href="#quickAdd" data-bs-toggle="modal" class="btn-main-product">Quick Add</a>
+                                            <a href="#quickAdd" data-bs-toggle="modal" class="btn-main-product">Quick Vote</a>
                                         </div> 
                                     </div>
                                     <div class="card-product-info">
-                                        <a href="product-detail.html" class="title link">Double-button trench coat</a>
-                                        <span class="price"><span class="old-price">$98.00</span>$219.99</span>
+                                        <a href="product-detail.html" class="title link">Contestant Name</a>
+                                        <span class="price"><span class="old-price">1,245 votes</span>1,245 votes</span>
                                         <ul class="list-color-product">
                                             <li class="list-color-item color-swatch active">
                                                 <span class="swatch-value bg-grey-2"></span>
@@ -1493,7 +1512,7 @@ import Layout from '@/layouts/Layout.vue';
                                 </div>
                             </div>
                             <div class="sec-btn text-center">
-                                <a href="shop-default-grid.html" class="btn-line">View All Products</a>
+                                <a href="shop-default-grid.html" class="btn-line">View All Contestants</a>
                             </div>
                         </div>
                     </div>
@@ -1510,10 +1529,10 @@ import Layout from '@/layouts/Layout.vue';
                             <img class="lazyload" data-src="/tmp/images/collections/banner-collection/banner-cls1.jpg" src="/tmp/images/collections/banner-collection/banner-cls1.jpg" alt="banner-cls">
                         </a>
                         <div class="content">
-                            <h3 class="title wow fadeInUp"><a href="shop-collection.html" class="link">Crossbody bag</a></h3>
-                            <p class="desc wow fadeInUp">From beach to party: Perfect styles for every occasion.</p>
+                            <h3 class="title wow fadeInUp"><a href="/contestants" class="link">Campus Crown 2026</a></h3>
+                            <p class="desc wow fadeInUp">The biggest inter-university beauty contest. Support your school’s representative.</p>
                             <div class="wow fadeInUp">
-                                <a href="shop-collection.html" class="btn-line">Shop Now</a>
+                                <a href="/contestants" class="btn-line">Vote Now</a>
                             </div>
                         </div>
                     </div>
@@ -1522,10 +1541,10 @@ import Layout from '@/layouts/Layout.vue';
                             <img class="lazyload" data-src="/tmp/images/collections/banner-collection/banner-cls2.jpg" src="/tmp/images/collections/banner-collection/banner-cls2.jpg" alt="banner-cls">
                         </a>
                         <div class="content">
-                            <h3 class="title"><a href="shop-collection.html" class="link text-white wow fadeInUp">Capsule Collection</a></h3>
-                            <p class="desc text-white wow fadeInUp">Reserved for special occasions</p>
+                            <h3 class="title"><a href="/contestants" class="link text-white wow fadeInUp">Global Talent Showcase</a></h3>
+                            <p class="desc text-white wow fadeInUp">Singers, dancers, creators — vote for the most talented performer.</p>
                             <div class=" wow fadeInUp">
-                                <a href="shop-collection.html" class="btn-line style-white">Shop Now</a>
+                                <a href="/contestants" class="btn-line style-white">Explore Contest</a>
                             </div>
                         </div>
                     </div>
@@ -1540,11 +1559,11 @@ import Layout from '@/layouts/Layout.vue';
                     <div class="col-lg-5">
                         <div class="banner-left">
                             <div class="box-title">
-                                <h3 class="wow fadeInUp">Limited-Time Deals On!</h3>
-                                <p class="text-secondary wow fadeInUp">Up to 50% Off Selected Styles. Don't Miss Out.</p>
+                                <h3 class="wow fadeInUp">Voting Ends Soon</h3>
+                                <p class="text-secondary wow fadeInUp">Only a limited time left to support your favorite contestant.</p>
                             </div>
                             <div class="btn-banner wow fadeInUp">
-                                <a href="shop-default-grid.html" class="tf-btn btn-fill"><span class="text">Shop Now</span><i class="icon icon-arrowUpRight"></i></a>
+                                <a href="/contestants" class="tf-btn btn-fill"><span class="text">Cast Your Vote</span><i class="icon icon-arrowUpRight"></i></a>
                             </div>
                         </div>
                     </div>
@@ -1569,8 +1588,8 @@ import Layout from '@/layouts/Layout.vue';
         <section class="flat-spacing">
             <div class="container">
                 <div class="heading-section text-center">
-                    <h3 class="heading wow fadeInUp">Customer Say!</h3>
-                    <p class="subheading wow fadeInUp">Our customers adore our products, and we constantly aim to delight them.</p>
+                    <h3 class="heading wow fadeInUp">Success Stories</h3>
+                    <p class="subheading wow fadeInUp">Organizers and communities share how their contests grew with this platform.</p>
                 </div>
                 <div dir="ltr" class="swiper tf-sw-testimonial" data-preview="2" data-tablet="1.3" data-mobile="1" data-space-lg="30" data-space-md="30" data-space="15" data-pagination="1" data-pagination-md="1" data-pagination-lg="1">
                     <div class="swiper-wrapper">
@@ -1580,7 +1599,7 @@ import Layout from '@/layouts/Layout.vue';
                                     <img data-src="/tmp/images/testimonial/tes-1.jpg" src="/tmp/images/testimonial/tes-1.jpg" alt="img-testimonial">
                                     <a href="#quickView" data-bs-toggle="modal" class="box-icon hover-tooltip center">
                                         <span class="icon icon-eye"></span>
-                                        <span class="tooltip">Quick View</span>
+                                        <span class="tooltip">View Profile</span>
                                     </a>
                                 </div>
                                 <div class="content">
@@ -1592,7 +1611,7 @@ import Layout from '@/layouts/Layout.vue';
                                             <i class="icon icon-star"></i>
                                             <i class="icon icon-star"></i>
                                         </div>
-                                        <p class="text-secondary">"Fantastic shop! Great selection, fair prices, and friendly staff. Highly recommended. The quality of the products is exceptional, and the prices are very reasonable!"</p>
+                                        <p class="text-secondary">"This platform helped our university run a seamless voting competition with thousands of participants."</p>
                                         <div class="box-author">
                                             <div class="text-title author">Sybil Sharp</div>
                                             <svg class="icon" width="20" height="21" viewBox="0 0 20 21" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -1613,8 +1632,8 @@ import Layout from '@/layouts/Layout.vue';
                                             <img src="/tmp/images/avatar/user-4.jpg" alt="avt">
                                         </div>
                                         <div class="box-price">
-                                            <p class="text-title text-line-clamp-1">Contrasting sheepskin sweatshirt</p>
-                                            <div class="text-button price">$60.00</div>
+                                            <p class="text-title text-line-clamp-1">Campus Crown 2026</p>
+                                            <div class="text-button price">1,245 votes</div>
                                         </div>
                                     </div>
                                 </div>
@@ -1626,7 +1645,7 @@ import Layout from '@/layouts/Layout.vue';
                                     <img data-src="/tmp/images/testimonial/tes-2.jpg" src="/tmp/images/testimonial/tes-2.jpg" alt="img-testimonial">
                                     <a href="#quickView" data-bs-toggle="modal" class="box-icon hover-tooltip center">
                                         <span class="icon icon-eye"></span>
-                                        <span class="tooltip">Quick View</span>
+                                        <span class="tooltip">View Profile</span>
                                     </a>
                                 </div>
                                 <div class="content">
@@ -1638,7 +1657,7 @@ import Layout from '@/layouts/Layout.vue';
                                             <i class="icon icon-star"></i>
                                             <i class="icon icon-star"></i>
                                         </div>
-                                        <p class="text-secondary">"I absolutely love this shop! The products are high-quality and the customer service is excellent. I always leave with exactly what I need and a smile on my face."</p>
+                                        <p class="text-secondary">"Our brand campaign received over 50,000 votes using this platform."</p>
                                         <div class="box-author">
                                             <div class="text-title author">Mark G.</div>
                                             <svg class="icon" width="20" height="21" viewBox="0 0 20 21" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -1659,8 +1678,8 @@ import Layout from '@/layouts/Layout.vue';
                                             <img src="/tmp/images/avatar/user-5.jpg" alt="avt">
                                         </div>
                                         <div class="box-price">
-                                            <p class="text-title text-line-clamp-1">Contrasting sheepskin sweatshirt</p>
-                                            <div class="text-button price">$60.00</div>
+                                            <p class="text-title text-line-clamp-1">Global Talent Showcase</p>
+                                            <div class="text-button price">1,245 votes</div>
                                         </div>
                                     </div>
                                 </div>
@@ -1672,7 +1691,7 @@ import Layout from '@/layouts/Layout.vue';
                                     <img data-src="/tmp/images/testimonial/tes-1.jpg" src="/tmp/images/testimonial/tes-1.jpg" alt="img-testimonial">
                                     <a href="#quickView" data-bs-toggle="modal" class="box-icon hover-tooltip center">
                                         <span class="icon icon-eye"></span>
-                                        <span class="tooltip">Quick View</span>
+                                        <span class="tooltip">View Profile</span>
                                     </a>
                                 </div>
                                 <div class="content">
@@ -1684,7 +1703,7 @@ import Layout from '@/layouts/Layout.vue';
                                             <i class="icon icon-star"></i>
                                             <i class="icon icon-star"></i>
                                         </div>
-                                        <p class="text-secondary">"Fantastic shop! Great selection, fair prices, and friendly staff. Highly recommended. The quality of the products is exceptional, and the prices are very reasonable!"</p>
+                                        <p class="text-secondary">"Managing contestants and votes became incredibly easy."</p>
                                         <div class="box-author">
                                             <div class="text-title author">Sybil Sharp</div>
                                             <svg class="icon" width="20" height="21" viewBox="0 0 20 21" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -1705,8 +1724,8 @@ import Layout from '@/layouts/Layout.vue';
                                             <img src="/tmp/images/avatar/user-4.jpg" alt="avt">
                                         </div>
                                         <div class="box-price">
-                                            <p class="text-title text-line-clamp-1">Contrasting sheepskin sweatshirt</p>
-                                            <div class="text-button price">$60.00</div>
+                                            <p class="text-title text-line-clamp-1">Community Awards</p>
+                                            <div class="text-button price">1,245 votes</div>
                                         </div>
                                     </div>
                                 </div>
@@ -1718,7 +1737,7 @@ import Layout from '@/layouts/Layout.vue';
                                     <img data-src="/tmp/images/testimonial/tes-2.jpg" src="/tmp/images/testimonial/tes-2.jpg" alt="img-testimonial">
                                     <a href="#quickView" data-bs-toggle="modal" class="box-icon hover-tooltip center">
                                         <span class="icon icon-eye"></span>
-                                        <span class="tooltip">Quick View</span>
+                                        <span class="tooltip">View Profile</span>
                                     </a>
                                 </div>
                                 <div class="content">
@@ -1730,7 +1749,7 @@ import Layout from '@/layouts/Layout.vue';
                                             <i class="icon icon-star"></i>
                                             <i class="icon icon-star"></i>
                                         </div>
-                                        <p class="text-secondary">"I absolutely love this shop! The products are high-quality and the customer service is excellent. I always leave with exactly what I need and a smile on my face."</p>
+                                        <p class="text-secondary">"We launched a community awards contest in days and saw engagement surge."</p>
                                         <div class="box-author">
                                             <div class="text-title author">Mark G.</div>
                                             <svg class="icon" width="20" height="21" viewBox="0 0 20 21" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -1751,8 +1770,8 @@ import Layout from '@/layouts/Layout.vue';
                                             <img src="/tmp/images/avatar/user-5.jpg" alt="avt">
                                         </div>
                                         <div class="box-price">
-                                            <p class="text-title text-line-clamp-1">Contrasting sheepskin sweatshirt</p>
-                                            <div class="text-button price">$60.00</div>
+                                            <p class="text-title text-line-clamp-1">Rising Star Challenge</p>
+                                            <div class="text-button price">1,245 votes</div>
                                         </div>
                                     </div>
                                 </div>
@@ -1768,8 +1787,8 @@ import Layout from '@/layouts/Layout.vue';
         <section class="flat-spacing pt-0">
             <div class="container">
                 <div class="heading-section text-center">
-                    <h3 class="heading wow fadeInUp">News insight</h3>
-                    <p class="subheading text-secondary wow fadeInUp">Browse our Top Trending: the hottest picks loved by all.</p>
+                    <h3 class="heading wow fadeInUp">Announcements & Updates</h3>
+                    <p class="subheading text-secondary wow fadeInUp">Insights and guidance for running modern voting competitions.</p>
                 </div>
                 <div dir="ltr" class="swiper tf-sw-recent" data-preview="3" data-tablet="2" data-mobile="1" data-space-lg="30" data-space-md="30" data-space="15" data-pagination="1" data-pagination-md="1" data-pagination-lg="1">
                     <div class="swiper-wrapper">
@@ -1782,7 +1801,7 @@ import Layout from '@/layouts/Layout.vue';
                                     <p class="text-btn-uppercase text-secondary-2">13 August</p>
                                     <div>
                                         <h6 class="title fw-5">
-                                            <a class="link" href="blog-detail.html">Top 10 Summer Fashion Trends You Can't Miss in 2024</a>
+                                            <a class="link" href="blog-detail.html">How Online Voting is Transforming Campus Competitions</a>
                                         </h6>
                                         <div class="body-text">Lorem ipsum dolor sit amet, consectetur adipiscing elit. In sed vulputate massa.</div>
                                     </div>
@@ -1798,7 +1817,7 @@ import Layout from '@/layouts/Layout.vue';
                                     <p class="text-btn-uppercase text-secondary-2">13 August</p>
                                     <div>
                                         <h6 class="title fw-5">
-                                            <a class="link" href="blog-detail.html">How to Effortlessly Style Your Office Wear for a Modern Look</a>
+                                            <a class="link" href="blog-detail.html">5 Tips for Running a Successful Voting Contest</a>
                                         </h6>
                                         <div class="body-text">Lorem ipsum dolor sit amet, consectetur adipiscing elit. In sed vulputate massa.</div>
                                     </div>
@@ -1815,7 +1834,7 @@ import Layout from '@/layouts/Layout.vue';
                                     
                                     <div>
                                         <h6 class="title fw-5">
-                                            <a class="link" href="blog-detail.html">Sustainable Fashion: Eco-Friendly Brands to Watch This Year</a>
+                                            <a class="link" href="blog-detail.html">Behind the Scenes of the Global Talent Showcase</a>
                                         </h6>
                                         <div class="body-text">Lorem ipsum dolor sit amet, consectetur adipiscing elit. In sed vulputate massa.</div>
                                     </div>
@@ -1832,8 +1851,8 @@ import Layout from '@/layouts/Layout.vue';
         <section>
             <div class="container">
                 <div class="heading-section text-center">
-                    <h3 class="heading wow fadeInUp">Shop Instagram</h3>
-                    <p class="subheading text-secondary wow fadeInUp">Elevate your wardrobe with fresh finds today!</p>
+                    <h3 class="heading wow fadeInUp">Contest Moments</h3>
+                    <p class="subheading text-secondary wow fadeInUp">Highlights from competitions, winners, and celebrations.</p>
                 </div>
                 <div dir="ltr" class="swiper tf-sw-shop-gallery" data-preview="5" data-tablet="3" data-mobile="2" data-space-lg="10" data-space-md="10" data-space="8" data-pagination="2" data-pagination-md="3" data-pagination-lg="1">
                     <div class="swiper-wrapper">
@@ -1842,7 +1861,7 @@ import Layout from '@/layouts/Layout.vue';
                                 <div class="img-style">
                                     <img class="lazyload img-hover" data-src="/tmp/images/gallery/gallery-1.jpg" src="/tmp/images/gallery/gallery-1.jpg" alt="image-gallery">
                                 </div>
-                                <a href="product-detail.html" class="box-icon hover-tooltip"><span class="icon icon-eye"></span> <span class="tooltip">View Product</span></a>
+                                <a href="product-detail.html" class="box-icon hover-tooltip"><span class="icon icon-eye"></span> <span class="tooltip">View Moment</span></a>
                             </div>
                         </div>
                         <div class="swiper-slide">
@@ -1850,7 +1869,7 @@ import Layout from '@/layouts/Layout.vue';
                                 <div class="img-style">
                                     <img class="lazyload img-hover" data-src="/tmp/images/gallery/gallery-2.jpg" src="/tmp/images/gallery/gallery-2.jpg" alt="image-gallery">
                                 </div>
-                                <a href="product-detail.html" class="box-icon hover-tooltip"><span class="icon icon-eye"></span> <span class="tooltip">View Product</span></a>
+                                <a href="product-detail.html" class="box-icon hover-tooltip"><span class="icon icon-eye"></span> <span class="tooltip">View Moment</span></a>
                             </div>
                         </div>
                         <div class="swiper-slide">
@@ -1858,7 +1877,7 @@ import Layout from '@/layouts/Layout.vue';
                                 <div class="img-style">
                                     <img class="lazyload img-hover" data-src="/tmp/images/gallery/gallery-3.jpg" src="/tmp/images/gallery/gallery-3.jpg" alt="image-gallery">
                                 </div>
-                                <a href="product-detail.html" class="box-icon hover-tooltip"><span class="icon icon-eye"></span> <span class="tooltip">View Product</span></a>
+                                <a href="product-detail.html" class="box-icon hover-tooltip"><span class="icon icon-eye"></span> <span class="tooltip">View Moment</span></a>
                             </div>
                         </div>
                         <div class="swiper-slide">
@@ -1866,7 +1885,7 @@ import Layout from '@/layouts/Layout.vue';
                                 <div class="img-style">
                                     <img class="lazyload img-hover" data-src="/tmp/images/gallery/gallery-4.jpg" src="/tmp/images/gallery/gallery-4.jpg" alt="image-gallery">
                                 </div>
-                                <a href="product-detail.html" class="box-icon hover-tooltip"><span class="icon icon-eye"></span> <span class="tooltip">View Product</span></a>
+                                <a href="product-detail.html" class="box-icon hover-tooltip"><span class="icon icon-eye"></span> <span class="tooltip">View Moment</span></a>
                             </div>
                         </div>
                         <div class="swiper-slide">
@@ -1874,7 +1893,7 @@ import Layout from '@/layouts/Layout.vue';
                                 <div class="img-style">
                                     <img class="lazyload img-hover" data-src="/tmp/images/gallery/gallery-5.jpg" src="/tmp/images/gallery/gallery-5.jpg" alt="image-gallery">
                                 </div>
-                                <a href="product-detail.html" class="box-icon hover-tooltip"><span class="icon icon-eye"></span> <span class="tooltip">View Product</span></a>
+                                <a href="product-detail.html" class="box-icon hover-tooltip"><span class="icon icon-eye"></span> <span class="tooltip">View Moment</span></a>
                             </div>
                         </div>
                     </div>
@@ -1892,8 +1911,8 @@ import Layout from '@/layouts/Layout.vue';
                             <div class="tf-icon-box">
                                 <div class="icon-box"><span class="icon icon-return"></span></div>
                                 <div class="content text-center">
-                                    <h6>14-Day Returns</h6>
-                                    <p class="text-secondary">Risk-free shopping with easy returns.</p>
+                                    <h6>Secure Voting</h6>
+                                    <p class="text-secondary">Advanced fraud prevention ensures fair results.</p>
                                 </div>
                             </div>
                         </div>
@@ -1901,8 +1920,8 @@ import Layout from '@/layouts/Layout.vue';
                             <div class="tf-icon-box">
                                 <div class="icon-box"><span class="icon icon-shipping"></span></div>
                                 <div class="content text-center">
-                                    <h6>Free Shipping</h6>
-                                    <p class="text-secondary">No extra costs, just the price you see.</p>
+                                    <h6>Real-Time Leaderboards</h6>
+                                    <p class="text-secondary">Watch contestants climb the rankings instantly.</p>
                                 </div>
                             </div>
                         </div>
@@ -1910,8 +1929,8 @@ import Layout from '@/layouts/Layout.vue';
                             <div class="tf-icon-box">
                                 <div class="icon-box"><span class="icon icon-headset"></span></div>
                                 <div class="content text-center">
-                                    <h6>24/7 Support</h6>
-                                    <p class="text-secondary">24/7 support, always here just for you</p>
+                                    <h6>Easy Contest Setup</h6>
+                                    <p class="text-secondary">Launch competitions in minutes.</p>
                                 </div>
                             </div>
                         </div>
@@ -1919,8 +1938,8 @@ import Layout from '@/layouts/Layout.vue';
                             <div class="tf-icon-box">
                                 <div class="icon-box"><span class="icon icon-sealCheck"></span></div>
                                 <div class="content text-center">
-                                    <h6>Member Discounts</h6>
-                                    <p class="text-secondary">Special prices for our loyal customers.</p>
+                                    <h6>Scalable Platform</h6>
+                                    <p class="text-secondary">Perfect for schools, brands, and global events.</p>
                                 </div>
                             </div>
                         </div>
@@ -1940,8 +1959,8 @@ import Layout from '@/layouts/Layout.vue';
                     <span class="icon icon-close btn-hide-popup" data-bs-dismiss="modal"></span>
                 </div>
                 <div class="modal-bottom text-center">
-                    <p class="text-btn-uppercase fw-4 font-2">Subscribe To Our Newletter!</p>
-                    <h5>Receive 10% OFF your next order, exclusive offers & more!</h5>
+                    <p class="text-btn-uppercase fw-4 font-2">Join the Voting Community</p>
+                    <h5>Be the first to discover new contests and vote for your favorites.</h5>
                     <div class="sib-form">
                         <div id="sib-form-container" class="sib-form-container">
                             <div id="error-message" class="sib-form-message-panel">
@@ -2055,7 +2074,7 @@ import Layout from '@/layouts/Layout.vue';
                 </div>
                 <form class="form-search">
                     <fieldset class="text">
-                        <input type="text" placeholder="Searching..." class="" name="text" tabindex="0" value="" aria-required="true" required>
+                        <input type="text" placeholder="Search contests or contestants" class="" name="text" tabindex="0" value="" aria-required="true" required>
                     </fieldset>
                     <button class="" type="submit">
                         <svg class="icon" width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -2065,16 +2084,16 @@ import Layout from '@/layouts/Layout.vue';
                     </button>
                 </form>
                 <div>
-                    <h5 class="mb_16">Feature keywords Today</h5>
+                    <h5 class="mb_16">Trending searches</h5>
                     <ul class="list-tags">
-                        <li><a href="#" class="radius-60 link">Dresses</a></li>
-                        <li><a href="#" class="radius-60 link">Dresses women</a></li>
-                        <li><a href="#" class="radius-60 link">Dresses midi</a></li>
-                        <li><a href="#" class="radius-60 link">Dress summer</a></li>
+                        <li><a href="#" class="radius-60 link">Campus competitions</a></li>
+                        <li><a href="#" class="radius-60 link">Talent shows</a></li>
+                        <li><a href="#" class="radius-60 link">Beauty pageants</a></li>
+                        <li><a href="#" class="radius-60 link">Community awards</a></li>
                     </ul>
                 </div>
                 <div>
-                    <h6 class="mb_16">Recently viewed products</h6>
+                    <h6 class="mb_16">Recently viewed contestants</h6>
                     <div class="tf-grid-layout tf-col-2 lg-col-3 xl-col-4 loadmore-item" data-display="4" data-count="4">
                         <div class="fl-item card-product card-product-size">
                             <div class="card-product-wrapper">
@@ -2093,24 +2112,24 @@ import Layout from '@/layouts/Layout.vue';
                                 <div class="list-product-btn">
                                     <a href="javascript:void(0);" class="box-icon wishlist btn-icon-action">
                                         <span class="icon icon-heart"></span>
-                                        <span class="tooltip">Wishlist</span>
+                                        <span class="tooltip">Favorite</span>
                                     </a>
                                     <a href="#compare" data-bs-toggle="offcanvas" aria-controls="compare" class="box-icon compare btn-icon-action">
                                         <span class="icon icon-gitDiff"></span>
-                                        <span class="tooltip">Compare</span>
+                                        <span class="tooltip">Share</span>
                                     </a>
                                     <a href="#quickView" data-bs-toggle="modal" class="box-icon quickview tf-btn-loading">
                                         <span class="icon icon-eye"></span>
-                                        <span class="tooltip">Quick View</span>
+                                        <span class="tooltip">View Profile</span>
                                     </a>
                                 </div>
                                 <div class="list-btn-main">
-                                    <a href="#quickAdd" data-bs-toggle="modal" class="btn-main-product">Quick Add</a>
+                                    <a href="#quickAdd" data-bs-toggle="modal" class="btn-main-product">Quick Vote</a>
                                 </div> 
                             </div>
                             <div class="card-product-info">
-                                <a href="product-detail.html" class="title link">Ribbed cotton-blend top</a>
-                                <span class="price current-price">$39.99</span>
+                                <a href="product-detail.html" class="title link">Contestant Name</a>
+                                <span class="price current-price">1,245 votes</span>
                             </div>
                         </div>
                         <div class="fl-item card-product">
@@ -2123,24 +2142,24 @@ import Layout from '@/layouts/Layout.vue';
                                 <div class="list-product-btn">
                                     <a href="javascript:void(0);" class="box-icon wishlist btn-icon-action">
                                         <span class="icon icon-heart"></span>
-                                        <span class="tooltip">Wishlist</span>
+                                        <span class="tooltip">Favorite</span>
                                     </a>
                                     <a href="#compare" data-bs-toggle="offcanvas" aria-controls="compare" class="box-icon compare btn-icon-action">
                                         <span class="icon icon-gitDiff"></span>
-                                        <span class="tooltip">Compare</span>
+                                        <span class="tooltip">Share</span>
                                     </a>
                                     <a href="#quickView" data-bs-toggle="modal" class="box-icon quickview tf-btn-loading">
                                         <span class="icon icon-eye"></span>
-                                        <span class="tooltip">Quick View</span>
+                                        <span class="tooltip">View Profile</span>
                                     </a>
                                 </div>
                                 <div class="list-btn-main">
-                                    <a href="#quickAdd" data-bs-toggle="modal" class="btn-main-product">Quick Add</a>
+                                    <a href="#quickAdd" data-bs-toggle="modal" class="btn-main-product">Quick Vote</a>
                                 </div> 
                             </div>
                             <div class="card-product-info">
-                                <a href="product-detail.html" class="title link">Faux-leather trousers</a>
-                                <span class="price current-price">$79.99</span>
+                                <a href="product-detail.html" class="title link">Contestant Name</a>
+                                <span class="price current-price">1,245 votes</span>
                                 <ul class="list-color-product">
                                     <li class="list-color-item color-swatch active">
                                         <span class="d-none text-capitalize color-filter">Orange</span>
@@ -2173,24 +2192,24 @@ import Layout from '@/layouts/Layout.vue';
                                 <div class="list-product-btn">
                                     <a href="javascript:void(0);" class="box-icon wishlist btn-icon-action">
                                         <span class="icon icon-heart"></span>
-                                        <span class="tooltip">Wishlist</span>
+                                        <span class="tooltip">Favorite</span>
                                     </a>
                                     <a href="#compare" data-bs-toggle="offcanvas" aria-controls="compare" class="box-icon compare btn-icon-action">
                                         <span class="icon icon-gitDiff"></span>
-                                        <span class="tooltip">Compare</span>
+                                        <span class="tooltip">Share</span>
                                     </a>
                                     <a href="#quickView" data-bs-toggle="modal" class="box-icon quickview tf-btn-loading">
                                         <span class="icon icon-eye"></span>
-                                        <span class="tooltip">Quick View</span>
+                                        <span class="tooltip">View Profile</span>
                                     </a>
                                 </div>
                                 <div class="list-btn-main">
-                                    <a href="#quickAdd" data-bs-toggle="modal" class="btn-main-product">Quick Add</a>
+                                    <a href="#quickAdd" data-bs-toggle="modal" class="btn-main-product">Quick Vote</a>
                                 </div> 
                             </div>
                             <div class="card-product-info">
-                                <a href="product-detail.html" class="title link">Belt wrap dress</a>
-                                <div class="price"><span class="old-price">$98.00</span><span class="current-price">$129.99</span></div>
+                                <a href="product-detail.html" class="title link">Contestant Name</a>
+                                <div class="price"><span class="old-price">1,245 votes</span><span class="current-price">1,245 votes</span></div>
                                 <ul class="list-color-product">
                                     <li class="list-color-item color-swatch active">
                                         <span class="d-none text-capitalize color-filter">Green</span>
@@ -2228,24 +2247,24 @@ import Layout from '@/layouts/Layout.vue';
                                 <div class="list-product-btn">
                                     <a href="javascript:void(0);" class="box-icon wishlist btn-icon-action">
                                         <span class="icon icon-heart"></span>
-                                        <span class="tooltip">Wishlist</span>
+                                        <span class="tooltip">Favorite</span>
                                     </a>
                                     <a href="#compare" data-bs-toggle="offcanvas" aria-controls="compare" class="box-icon compare btn-icon-action">
                                         <span class="icon icon-gitDiff"></span>
-                                        <span class="tooltip">Compare</span>
+                                        <span class="tooltip">Share</span>
                                     </a>
                                     <a href="#quickView" data-bs-toggle="modal" class="box-icon quickview tf-btn-loading">
                                         <span class="icon icon-eye"></span>
-                                        <span class="tooltip">Quick View</span>
+                                        <span class="tooltip">View Profile</span>
                                     </a>
                                 </div>
                                 <div class="list-btn-main">
-                                    <a href="#quickAdd" data-bs-toggle="modal" class="btn-main-product">Quick Add</a>
+                                    <a href="#quickAdd" data-bs-toggle="modal" class="btn-main-product">Quick Vote</a>
                                 </div> 
                             </div>
                             <div class="card-product-info">
-                                <a href="product-detail.html" class="title link">Double-button trench coat</a>
-                                <div class="price"><span class="old-price">$98.00</span><span class="current-price">$219.99</span></div>
+                                <a href="product-detail.html" class="title link">Contestant Name</a>
+                                <div class="price"><span class="old-price">1,245 votes</span><span class="current-price">1,245 votes</span></div>
                                 <ul class="list-color-product">
                                     <li class="list-color-item color-swatch active">
                                         <span class="d-none text-capitalize color-filter">Grey</span>
@@ -2274,24 +2293,24 @@ import Layout from '@/layouts/Layout.vue';
                                 <div class="list-product-btn">
                                     <a href="javascript:void(0);" class="box-icon wishlist btn-icon-action">
                                         <span class="icon icon-heart"></span>
-                                        <span class="tooltip">Wishlist</span>
+                                        <span class="tooltip">Favorite</span>
                                     </a>
                                     <a href="#compare" data-bs-toggle="offcanvas" aria-controls="compare" class="box-icon compare btn-icon-action">
                                         <span class="icon icon-gitDiff"></span>
-                                        <span class="tooltip">Compare</span>
+                                        <span class="tooltip">Share</span>
                                     </a>
                                     <a href="#quickView" data-bs-toggle="modal" class="box-icon quickview tf-btn-loading">
                                         <span class="icon icon-eye"></span>
-                                        <span class="tooltip">Quick View</span>
+                                        <span class="tooltip">View Profile</span>
                                     </a>
                                 </div>
                                 <div class="list-btn-main">
-                                    <a href="#shoppingCart" data-bs-toggle="modal" class="btn-main-product">Add To cart</a>
+                                    <a href="#shoppingCart" data-bs-toggle="modal" class="btn-main-product">Vote</a>
                                 </div> 
                             </div>
                             <div class="card-product-info">
-                                <a href="product-detail.html" class="title link">V-neck cotton T-shirt</a>
-                                <span class="price current-price">$59.99</span>
+                                <a href="product-detail.html" class="title link">Contestant Name</a>
+                                <span class="price current-price">1,245 votes</span>
                             </div>
                         </div>
                         <div class="fl-item card-product" >
@@ -2374,24 +2393,24 @@ import Layout from '@/layouts/Layout.vue';
                                 <div class="list-product-btn">
                                     <a href="javascript:void(0);" class="box-icon wishlist btn-icon-action">
                                         <span class="icon icon-heart"></span>
-                                        <span class="tooltip">Wishlist</span>
+                                        <span class="tooltip">Favorite</span>
                                     </a>
                                     <a href="#compare" data-bs-toggle="offcanvas" aria-controls="compare" class="box-icon compare btn-icon-action">
                                         <span class="icon icon-gitDiff"></span>
-                                        <span class="tooltip">Compare</span>
+                                        <span class="tooltip">Share</span>
                                     </a>
                                     <a href="#quickView" data-bs-toggle="modal" class="box-icon quickview tf-btn-loading">
                                         <span class="icon icon-eye"></span>
-                                        <span class="tooltip">Quick View</span>
+                                        <span class="tooltip">View Profile</span>
                                     </a>
                                 </div>
                                 <div class="list-btn-main">
-                                    <a href="#shoppingCart" data-bs-toggle="modal" class="btn-main-product">Add To cart</a>
+                                    <a href="#shoppingCart" data-bs-toggle="modal" class="btn-main-product">Vote</a>
                                 </div> 
                             </div>
                             <div class="card-product-info">
-                                <a href="product-detail.html" class="title link">Polarized sunglasses</a>
-                                <div class="price"><span class="old-price">$98.00</span> <span class="current-price">$79.99</span></div>
+                                <a href="product-detail.html" class="title link">Contestant Name</a>
+                                <div class="price"><span class="old-price">1,245 votes</span> <span class="current-price">1,245 votes</span></div>
                                 <ul class="list-color-product">
                                     <li class="list-color-item color-swatch active">
                                         <span class="d-none text-capitalize color-filter">Beige</span>
@@ -2429,24 +2448,24 @@ import Layout from '@/layouts/Layout.vue';
                                 <div class="list-product-btn">
                                     <a href="javascript:void(0);" class="box-icon wishlist btn-icon-action">
                                         <span class="icon icon-heart"></span>
-                                        <span class="tooltip">Wishlist</span>
+                                        <span class="tooltip">Favorite</span>
                                     </a>
                                     <a href="#compare" data-bs-toggle="offcanvas" aria-controls="compare" class="box-icon compare btn-icon-action">
                                         <span class="icon icon-gitDiff"></span>
-                                        <span class="tooltip">Compare</span>
+                                        <span class="tooltip">Share</span>
                                     </a>
                                     <a href="#quickView" data-bs-toggle="modal" class="box-icon quickview tf-btn-loading">
                                         <span class="icon icon-eye"></span>
-                                        <span class="tooltip">Quick View</span>
+                                        <span class="tooltip">View Profile</span>
                                     </a>
                                 </div>
                                 <div class="list-btn-main">
-                                    <a href="#quickAdd" data-bs-toggle="modal" class="btn-main-product">Quick Add</a>
+                                    <a href="#quickAdd" data-bs-toggle="modal" class="btn-main-product">Quick Vote</a>
                                 </div> 
                             </div>
                             <div class="card-product-info">
-                                <a href="product-detail.html" class="title link">Ramie shirt with pockets </a>
-                                <div class="price"><span class="old-price">$98.00</span> <span class="current-price">$89.99</span></div>
+                                <a href="product-detail.html" class="title link">Contestant Name</a>
+                                <div class="price"><span class="old-price">1,245 votes</span> <span class="current-price">1,245 votes</span></div>
                                 <ul class="list-color-product">
                                     <li class="list-color-item color-swatch active line">
                                         <span class="d-none text-capitalize color-filter">Green</span>
@@ -2471,24 +2490,24 @@ import Layout from '@/layouts/Layout.vue';
                                 <div class="list-product-btn">
                                     <a href="javascript:void(0);" class="box-icon wishlist btn-icon-action">
                                         <span class="icon icon-heart"></span>
-                                        <span class="tooltip">Wishlist</span>
+                                        <span class="tooltip">Favorite</span>
                                     </a>
                                     <a href="#compare" data-bs-toggle="offcanvas" aria-controls="compare" class="box-icon compare btn-icon-action">
                                         <span class="icon icon-gitDiff"></span>
-                                        <span class="tooltip">Compare</span>
+                                        <span class="tooltip">Share</span>
                                     </a>
                                     <a href="#quickView" data-bs-toggle="modal" class="box-icon quickview tf-btn-loading">
                                         <span class="icon icon-eye"></span>
-                                        <span class="tooltip">Quick View</span>
+                                        <span class="tooltip">View Profile</span>
                                     </a>
                                 </div>
                                 <div class="list-btn-main">
-                                    <a href="#shoppingCart" data-bs-toggle="modal" class="btn-main-product">Add To cart</a>
+                                    <a href="#shoppingCart" data-bs-toggle="modal" class="btn-main-product">Vote</a>
                                 </div> 
                             </div>
                             <div class="card-product-info">
-                                <a href="product-detail.html" class="title link">Ribbed cotton-blend top</a>
-                                <span class="price current-price">$69.99</span>
+                                <a href="product-detail.html" class="title link">Contestant Name</a>
+                                <span class="price current-price">1,245 votes</span>
                                 <ul class="list-color-product">
                                     <li class="list-color-item color-swatch active line">
                                         <span class="d-none text-capitalize color-filter">Light Blue</span>
@@ -2526,24 +2545,24 @@ import Layout from '@/layouts/Layout.vue';
                                 <div class="list-product-btn">
                                     <a href="javascript:void(0);" class="box-icon wishlist btn-icon-action">
                                         <span class="icon icon-heart"></span>
-                                        <span class="tooltip">Wishlist</span>
+                                        <span class="tooltip">Favorite</span>
                                     </a>
                                     <a href="#compare" data-bs-toggle="offcanvas" aria-controls="compare" class="box-icon compare btn-icon-action">
                                         <span class="icon icon-gitDiff"></span>
-                                        <span class="tooltip">Compare</span>
+                                        <span class="tooltip">Share</span>
                                     </a>
                                     <a href="#quickView" data-bs-toggle="modal" class="box-icon quickview tf-btn-loading">
                                         <span class="icon icon-eye"></span>
-                                        <span class="tooltip">Quick View</span>
+                                        <span class="tooltip">View Profile</span>
                                     </a>
                                 </div>
                                 <div class="list-btn-main">
-                                    <a href="#quickAdd" data-bs-toggle="modal" class="btn-main-product">Quick Add</a>
+                                    <a href="#quickAdd" data-bs-toggle="modal" class="btn-main-product">Quick Vote</a>
                                 </div> 
                             </div>
                             <div class="card-product-info">
-                                <a href="product-detail.html" class="title link">Buttoned cotton shirt</a>
-                                <span class="price current-price">$89.99</span>
+                                <a href="product-detail.html" class="title link">Contestant Name</a>
+                                <span class="price current-price">1,245 votes</span>
                                 <ul class="list-color-product">
                                     <li class="list-color-item color-swatch active">
                                         <span class="d-none text-capitalize color-filter">Light Blue</span>
@@ -2577,24 +2596,24 @@ import Layout from '@/layouts/Layout.vue';
                                 <div class="list-product-btn">
                                     <a href="javascript:void(0);" class="box-icon wishlist btn-icon-action">
                                         <span class="icon icon-heart"></span>
-                                        <span class="tooltip">Wishlist</span>
+                                        <span class="tooltip">Favorite</span>
                                     </a>
                                     <a href="#compare" data-bs-toggle="offcanvas" aria-controls="compare" class="box-icon compare btn-icon-action">
                                         <span class="icon icon-gitDiff"></span>
-                                        <span class="tooltip">Compare</span>
+                                        <span class="tooltip">Share</span>
                                     </a>
                                     <a href="#quickView" data-bs-toggle="modal" class="box-icon quickview tf-btn-loading">
                                         <span class="icon icon-eye"></span>
-                                        <span class="tooltip">Quick View</span>
+                                        <span class="tooltip">View Profile</span>
                                     </a>
                                 </div>
                                 <div class="list-btn-main">
-                                    <a href="#quickAdd" data-bs-toggle="modal" class="btn-main-product">Quick Add</a>
+                                    <a href="#quickAdd" data-bs-toggle="modal" class="btn-main-product">Quick Vote</a>
                                 </div> 
                             </div>
                             <div class="card-product-info">
-                                <a href="product-detail.html" class="title link">Chest pocket cotton over shirt</a>
-                                <span class="price current-price">$99.25</span>
+                                <a href="product-detail.html" class="title link">Contestant Name</a>
+                                <span class="price current-price">1,245 votes</span>
                                 <ul class="list-color-product">
                                     <li class="list-color-item color-swatch active">
                                         <span class="d-none text-capitalize color-filter">Beige</span>
@@ -2623,24 +2642,24 @@ import Layout from '@/layouts/Layout.vue';
                                 <div class="list-product-btn">
                                     <a href="javascript:void(0);" class="box-icon wishlist btn-icon-action">
                                         <span class="icon icon-heart"></span>
-                                        <span class="tooltip">Wishlist</span>
+                                        <span class="tooltip">Favorite</span>
                                     </a>
                                     <a href="#compare" data-bs-toggle="offcanvas" aria-controls="compare" class="box-icon compare btn-icon-action">
                                         <span class="icon icon-gitDiff"></span>
-                                        <span class="tooltip">Compare</span>
+                                        <span class="tooltip">Share</span>
                                     </a>
                                     <a href="#quickView" data-bs-toggle="modal" class="box-icon quickview tf-btn-loading">
                                         <span class="icon icon-eye"></span>
-                                        <span class="tooltip">Quick View</span>
+                                        <span class="tooltip">View Profile</span>
                                     </a>
                                 </div>
                                 <div class="list-btn-main">
-                                    <a href="#shoppingCart" data-bs-toggle="modal" class="btn-main-product">Add To cart</a>
+                                    <a href="#shoppingCart" data-bs-toggle="modal" class="btn-main-product">Vote</a>
                                 </div> 
                             </div>
                             <div class="card-product-info">
-                                <a href="product-detail.html" class="title link">Cotton shopper bag</a>
-                                <span class="price current-price">$199.25</span>
+                                <a href="product-detail.html" class="title link">Contestant Name</a>
+                                <span class="price current-price">1,245 votes</span>
                                 <ul class="list-color-product">
                                     <li class="list-color-item color-swatch active line">
                                         <span class="d-none text-capitalize color-filter">White</span>
@@ -2675,24 +2694,24 @@ import Layout from '@/layouts/Layout.vue';
                                 <div class="list-product-btn">
                                     <a href="javascript:void(0);" class="box-icon wishlist btn-icon-action">
                                         <span class="icon icon-heart"></span>
-                                        <span class="tooltip">Wishlist</span>
+                                        <span class="tooltip">Favorite</span>
                                     </a>
                                     <a href="#compare" data-bs-toggle="offcanvas" aria-controls="compare" class="box-icon compare btn-icon-action">
                                         <span class="icon icon-gitDiff"></span>
-                                        <span class="tooltip">Compare</span>
+                                        <span class="tooltip">Share</span>
                                     </a>
                                     <a href="#quickView" data-bs-toggle="modal" class="box-icon quickview tf-btn-loading">
                                         <span class="icon icon-eye"></span>
-                                        <span class="tooltip">Quick View</span>
+                                        <span class="tooltip">View Profile</span>
                                     </a>
                                 </div>
                                 <div class="list-btn-main">
-                                    <a href="#quickAdd" data-bs-toggle="modal" class="btn-main-product">Quick Add</a>
+                                    <a href="#quickAdd" data-bs-toggle="modal" class="btn-main-product">Quick Vote</a>
                                 </div> 
                             </div>
                             <div class="card-product-info">
-                                <a href="product-detail.html" class="title link">Chest pocket cotton over shirt</a>
-                                <span class="price current-price">$250.00</span>
+                                <a href="product-detail.html" class="title link">Contestant Name</a>
+                                <span class="price current-price">1,245 votes</span>
                                 
                             </div>
                         </div>
@@ -3150,10 +3169,10 @@ import Layout from '@/layouts/Layout.vue';
                                             <ul class="sub-nav-menu sub-menu-level-2">
                                                 <li><a href="wish-list.html" class="sub-nav-link">Wish List</a></li>
                                                 <li><a href="search-result.html" class="sub-nav-link">Search Result</a></li>
-                                                <li><a href="shopping-cart.html" class="sub-nav-link">Shopping Cart</a></li>
+                                                <li><a href="/cart" class="sub-nav-link">Vote Cart</a></li>
                                                 <li><a href="login.html" class="sub-nav-link">Login/Register</a></li>
                                                 <li><a href="forget-password.html" class="sub-nav-link">Forget Password</a></li>
-                                                <li><a href="order-tracking.html" class="sub-nav-link">Order Tracking</a></li>
+                                                <li><a href="order-tracking.html" class="sub-nav-link">Vote History</a></li>
                                                 <li><a href="my-account.html" class="sub-nav-link">My Account</a></li>
                                             </ul>
                                         </div>
@@ -3285,7 +3304,7 @@ import Layout from '@/layouts/Layout.vue';
                             <svg class="icon" width="18" height="18" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
                                 <path d="M20.8401 4.60987C20.3294 4.09888 19.7229 3.69352 19.0555 3.41696C18.388 3.14039 17.6726 2.99805 16.9501 2.99805C16.2276 2.99805 15.5122 3.14039 14.8448 3.41696C14.1773 3.69352 13.5709 4.09888 13.0601 4.60987L12.0001 5.66987L10.9401 4.60987C9.90843 3.57818 8.50915 2.99858 7.05012 2.99858C5.59109 2.99858 4.19181 3.57818 3.16012 4.60987C2.12843 5.64156 1.54883 7.04084 1.54883 8.49987C1.54883 9.95891 2.12843 11.3582 3.16012 12.3899L4.22012 13.4499L12.0001 21.2299L19.7801 13.4499L20.8401 12.3899C21.3511 11.8791 21.7565 11.2727 22.033 10.6052C22.3096 9.93777 22.4519 9.22236 22.4519 8.49987C22.4519 7.77738 22.3096 7.06198 22.033 6.39452C21.7565 5.72706 21.3511 5.12063 20.8401 4.60987V4.60987Z" stroke="#181818" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
                             </svg>
-                            Wishlist 
+                            Favorite Contestants
                         </a>
                         
                         <a href="login.html" class="site-nav-icon">
@@ -3462,7 +3481,7 @@ import Layout from '@/layouts/Layout.vue';
                 </div>
                 <div class="wrap">
                     <div class="header">
-                        <h5 class="title">Quick View</h5>
+                        <h5 class="title">Contestant Preview</h5>
                         <span class="icon-close icon-close-popup" data-bs-dismiss="modal"></span>
                     </div>
                     <div class="tf-product-info-list">
@@ -3489,13 +3508,13 @@ import Layout from '@/layouts/Layout.vue';
                             </div>
                             <div class="tf-product-info-desc">
                                 <div class="tf-product-info-price">
-                                    <h5 class="price-on-sale font-2">$79.99</h5>
-                                    <div class="compare-at-price font-2">$98.99</div>
+                                    <h5 class="price-on-sale font-2">1,245 votes</h5>
+                                    <div class="compare-at-price font-2">1,245 votes</div>
                                     <div class="badges-on-sale text-btn-uppercase">
                                         -25%
                                     </div>
                                 </div>
-                                <p>The garments labelled as Committed are products that have been produced using sustainable fibres or processes, reducing their environmental impact.</p>
+                                <p>A short bio about the contestant, their background, and why they deserve your vote.</p>
                                 <div class="tf-product-info-liveview">
                                     <i class="icon icon-eye"></i>
                                     <p class="text-caption-1"><span class="liveview-count">28</span> people are viewing this right now</p>
@@ -3561,14 +3580,14 @@ import Layout from '@/layouts/Layout.vue';
                             </div>
                             <div>
                                 <div class="tf-product-info-by-btn mb_10">
-                                    <a class="btn-style-2 grow text-btn-uppercase fw-6 show-shopping-cart"><span>Add to cart -&nbsp;</span><span class="tf-qty-price total-price">$79.99</span></a>
+                                    <a class="btn-style-2 grow text-btn-uppercase fw-6 show-shopping-cart"><span>Vote -&nbsp;</span><span class="tf-qty-price total-price">1,245 votes</span></a>
                                     <a href="#compare" data-bs-toggle="offcanvas" aria-controls="compare" class="box-icon hover-tooltip compare btn-icon-action show-compare">
                                         <span class="icon icon-gitDiff"></span>
-                                        <span class="tooltip text-caption-2">Compare</span>
+                                        <span class="tooltip text-caption-2">Share</span>
                                     </a>
                                     <a href="javascript:void(0);" class="box-icon hover-tooltip text-caption-2 wishlist btn-icon-action">
                                         <span class="icon icon-heart"></span>
-                                        <span class="tooltip text-caption-2">Wishlist</span>
+                                        <span class="tooltip text-caption-2">Favorite</span>
                                     </a>
                                 </div>
                                 <a href="#" class="btn-style-3 text-btn-uppercase">Buy it now</a>
@@ -3587,7 +3606,7 @@ import Layout from '@/layouts/Layout.vue';
         <div class="modal-dialog">
             <div class="modal-content">
                 <div class="tf-minicart-recommendations">
-                    <h6 class="title">You May Also Like</h6>
+                    <h6 class="title">Recommended Contestants</h6>
                     <div class="wrap-recommendations">
                         <div class="list-cart">
                             <div class="list-cart-item">
@@ -3596,11 +3615,11 @@ import Layout from '@/layouts/Layout.vue';
                                 </div>
                                 <div class="content">
                                     <div class="name">
-                                        <a class="link text-line-clamp-1" href="product-detail.html">Belt wrap dress</a>
+                                        <a href="product-detail.html" class="link text-line-clamp-1">Contestant Name</a>
                                     </div>
                                     <div class="cart-item-bot">
-                                        <div class="text-button price">$59.99</div>
-                                        <a class="link text-button" href="#">Add to cart</a>
+                                        <div class="text-button price">1,245 votes</div>
+                                        <a class="link text-button" href="#">Vote</a>
                                     </div>
                                 </div>
                             </div>
@@ -3610,11 +3629,11 @@ import Layout from '@/layouts/Layout.vue';
                                 </div>
                                 <div class="content">
                                     <div class="name">
-                                        <a class="link text-line-clamp-1" href="product-detail.html">Double-button coat</a>
+                                        <a href="product-detail.html" class="link text-line-clamp-1">Contestant Name</a>
                                     </div>
                                     <div class="cart-item-bot">
-                                        <div class="text-button price">$59.99</div>
-                                        <a class="link text-button" href="#">Add to cart</a>
+                                        <div class="text-button price">1,245 votes</div>
+                                        <a class="link text-button" href="#">Vote</a>
                                     </div>
                                 </div>
                             </div>
@@ -3624,11 +3643,11 @@ import Layout from '@/layouts/Layout.vue';
                                 </div>
                                 <div class="content">
                                     <div class="name">
-                                        <a class="link text-line-clamp-1" href="product-detail.html">Belted Manteco coat</a>
+                                        <a href="product-detail.html" class="link text-line-clamp-1">Contestant Name</a>
                                     </div>
                                     <div class="cart-item-bot">
-                                        <div class="text-button price">$59.99</div>
-                                        <a class="link text-button" href="#">Add to cart</a>
+                                        <div class="text-button price">1,245 votes</div>
+                                        <a class="link text-button" href="#">Vote</a>
                                     </div>
                                 </div>
                             </div>
@@ -3638,11 +3657,11 @@ import Layout from '@/layouts/Layout.vue';
                                 </div>
                                 <div class="content">
                                     <div class="name">
-                                        <a class="link text-line-clamp-1" href="product-detail.html">Belt wrap dress</a>
+                                        <a href="product-detail.html" class="link text-line-clamp-1">Contestant Name</a>
                                     </div>
                                     <div class="cart-item-bot">
-                                        <div class="text-button price">$59.99</div>
-                                        <a class="link text-button" href="#">Add to cart</a>
+                                        <div class="text-button price">1,245 votes</div>
+                                        <a class="link text-button" href="#">Vote</a>
                                     </div>
                                 </div>
                             </div>
@@ -3652,11 +3671,11 @@ import Layout from '@/layouts/Layout.vue';
                                 </div>
                                 <div class="content">
                                     <div class="name">
-                                        <a class="link text-line-clamp-1" href="product-detail.html">Belt wrap dress</a>
+                                        <a href="product-detail.html" class="link text-line-clamp-1">Contestant Name</a>
                                     </div>
                                     <div class="cart-item-bot">
-                                        <div class="text-button price">$59.99</div>
-                                        <a class="link text-button" href="#">Add to cart</a>
+                                        <div class="text-button price">1,245 votes</div>
+                                        <a class="link text-button" href="#">Vote</a>
                                     </div>
                                 </div>
                             </div>
@@ -3666,11 +3685,11 @@ import Layout from '@/layouts/Layout.vue';
                                 </div>
                                 <div class="content">
                                     <div class="name">
-                                        <a class="link text-line-clamp-1" href="product-detail.html">Belt wrap dress</a>
+                                        <a href="product-detail.html" class="link text-line-clamp-1">Contestant Name</a>
                                     </div>
                                     <div class="cart-item-bot">
-                                        <div class="text-button price">$59.99</div>
-                                        <a class="link text-button" href="#">Add to cart</a>
+                                        <div class="text-button price">1,245 votes</div>
+                                        <a class="link text-button" href="#">Vote</a>
                                     </div>
                                 </div>
                             </div>
@@ -3679,7 +3698,7 @@ import Layout from '@/layouts/Layout.vue';
                 </div>
                 <div class="d-flex flex-column grow h-100">
                     <div class="header">
-                        <h5 class="title">Shopping Cart</h5>
+                        <h5 class="title">Vote Cart</h5>
                         <span class="icon-close icon-close-popup" data-bs-dismiss="modal"></span>
                     </div>
                     <div class="wrap">
@@ -3690,7 +3709,7 @@ import Layout from '@/layouts/Layout.vue';
                                 </div>
                             </div>
                             <div class="text-caption-1">
-                                Congratulations! You've got free shipping!
+                                You're ready to confirm your votes.
                             </div>
                         </div>
                         <div class="tf-mini-cart-wrap">
@@ -3703,12 +3722,12 @@ import Layout from '@/layouts/Layout.vue';
                                             </div>
                                             <div class="tf-mini-cart-info grow">
                                                 <div class="mb_12 d-flex align-items-center justify-content-between flex-wrap gap-12">
-                                                    <div class="text-title"><a href="product-detail.html" class="link text-line-clamp-1">Contrasting sheepskin</a></div>
+                                                    <div class="text-title"><a href="product-detail.html" class="link text-line-clamp-1">Contestant Name</a></div>
                                                     <div class="text-button tf-btn-remove remove">Remove</div>
                                                 </div>
                                                 <div class="d-flex align-items-center justify-content-between flex-wrap gap-12">
                                                     <div class="text-secondary-2">XL/Blue</div>
-                                                    <div class="text-button">1 X $60.00</div>
+                                                    <div class="text-button">1 X 1,245 votes</div>
                                                 </div>
                                             </div>
                                         </div>
@@ -3718,12 +3737,12 @@ import Layout from '@/layouts/Layout.vue';
                                             </div>
                                             <div class="tf-mini-cart-info grow">
                                                 <div class="mb_12 d-flex align-items-center justify-content-between flex-wrap gap-12">
-                                                    <div class="text-title"><a href="product-detail.html" class="link text-line-clamp-1">Suede leggings</a></div>
+                                                    <div class="text-title"><a href="product-detail.html" class="link text-line-clamp-1">Contestant Name</a></div>
                                                     <div class="text-button tf-btn-remove remove">Remove</div>
                                                 </div>
                                                 <div class="d-flex align-items-center justify-content-between flex-wrap gap-12">
                                                     <div class="text-secondary-2">XL/Blue</div>
-                                                    <div class="text-button">1 X $60.00</div>
+                                                    <div class="text-button">1 X 1,245 votes</div>
                                                 </div>
                                             </div>
                                         </div>
@@ -3733,12 +3752,12 @@ import Layout from '@/layouts/Layout.vue';
                                             </div>
                                             <div class="tf-mini-cart-info grow">
                                                 <div class="mb_12 d-flex align-items-center justify-content-between flex-wrap gap-12">
-                                                    <div class="text-title"><a href="product-detail.html" class="link text-line-clamp-1">Faux-leather trousers</a></div>
+                                                    <div class="text-title"><a href="product-detail.html" class="link text-line-clamp-1">Contestant Name</a></div>
                                                     <div class="text-button tf-btn-remove remove">Remove</div>
                                                 </div>
                                                 <div class="d-flex align-items-center justify-content-between flex-wrap gap-12">
                                                     <div class="text-secondary-2">XL/Blue</div>
-                                                    <div class="text-button">1 X $60.00</div>
+                                                    <div class="text-button">1 X 1,245 votes</div>
                                                 </div>
                                             </div>
                                         </div>
@@ -3748,12 +3767,12 @@ import Layout from '@/layouts/Layout.vue';
                                             </div>
                                             <div class="tf-mini-cart-info grow">
                                                 <div class="mb_12 d-flex align-items-center justify-content-between flex-wrap gap-12">
-                                                    <div class="text-title"><a href="product-detail.html" class="link text-line-clamp-1">Biker-style leggings</a></div>
+                                                    <div class="text-title"><a href="product-detail.html" class="link text-line-clamp-1">Contestant Name</a></div>
                                                     <div class="text-button tf-btn-remove remove">Remove</div>
                                                 </div>
                                                 <div class="d-flex align-items-center justify-content-between flex-wrap gap-12">
                                                     <div class="text-secondary-2">XL/Blue</div>
-                                                    <div class="text-button">1 X $60.00</div>
+                                                    <div class="text-button">1 X 1,245 votes</div>
                                                 </div>
                                             </div>
                                         </div>
@@ -3763,12 +3782,12 @@ import Layout from '@/layouts/Layout.vue';
                                             </div>
                                             <div class="tf-mini-cart-info grow">
                                                 <div class="mb_12 d-flex align-items-center justify-content-between flex-wrap gap-12">
-                                                    <div class="text-title"><a href="product-detail.html" class="link text-line-clamp-1">Jacquard fluid trousers</a></div>
+                                                    <div class="text-title"><a href="product-detail.html" class="link text-line-clamp-1">Contestant Name</a></div>
                                                     <div class="text-button tf-btn-remove remove">Remove</div>
                                                 </div>
                                                 <div class="d-flex align-items-center justify-content-between flex-wrap gap-12">
                                                     <div class="text-secondary-2">XL/Blue</div>
-                                                    <div class="text-button">1 X $60.00</div>
+                                                    <div class="text-button">1 X 1,245 votes</div>
                                                 </div>
                                             </div>
                                         </div>
@@ -3820,8 +3839,8 @@ import Layout from '@/layouts/Layout.vue';
                                 </div>
                                 <div class="tf-mini-cart-bottom-wrap">
                                     <div class="tf-cart-totals-discounts">
-                                        <h5>Subtotal</h5>
-                                        <h5 class="tf-totals-total-value">$186,99</h5>
+                                        <h5>Total Votes</h5>
+                                        <h5 class="tf-totals-total-value">1,245 votes,99</h5>
                                     </div>
                                     <div class="tf-cart-checkbox">
                                         <div class="tf-checkbox-wrapp">
@@ -3836,11 +3855,11 @@ import Layout from '@/layouts/Layout.vue';
                                         </label>
                                     </div>
                                     <div class="tf-mini-cart-view-checkout">
-                                        <a href="shopping-cart.html" class="tf-btn w-100 btn-white radius-4 has-border"><span class="text">View cart</span></a>
-                                        <a href="shopping-cart.html" class="tf-btn w-100 btn-fill radius-4"><span class="text">Check Out</span></a>
+                                        <a href="shopping-cart.html" class="tf-btn w-100 btn-white radius-4 has-border"><span class="text">View vote cart</span></a>
+                                        <a href="shopping-cart.html" class="tf-btn w-100 btn-fill radius-4"><span class="text">Confirm Votes</span></a>
                                     </div>
                                     <div class="text-center">
-                                        <a class="link text-btn-uppercase" href="shop-default-grid.html">Or continue shopping</a>
+                                        <a class="link text-btn-uppercase" href="shop-default-grid.html">Continue browsing contests</a>
                                     </div>
                                 </div>
                             </div>
@@ -3864,7 +3883,7 @@ import Layout from '@/layouts/Layout.vue';
                                     </label>
                                     <form class="form-add-note tf-mini-cart-tool-wrap">
                                         <fieldset class="d-flex">
-                                            <textarea name="note" id="Cart-note" placeholder="Add special instructions for your order..."></textarea>
+                                            <textarea name="note" id="Cart-note" placeholder="Add a note for this vote (optional)..."></textarea>
                                         </fieldset>
                                         <div class="tf-cart-tool-btns">
                                             <button type="submit" class="btn-style-2 w-100"><span class="text text-btn-uppercase">Save</span></button>
@@ -3889,7 +3908,7 @@ import Layout from '@/layouts/Layout.vue';
                                                 </defs>
                                             </svg>
                                         </span>
-                                        <span class="text-title">Estimate shipping rates</span>
+                                        <span class="text-title">Add a voting note</span>
                                     </label>
                                     <form class="form-estimate-shipping tf-mini-cart-tool-wrap">
                                         <div class="mb_12">
@@ -3958,7 +3977,7 @@ import Layout from '@/layouts/Layout.vue';
                                             <div class="tf-gift-wrap-infos">
                                                 <p>Do you want a gift wrap?</p>
                                                 Only
-                                                <span class="price fw-6">$5.00</span>
+                                                <span class="price fw-6">1,245 votes</span>
                                             </div>
                                         </div>
                                         <div class="tf-cart-tool-btns tf-mini-cart-tool-wrap">
@@ -4025,12 +4044,12 @@ import Layout from '@/layouts/Layout.vue';
                                         </div>
                                         <div class="tf-mini-cart-info grow">
                                             <div class="mb_12 d-flex align-items-center justify-content-between flex-wrap gap-12">
-                                                <div class="text-title"><a href="product-detail.html" class="link text-line-clamp-1">Contrasting sheepskin</a></div>
+                                                <div class="text-title"><a href="product-detail.html" class="link text-line-clamp-1">Contestant Name</a></div>
                                                 <div class="text-button tf-btn-remove remove">Remove</div>
                                             </div>
                                             <div class="d-flex align-items-center justify-content-between flex-wrap gap-12">
                                                 <div class="text-secondary-2">XL/Blue</div>
-                                                <div class="text-button">1 X $60.00</div>
+                                                <div class="text-button">1 X 1,245 votes</div>
                                             </div>
                                         </div>
                                     </div>
@@ -4040,12 +4059,12 @@ import Layout from '@/layouts/Layout.vue';
                                         </div>
                                         <div class="tf-mini-cart-info grow">
                                             <div class="mb_12 d-flex align-items-center justify-content-between flex-wrap gap-12">
-                                                <div class="text-title"><a href="product-detail.html" class="link text-line-clamp-1">Suede leggings</a></div>
+                                                <div class="text-title"><a href="product-detail.html" class="link text-line-clamp-1">Contestant Name</a></div>
                                                 <div class="text-button tf-btn-remove remove">Remove</div>
                                             </div>
                                             <div class="d-flex align-items-center justify-content-between flex-wrap gap-12">
                                                 <div class="text-secondary-2">XL/Blue</div>
-                                                <div class="text-button">1 X $60.00</div>
+                                                <div class="text-button">1 X 1,245 votes</div>
                                             </div>
                                         </div>
                                     </div>
@@ -4055,12 +4074,12 @@ import Layout from '@/layouts/Layout.vue';
                                         </div>
                                         <div class="tf-mini-cart-info grow">
                                             <div class="mb_12 d-flex align-items-center justify-content-between flex-wrap gap-12">
-                                                <div class="text-title"><a href="product-detail.html" class="link text-line-clamp-1">Faux-leather trousers</a></div>
+                                                <div class="text-title"><a href="product-detail.html" class="link text-line-clamp-1">Contestant Name</a></div>
                                                 <div class="text-button tf-btn-remove remove">Remove</div>
                                             </div>
                                             <div class="d-flex align-items-center justify-content-between flex-wrap gap-12">
                                                 <div class="text-secondary-2">XL/Blue</div>
-                                                <div class="text-button">1 X $60.00</div>
+                                                <div class="text-button">1 X 1,245 votes</div>
                                             </div>
                                         </div>
                                     </div>
@@ -4070,12 +4089,12 @@ import Layout from '@/layouts/Layout.vue';
                                         </div>
                                         <div class="tf-mini-cart-info grow">
                                             <div class="mb_12 d-flex align-items-center justify-content-between flex-wrap gap-12">
-                                                <div class="text-title"><a href="product-detail.html" class="link text-line-clamp-1">Biker-style leggings</a></div>
+                                                <div class="text-title"><a href="product-detail.html" class="link text-line-clamp-1">Contestant Name</a></div>
                                                 <div class="text-button tf-btn-remove remove">Remove</div>
                                             </div>
                                             <div class="d-flex align-items-center justify-content-between flex-wrap gap-12">
                                                 <div class="text-secondary-2">XL/Blue</div>
-                                                <div class="text-button">1 X $60.00</div>
+                                                <div class="text-button">1 X 1,245 votes</div>
                                             </div>
                                         </div>
                                     </div>
@@ -4085,12 +4104,12 @@ import Layout from '@/layouts/Layout.vue';
                                         </div>
                                         <div class="tf-mini-cart-info grow">
                                             <div class="mb_12 d-flex align-items-center justify-content-between flex-wrap gap-12">
-                                                <div class="text-title"><a href="product-detail.html" class="link text-line-clamp-1">Jacquard fluid trousers</a></div>
+                                                <div class="text-title"><a href="product-detail.html" class="link text-line-clamp-1">Contestant Name</a></div>
                                                 <div class="text-button tf-btn-remove remove">Remove</div>
                                             </div>
                                             <div class="d-flex align-items-center justify-content-between flex-wrap gap-12">
                                                 <div class="text-secondary-2">XL/Blue</div>
-                                                <div class="text-button">1 X $60.00</div>
+                                                <div class="text-button">1 X 1,245 votes</div>
                                             </div>
                                         </div>
                                     </div>
@@ -4099,7 +4118,7 @@ import Layout from '@/layouts/Layout.vue';
                         </div>
                         <div class="tf-mini-cart-bottom">
                             <a href="wish-list.html" class="btn-style-2 w-100 radius-4 view-all-wishlist"><span class="text-btn-uppercase">View All Wish List</span></a>
-                            <a href="shop-default-grid.html" class="text-btn-uppercase">Or continue shopping</a>
+                            <a href="shop-default-grid.html" class="text-btn-uppercase">Continue browsing contests</a>
                         </div>
                     </div>
                 </div>
@@ -4258,7 +4277,7 @@ import Layout from '@/layouts/Layout.vue';
                         <div class="col-12">
                             <div class="tf-compare-list list-file-delete">
                                 <div class="tf-compare-head">
-                                    <h5 class="title">Compare <br> Products</h5>
+                                    <h5 class="title">Compare <br> Contestants</h5>
                                 </div>
                                 <div class="tf-compare-wrap">
                                     <div class="tf-compare-item file-delete">
@@ -4283,9 +4302,9 @@ import Layout from '@/layouts/Layout.vue';
                                         </a>
                                         <div class="content">
                                             <div class="text-title">
-                                                <a class="link text-line-clamp-2" href="product-detail.html">V-neck cotton T-shirt</a>
+                                                <a href="product-detail.html" class="link text-line-clamp-2">Contestant Name</a>
                                             </div>
-                                            <div class="text-button">$59.99</div>
+                                            <div class="text-button">1,245 votes</div>
                                         </div>
                                     </div>
                                     <div class="tf-compare-item file-delete">
@@ -4310,9 +4329,9 @@ import Layout from '@/layouts/Layout.vue';
                                         </a>
                                         <div class="content">
                                             <div class="text-title">
-                                                <a class="link text-line-clamp-2" href="product-detail.html">Ramie shirt with pockets </a>
+                                                <a href="product-detail.html" class="link text-line-clamp-2">Contestant Name</a>
                                             </div>
-                                            <div class="text-button">$72.00</div>
+                                            <div class="text-button">1,245 votes</div>
                                         </div>
                                     </div>
                                     <div class="tf-compare-item file-delete">
@@ -4337,17 +4356,17 @@ import Layout from '@/layouts/Layout.vue';
                                         </a>
                                         <div class="content">
                                             <div class="text-title">
-                                                <a class="link text-line-clamp-2" href="product-detail.html">Ribbed cotton-blend top</a>
+                                                <a href="product-detail.html" class="link text-line-clamp-2">Contestant Name</a>
                                             </div>
-                                            <div class="text-button">$65.00</div>
+                                            <div class="text-button">1,245 votes</div>
                                         </div>
                                     </div>
                                 </div>
                                 <div class="tf-compare-buttons">
                                     <div class="tf-compare-buttons-wrap">
-                                        <a href="compare-products.html" class="tf-btn w-100 btn-fill radius-4"><span class="text text-btn-uppercase">Compare Products</span></a>
+                                        <a href="compare-products.html" class="tf-btn w-100 btn-fill radius-4"><span class="text text-btn-uppercase">Compare Contestants</span></a>
                                         <div class="tf-compapre-button-clear-all clear-file-delete tf-btn w-100 btn-white radius-4 has-border">
-                                            <span class="text text-btn-uppercase">Clear All Products</span>
+                                            <span class="text text-btn-uppercase">Clear All Contestants</span>
                                         </div>
                                     </div>
                                 </div>
@@ -4374,10 +4393,10 @@ import Layout from '@/layouts/Layout.vue';
                                 <img src="/tmp/images/products/womens/women-1.jpg" alt="">
                             </div>
                             <div class="content">
-                                <a href="product-detail.html">Ribbed Tank Top</a>
+                                <a href="product-detail.html">Contestant Name</a>
                                 <div class="tf-product-info-price">
-                                    <h5 class="price-on-sale font-2">$79.99</h5>
-                                    <div class="compare-at-price font-2">$98.99</div>
+                                    <h5 class="price-on-sale font-2">1,245 votes</h5>
+                                    <div class="compare-at-price font-2">1,245 votes</div>
                                     <div class="badges-on-sale text-btn-uppercase">
                                         -25%
                                     </div>
@@ -4387,7 +4406,7 @@ import Layout from '@/layouts/Layout.vue';
                         <div class="tf-product-info-choose-option">
                             <div class="variant-picker-item">
                                 <div class="variant-picker-label mb_12">
-                                    Colors:<span class="text-title variant-picker-label-value">Beige</span>
+                                    Categories:<span class="text-title variant-picker-label-value">Talent</span>
                                 </div>
                                 <div class="variant-picker-values type-click">
                                     <input id="values-beige2" type="radio" name="color3" checked>
@@ -4409,7 +4428,7 @@ import Layout from '@/layouts/Layout.vue';
                             </div>
                             <div class="variant-picker-item">
                                 <div class="variant-picker-label">
-                                    Size:<span class="text-title variant-picker-label-value">L</span>
+                                    Contest:<span class="text-title variant-picker-label-value">Campus Crown</span>
                                 </div>
                                 <div class="variant-picker-values gap12">
                                     <input type="radio" name="size3" id="values-s2">
@@ -4431,7 +4450,7 @@ import Layout from '@/layouts/Layout.vue';
                                 </div>
                             </div>
                             <div class="tf-product-info-quantity">
-                                <div class="title mb_12">Quantity:</div>
+                                <div class="title mb_12">Votes:</div>
                                 <div class="wg-quantity">
                                     <span class="btn-quantity btn-decrease">-</span>
                                     <input class="quantity-product" type="text" name="number" value="1">
@@ -4440,17 +4459,17 @@ import Layout from '@/layouts/Layout.vue';
                             </div>
                             <div>
                                 <div class="tf-product-info-by-btn mb_10">
-                                    <a class="btn-style-2 grow text-btn-uppercase fw-6 show-shopping-cart"><span>Add to cart -&nbsp;</span><span class="tf-qty-price total-price">$79.99</span></a>
+                                    <a class="btn-style-2 grow text-btn-uppercase fw-6 show-shopping-cart"><span>Vote -&nbsp;</span><span class="tf-qty-price total-price">1,245 votes</span></a>
                                     <a href="#compare" data-bs-toggle="offcanvas" aria-controls="compare" class="box-icon hover-tooltip compare btn-icon-action show-compare">
                                         <span class="icon icon-gitDiff"></span>
-                                        <span class="tooltip text-caption-2">Compare</span>
+                                        <span class="tooltip text-caption-2">Share</span>
                                     </a>
                                     <a href="javascript:void(0);" class="box-icon hover-tooltip text-caption-2 wishlist btn-icon-action">
                                         <span class="icon icon-heart"></span>
-                                        <span class="tooltip text-caption-2">Wishlist</span>
+                                        <span class="tooltip text-caption-2">Favorite</span>
                                     </a>
                                 </div>
-                                <a href="#" class="btn-style-3 text-btn-uppercase">Buy it now</a>
+                                <a href="#" class="btn-style-3 text-btn-uppercase">Vote now</a>
                             </div>
                         </div>
                     </div>
@@ -4462,3 +4481,12 @@ import Layout from '@/layouts/Layout.vue';
     </template>
     </Layout>
 </template>
+
+
+
+
+
+
+
+
+

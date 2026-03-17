@@ -1,16 +1,18 @@
 <script setup lang="ts">
+import { computed } from 'vue';
 import type { ModalContestant } from '@/composables/useGlobalModals';
 
 defineOptions({ inheritAttrs: false });
 
-defineProps<{
+const props = defineProps<{
     contestant: ModalContestant;
-    compareAtPrice: string;
     colorOptions: Array<{ id: string; label: string; swatchClass: string; price: number }>;
     sizeOptions: readonly string[];
     basePrice: number;
-    stockLabel: string;
 }>();
+
+const voteFormatter = new Intl.NumberFormat('en-US');
+const formattedVotes = computed(() => voteFormatter.format(props.contestant.votes));
 </script>
 
 <template>
@@ -21,7 +23,7 @@ defineProps<{
             <div class="tf-product-info-list other-image-zoom">
                 <div class="tf-product-info-heading">
                     <div class="tf-product-info-name">
-                        <div class="text text-btn-uppercase">{{ contestant.brand }}</div>
+                        <div class="text text-btn-uppercase">{{ contestant.contestName }}</div>
                         <h3 class="name">{{ contestant.name }}</h3>
                         <div class="sub">
                             <div class="tf-product-info-rate">
@@ -36,15 +38,14 @@ defineProps<{
                             </div>
                             <div class="tf-product-info-sold">
                                 <i class="icon icon-lightning"></i>
-                                <div class="text text-caption-1">18 sold in last 32 hours</div>
+                                <div class="text text-caption-1">18 votes in last 32 hours</div>
                             </div>
                         </div>
                     </div>
                     <div class="tf-product-info-desc">
                         <div class="tf-product-info-price">
-                            <h5 class="price-on-sale font-2">{{ contestant.price }}</h5>
-                            <div class="compare-at-price font-2">{{ compareAtPrice }}</div>
-                            <div v-if="contestant.oldPrice" class="badges-on-sale text-btn-uppercase">-25%</div>
+                            <h5 class="price-on-sale font-2">{{ formattedVotes }} Votes</h5>
+                            <div class="compare-at-price font-2">Vote Cost: {{ formattedVotes }}</div>
                         </div>
                         <p>{{ contestant.description }}</p>
                         <div class="tf-product-info-liveview">
@@ -59,7 +60,7 @@ defineProps<{
                 <div class="tf-product-info-choose-option">
                     <div class="variant-picker-item">
                         <div class="variant-picker-label mb_12">
-                            Colors:
+                            Vote Options:
                             <span class="text-title variant-picker-label-value value-currentColor">
                                 {{ colorOptions[0].label }}
                             </span>
@@ -107,7 +108,7 @@ defineProps<{
                     </div>
 
                     <div class="tf-product-info-quantity">
-                        <div class="title mb_12">Quantity:</div>
+                        <div class="title mb_12">Number of Votes:</div>
                         <div class="wg-quantity">
                             <span class="btn-quantity btn-decrease">-</span>
                             <input class="quantity-product" type="text" name="number" value="1" />
@@ -122,8 +123,8 @@ defineProps<{
                                 data-bs-toggle="modal"
                                 class="btn-style-2 grow text-btn-uppercase fw-6 btn-add-to-cart"
                             >
-                                <span>Add to cart -&nbsp;</span>
-                                <span class="tf-qty-price total-price">{{ contestant.price }}</span>
+                                <span>Add votes -&nbsp;</span>
+                                <span class="tf-qty-price total-price">{{ formattedVotes }}</span>
                             </a>
                             <a href="#compare" data-bs-toggle="offcanvas" aria-controls="compare" class="box-icon hover-tooltip compare btn-icon-action">
                                 <span class="icon icon-gitDiff"></span>
@@ -134,14 +135,14 @@ defineProps<{
                                 <span class="tooltip text-caption-2">Wishlist</span>
                             </a>
                         </div>
-                        <a href="#" class="btn-style-3 text-btn-uppercase">Buy it now</a>
+                        <a href="#" class="btn-style-3 text-btn-uppercase">Vote now</a>
                     </div>
 
                     <div class="tf-product-info-help">
                         <div class="tf-product-info-extra-link">
-                            <a href="#delivery_return" data-bs-toggle="modal" class="tf-product-extra-icon">
+                            <a href="#" class="tf-product-extra-icon">
                                 <div class="icon"><i class="icon-shipping"></i></div>
-                                <p class="text-caption-1">Delivery & Return</p>
+                                <p class="text-caption-1">Voting Info</p>
                             </a>
                             <a href="#ask_question" data-bs-toggle="modal" class="tf-product-extra-icon">
                                 <div class="icon"><i class="icon-question"></i></div>
@@ -155,43 +156,39 @@ defineProps<{
                         <div class="tf-product-info-time">
                             <div class="icon"><i class="icon-timer"></i></div>
                             <p class="text-caption-1">
-                                Estimated Delivery: <span>12-26 days</span> (International), <span>3-6 days</span>
-                                (United States)
+                                Estimated Vote Processing: <span>Instant</span> (Online), <span>Same day</span>
+                                (Verification)
                             </p>
                         </div>
                         <div class="tf-product-info-return">
                             <div class="icon"><i class="icon-arrowClockwise"></i></div>
                             <p class="text-caption-1">
-                                Return within <span>45 days</span> of purchase. Duties & taxes are non-refundable.
+                                Votes are final once submitted. Please review your selections before confirming.
                             </p>
                         </div>
                     </div>
 
                     <ul class="tf-product-info-sku">
                         <li>
-                            <p class="text-caption-1">SKU:</p>
+                            <p class="text-caption-1">Contestant ID:</p>
                             <p class="text-caption-1 text-1">{{ contestant.id }}</p>
                         </li>
                         <li>
-                            <p class="text-caption-1">Vendor:</p>
-                            <p class="text-caption-1 text-1">{{ contestant.brand }}</p>
+                            <p class="text-caption-1">Contest:</p>
+                            <p class="text-caption-1 text-1">{{ contestant.contestName }}</p>
                         </li>
                         <li>
-                            <p class="text-caption-1">Available:</p>
-                            <p class="text-caption-1 text-1">{{ stockLabel }}</p>
+                            <p class="text-caption-1">Category:</p>
+                            <p class="text-caption-1 text-1">{{ contestant.category }}</p>
                         </li>
                         <li>
-                            <p class="text-caption-1">Categories:</p>
-                            <p class="text-caption-1">
-                                <a href="#" class="text-1 link">Contest</a>,
-                                <a href="#" class="text-1 link">Nominee</a>,
-                                <a href="#" class="text-1 link">{{ contestant.slug }}</a>
-                            </p>
+                            <p class="text-caption-1">Location:</p>
+                            <p class="text-caption-1 text-1">{{ contestant.location }}</p>
                         </li>
                     </ul>
 
                     <div class="tf-product-info-guranteed">
-                        <div class="text-title">Guranteed safe checkout:</div>
+                        <div class="text-title">Secure vote checkout:</div>
                         <div class="tf-payment">
                             <a href="#"><img src="/tmp/images/payment/img-1.png" alt="payment-1" /></a>
                             <a href="#"><img src="/tmp/images/payment/img-2.png" alt="payment-2" /></a>

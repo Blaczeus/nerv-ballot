@@ -8,32 +8,9 @@ import Layout from '@/layouts/Layout.vue';
     <Head title="About" />
 
     <Layout>
-        <!-- tf-add-cart-success -->
-        <div class="tf-add-cart-success">
-            <div class="tf-add-cart-heading">
-                <h5>Shopping Cart</h5>
-                <i class="icon icon-close tf-add-cart-close"></i>
-            </div>
-            <div class="tf-add-cart-product">
-                <div class="image">
-                    <img class="lazyload" data-src="/tmp/images/products/womens/women-3.jpg" alt="" src="/tmp/images/products/womens/women-3.jpg" />
-                </div>
-                <div class="content">
-                    <div class="text-title">
-                        <a class="link" href="/contestants/john-doe">Biker-style leggings</a>
-                    </div>
-                    <div class="text-caption-1 text-secondary-2">Green, XS, Cotton</div>
-                    <div class="text-title">$68.00</div>
-                </div>
-            </div>
-            <a href="/cart" class="tf-btn w-100 btn-fill radius-4"><span class="text text-btn-uppercase">View cart</span></a>
-        </div>
-        <!-- /tf-add-cart-success -->
-
         <Breadcrumb
             :items="[
-                { label: 'Homepage', link: '/' },
-                { label: 'Pages', link: '#' },
+                { label: 'Home', link: '/' },
                 { label: 'About' },
             ]"
             design="image"
@@ -54,62 +31,18 @@ import Layout from '@/layouts/Layout.vue';
                     </div>
                     <div class="col-md-6">
                         <div class="about-us-content">
-                            <h3 class="title wow fadeInUp">Modave - Offering rare and beautiful items worldwide</h3>
-                            <div class="widget-tabs style-3">
-                                <ul class="widget-menu-tab wow fadeInUp">
-                                    <li class="item-title active">
-                                        <span class="inner text-button">Introduction</span>
-                                    </li>
-                                    <li class="item-title">
-                                        <span class="inner text-button">Our Vision</span>
-                                    </li>
-                                    <li class="item-title">
-                                        <span class="inner text-button">What Sets Us Apart</span>
-                                    </li>
-                                    <li class="item-title">
-                                        <span class="inner text-button">Our Commitment</span>
-                                    </li>
-                                </ul>
-                                <div class="widget-content-tab wow fadeInUp">
-                                    <div class="widget-content-inner active">
-                                        <p>
-                                            Welcome to Modave Store, your premier destination for fashion-forward clothing and
-                                            accessories. We pride ourselves on offering a curated selection of rare and beautiful
-                                            items sourced both locally and globally. Our mission is to bring you the latest trends
-                                            and timeless styles, ensuring every piece reflects quality and elegance. Discover the
-                                            perfect addition to your wardrobe at Modave Store.
-                                        </p>
-                                    </div>
-                                    <div class="widget-content-inner">
-                                        <p>
-                                            Welcome to Modave Store, your premier destination for fashion-forward clothing and
-                                            accessories. We pride ourselves on offering a curated selection of rare and beautiful
-                                            items sourced both locally and globally. Our mission is to bring you the latest trends
-                                            and timeless styles, ensuring every piece reflects quality and elegance. Discover the
-                                            perfect addition to your wardrobe at Modave Store.
-                                        </p>
-                                    </div>
-                                    <div class="widget-content-inner">
-                                        <p>
-                                            Welcome to Modave Store, your premier destination for fashion-forward clothing and
-                                            accessories. We pride ourselves on offering a curated selection of rare and beautiful
-                                            items sourced both locally and globally. Our mission is to bring you the latest trends
-                                            and timeless styles, ensuring every piece reflects quality and elegance. Discover the
-                                            perfect addition to your wardrobe at Modave Store.
-                                        </p>
-                                    </div>
-                                    <div class="widget-content-inner">
-                                        <p>
-                                            Welcome to Modave Store, your premier destination for fashion-forward clothing and
-                                            accessories. We pride ourselves on offering a curated selection of rare and beautiful
-                                            items sourced both locally and globally. Our mission is to bring you the latest trends
-                                            and timeless styles, ensuring every piece reflects quality and elegance. Discover the
-                                            perfect addition to your wardrobe at Modave Store.
-                                        </p>
-                                    </div>
+                            <h3 class="title wow fadeInUp">About the Platform</h3>
+                            <div class="widget-content-tab wow fadeInUp">
+                                <div class="widget-content-inner active">
+                                    <p>
+                                        This platform connects communities with their favorite contestants by making voting simple,
+                                        transparent, and engaging. Visitors can explore contestants, cast votes for the nominees
+                                        they support, and follow rankings as results update. Our goal is to celebrate talent,
+                                        encourage participation, and keep every vote accountable from start to finish.
+                                    </p>
                                 </div>
                             </div>
-                            <a href="#" class="tf-btn btn-fill wow fadeInUp"><span class="text text-button">Read More</span></a>
+                            <a href="/contestants" class="tf-btn btn-fill wow fadeInUp"><span class="text text-button">Explore Contestants</span></a>
                         </div>
                     </div>
                 </div>
@@ -126,8 +59,8 @@ import Layout from '@/layouts/Layout.vue';
                             <div class="tf-icon-box style-2">
                                 <div class="icon-box"><span class="icon icon-return"></span></div>
                                 <div class="content">
-                                    <h6>14-Day Returns</h6>
-                                    <p class="text-secondary">Risk-free shopping with easy returns.</p>
+                                    <h6>Fair Voting System</h6>
+                                    <p class="text-secondary">Every vote is counted with clear, consistent rules.</p>
                                 </div>
                             </div>
                         </div>
@@ -135,8 +68,8 @@ import Layout from '@/layouts/Layout.vue';
                             <div class="tf-icon-box style-2">
                                 <div class="icon-box"><span class="icon icon-shipping"></span></div>
                                 <div class="content">
-                                    <h6>Free Shipping</h6>
-                                    <p class="text-secondary">No extra costs, just the price you see.</p>
+                                    <h6>Real-Time Results</h6>
+                                    <p class="text-secondary">Rankings update as votes are submitted.</p>
                                 </div>
                             </div>
                         </div>
@@ -144,8 +77,8 @@ import Layout from '@/layouts/Layout.vue';
                             <div class="tf-icon-box style-2">
                                 <div class="icon-box"><span class="icon icon-headset"></span></div>
                                 <div class="content">
-                                    <h6>24/7 Support</h6>
-                                    <p class="text-secondary">24/7 support, always here just for you</p>
+                                    <h6>Secure Voting Process</h6>
+                                    <p class="text-secondary">Protection measures keep voting safe and reliable.</p>
                                 </div>
                             </div>
                         </div>
@@ -153,8 +86,8 @@ import Layout from '@/layouts/Layout.vue';
                             <div class="tf-icon-box style-2">
                                 <div class="icon-box"><span class="icon icon-sealCheck"></span></div>
                                 <div class="content">
-                                    <h6>Member Discounts</h6>
-                                    <p class="text-secondary">Special prices for our loyal customers.</p>
+                                    <h6>Community Engagement</h6>
+                                    <p class="text-secondary">Support contestants and celebrate their journeys.</p>
                                 </div>
                             </div>
                         </div>
@@ -184,7 +117,7 @@ import Layout from '@/layouts/Layout.vue';
                             <div class="content text-center">
                                 <h6>1. Explore Contestants</h6>
                                 <p class="text-secondary">
-                                    Browse contestant profiles and shortlist your preferred nominees.
+                                    Browse contestant profiles and discover standout nominees.
                                 </p>
                             </div>
                         </div>
@@ -195,9 +128,9 @@ import Layout from '@/layouts/Layout.vue';
                                 <span class="icon icon-checkCircle"></span>
                             </div>
                             <div class="content text-center">
-                                <h6>2. Cast Your Vote</h6>
+                                <h6>2. Vote for Your Favorite</h6>
                                 <p class="text-secondary">
-                                    Submit your vote securely for your selected contestant.
+                                    Submit your vote securely for the contestant you support.
                                 </p>
                             </div>
                         </div>
@@ -208,9 +141,9 @@ import Layout from '@/layouts/Layout.vue';
                                 <span class="icon icon-eye"></span>
                             </div>
                             <div class="content text-center">
-                                <h6>3. Follow Results</h6>
+                                <h6>3. Track Rankings</h6>
                                 <p class="text-secondary">
-                                    Track updates and final rankings as voting progresses.
+                                    Follow updates and rankings as voting progresses.
                                 </p>
                             </div>
                         </div>
@@ -220,65 +153,11 @@ import Layout from '@/layouts/Layout.vue';
         </section>
         <!-- /How it works -->
 
-        <!-- Partner -->
-        <section class="flat-spacing-5 bg-surface">
-            <div dir="ltr" class="swiper tf-sw-partner sw-auto" data-preview="auto" data-tablet="auto" data-mobile-sm="auto" data-mobile="auto" data-space-lg="74" data-space-md="50" data-space="50" data-loop="true" data-auto-play="true" data-delay="0">
-                <div class="swiper-wrapper">
-                    <div class="swiper-slide">
-                        <a href="#" class="brand-item">
-                            <img src="/tmp/images/brand/vanfaba.png" alt="brand" />
-                        </a>
-                    </div>
-                    <div class="swiper-slide">
-                        <a href="#" class="brand-item">
-                            <img src="/tmp/images/brand/anvouge.png" alt="brand" />
-                        </a>
-                    </div>
-                    <div class="swiper-slide">
-                        <a href="#" class="brand-item">
-                            <img src="/tmp/images/brand/carolin.png" alt="brand" />
-                        </a>
-                    </div>
-                    <div class="swiper-slide">
-                        <a href="#" class="brand-item">
-                            <img src="/tmp/images/brand/shangxi.png" alt="brand" />
-                        </a>
-                    </div>
-                    <div class="swiper-slide">
-                        <a href="#" class="brand-item">
-                            <img src="/tmp/images/brand/ecomife.png" alt="brand" />
-                        </a>
-                    </div>
-                    <div class="swiper-slide">
-                        <a href="#" class="brand-item">
-                            <img src="/tmp/images/brand/cheryl.png" alt="brand" />
-                        </a>
-                    </div>
-                    <div class="swiper-slide">
-                        <a href="#" class="brand-item">
-                            <img src="/tmp/images/brand/sopify.png" alt="brand" />
-                        </a>
-                    </div>
-                    <div class="swiper-slide">
-                        <a href="#" class="brand-item">
-                            <img src="/tmp/images/brand/pennyw.png" alt="brand" />
-                        </a>
-                    </div>
-                    <div class="swiper-slide">
-                        <a href="#" class="brand-item">
-                            <img src="/tmp/images/brand/panadoxn.png" alt="brand" />
-                        </a>
-                    </div>
-                </div>
-            </div>
-        </section>
-        <!-- /Partner -->
-
         <!-- Testimonial -->
         <section class="flat-spacing">
             <div class="container">
                 <div class="heading-section text-center wow fadeInUp">
-                    <h3 class="heading">Customer Review</h3>
+                    <h3 class="heading">Community Feedback</h3>
                 </div>
                 <div dir="ltr" class="swiper tf-sw-testimonial wow fadeInUp" data-wow-delay="0.1s" data-preview="3" data-tablet="2" data-mobile="1" data-space-lg="30" data-space-md="30" data-space="15" data-pagination="1" data-pagination-md="1" data-pagination-lg="1">
                     <div class="swiper-wrapper">
@@ -288,11 +167,10 @@ import Layout from '@/layouts/Layout.vue';
                                     <div class="box-icon">
                                         <i class="icon icon-quote"></i>
                                     </div>
-                                    <div class="text-title">Variety of Styles!</div>
+                                    <div class="text-title">Clear and Trustworthy</div>
                                     <p class="text-secondary">
-                                        "Fantastic shop! Great selection, fair prices, and friendly staff. Highly
-                                        recommended. The quality of the products is exceptional, and the prices are very
-                                        reasonable!"
+                                        "The voting flow is easy to follow, and the rankings update quickly. It feels
+                                        transparent and fair."
                                     </p>
                                     <div class="box-rate-author">
                                         <div class="box-author">
@@ -315,10 +193,9 @@ import Layout from '@/layouts/Layout.vue';
                                     <div class="box-icon">
                                         <i class="icon icon-quote"></i>
                                     </div>
-                                    <div class="text-title">Quality of Clothing!</div>
+                                    <div class="text-title">Smooth Experience</div>
                                     <p class="text-secondary">
-                                        "I absolutely love this shop! The products are high-quality and the customer service
-                                        is excellent. I always leave with exactly what I need and a smile on my face."
+                                        "Exploring contestants and casting votes is simple. I like how everything is laid out."
                                     </p>
                                     <div class="box-rate-author">
                                         <div class="box-author">
@@ -341,11 +218,9 @@ import Layout from '@/layouts/Layout.vue';
                                     <div class="box-icon">
                                         <i class="icon icon-quote"></i>
                                     </div>
-                                    <div class="text-title">Customer Service!</div>
+                                    <div class="text-title">Engaging Community</div>
                                     <p class="text-secondary">
-                                        "I love this shop! The products are always top-quality, and the staff is incredibly
-                                        friendly and helpful. They go out of their way to make sure that I'm satisfied with my
-                                        purchase."
+                                        "It’s exciting to follow the rankings and support contestants in real time."
                                     </p>
                                     <div class="box-rate-author">
                                         <div class="box-author">
@@ -368,11 +243,9 @@ import Layout from '@/layouts/Layout.vue';
                                     <div class="box-icon">
                                         <i class="icon icon-quote"></i>
                                     </div>
-                                    <div class="text-title">Variety of Styles!</div>
+                                    <div class="text-title">Confident Voting</div>
                                     <p class="text-secondary">
-                                        "Fantastic shop! Great selection, fair prices, and friendly staff. Highly
-                                        recommended. The quality of the products is exceptional, and the prices are very
-                                        reasonable!"
+                                        "I appreciate how clear the process is. It feels secure and trustworthy."
                                     </p>
                                     <div class="box-rate-author">
                                         <div class="box-author">

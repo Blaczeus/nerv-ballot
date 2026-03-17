@@ -3,22 +3,12 @@ import { Link } from '@inertiajs/vue3';
 import { computed } from 'vue';
 import type { ModalContestant } from '@/composables/useGlobalModals';
 
-type ColorSwatch = {
-    name: string;
-    valueClass: string;
-    image: string;
-    line?: boolean;
-    active?: boolean;
-};
-
-type CardLayout = 'list' | 'grid';
+type CardLayout = 'list' | 'grid' | 'leaderboard';
 
 const props = withDefaults(defineProps<{
-    contestant: ModalContestant & {
-        colors: ColorSwatch[];
-        sizes: string[];
-    };
+    contestant: ModalContestant;
     layout?: CardLayout;
+    rank?: number;
 }>(), {
     layout: 'list',
 });
@@ -29,14 +19,55 @@ const emit = defineEmits<{
 }>();
 
 const contestantLink = computed(() => `/contestants/${props.contestant.slug}`);
+const voteFormatter = new Intl.NumberFormat('en-US');
+const formattedVotes = computed(() => {
+    const votes = props.contestant.votes;
+    if (typeof votes !== 'number' || Number.isNaN(votes)) return '0 Votes';
+    return `${voteFormatter.format(votes)} Votes`;
+});
+
+const rankMeta = computed(() => {
+    if (typeof props.rank !== 'number' || Number.isNaN(props.rank)) {
+        return {
+            badgeBg: '#f1f3f5',
+            badgeText: '#1f2937',
+            accent: '#6c757d',
+            number: null,
+        };
+    }
+
+    if (props.rank === 1) {
+        return { badgeBg: '#d4af37', badgeText: '#1f2937', accent: '#d4af37', number: props.rank };
+    }
+    if (props.rank === 2) {
+        return { badgeBg: '#c0c0c0', badgeText: '#1f2937', accent: '#c0c0c0', number: props.rank };
+    }
+    if (props.rank === 3) {
+        return { badgeBg: '#cd7f32', badgeText: '#1f2937', accent: '#cd7f32', number: props.rank };
+    }
+
+    return { badgeBg: '#f1f3f5', badgeText: '#1f2937', accent: '#6c757d', number: props.rank };
+});
+
+const rankBadgeStyle = computed(() => ({
+    backgroundColor: rankMeta.value.badgeBg,
+    color: rankMeta.value.badgeText,
+    width: '36px',
+    height: '36px',
+    fontWeight: '600',
+    fontSize: '14px',
+}));
+
+const voteStyle = computed(() => ({
+    color: rankMeta.value.accent,
+    fontWeight: '600',
+}));
 </script>
 
 <template>
     <div
         v-if="layout === 'list'"
         class="card-product style-list"
-        :data-availability="contestant.availability"
-        :data-brand="contestant.brand"
     >
         <div class="card-product-wrapper">
             <Link :href="contestantLink" class="product-img">
@@ -53,62 +84,29 @@ const contestantLink = computed(() => `/contestants/${props.contestant.slug}`);
                     alt="image-product"
                 />
             </Link>
-            <div v-if="contestant.oldPrice" class="on-sale-wrap">
-                <span class="on-sale-item">-25%</span>
-            </div>
         </div>
         <div class="card-product-info">
-            <Link :href="contestantLink" class="title link">{{ contestant.name }}</Link>
-            <div class="price">
-                <span v-if="contestant.oldPrice" class="old-price">{{ contestant.oldPrice }}</span>
-                <span class="current-price">{{ contestant.price }}</span>
+            <Link :href="contestantLink" class="title link mb_6 d-block">{{ contestant.name }}</Link>
+            <p class="text-caption-1 text-secondary mb_8">{{ contestant.contestName }}</p>
+            <div class="price mb_8">
+                <span class="current-price">{{ formattedVotes }}</span>
             </div>
-            <p class="description text-secondary text-line-clamp-2">
+            <p class="description text-secondary text-line-clamp-4 mb_12">
                 {{ contestant.description }}
             </p>
             <div class="variant-wrap-list">
-                <ul class="list-color-product">
-                    <li
-                        v-for="(color, index) in contestant.colors"
-                        :key="`${contestant.id}-${color.name}-${index}`"
-                        :class="[
-                            'list-color-item color-swatch',
-                            {
-                                active: color.active,
-                                line: color.line,
-                            },
-                        ]"
-                    >
-                        <span class="d-none text-capitalize color-filter">{{ color.name }}</span>
-                        <span :class="['swatch-value', color.valueClass]"></span>
-                        <img
-                            class="lazyload"
-                            :data-src="color.image"
-                            :src="color.image"
-                            alt="image-product"
-                        />
-                    </li>
-                </ul>
-                <div class="size-box list-product-btn">
-                    <span
-                        v-for="(size, index) in contestant.sizes"
-                        :key="`${contestant.id}-${size}-${index}`"
-                        class="size-item box-icon"
-                    >
-                        {{ size }}
-                    </span>
-                </div>
-                <div class="list-product-btn">
+                <div class="list-product-btn mt_16 d-flex gap-12 flex-wrap align-items-center">
                     <a
                         href="#shoppingCart"
                         class="btn-main-product"
                         @click.prevent="emit('add-to-cart', contestant)"
                     >
-                        Add To cart
+                        Vote Now
                     </a>
+                    <Link :href="contestantLink" class="btn-line">View Profile</Link>
                     <a href="javascript:void(0);" class="box-icon wishlist btn-icon-action">
                         <span class="icon icon-heart"></span>
-                        <span class="tooltip">Wishlist</span>
+                        <span class="tooltip">Add to Favorites</span>
                     </a>
                     <a
                         href="#compare"
@@ -117,7 +115,7 @@ const contestantLink = computed(() => `/contestants/${props.contestant.slug}`);
                         class="box-icon compare btn-icon-action"
                     >
                         <span class="icon icon-gitDiff"></span>
-                        <span class="tooltip">Compare</span>
+                        <span class="tooltip">Compare Contestants</span>
                     </a>
                     <a
                         href="#quickView"
@@ -125,7 +123,7 @@ const contestantLink = computed(() => `/contestants/${props.contestant.slug}`);
                         @click.prevent="emit('quick-view', contestant)"
                     >
                         <span class="icon icon-eye"></span>
-                        <span class="tooltip">Quick View</span>
+                        <span class="tooltip">Quick Preview</span>
                     </a>
                 </div>
             </div>
@@ -133,10 +131,8 @@ const contestantLink = computed(() => `/contestants/${props.contestant.slug}`);
     </div>
 
     <div
-        v-else
+        v-else-if="layout === 'grid'"
         class="card-product grid"
-        :data-availability="contestant.availability"
-        :data-brand="contestant.brand"
     >
         <div class="card-product-wrapper">
             <Link :href="contestantLink" class="product-img">
@@ -156,7 +152,7 @@ const contestantLink = computed(() => `/contestants/${props.contestant.slug}`);
             <div class="list-product-btn">
                 <a href="javascript:void(0);" class="box-icon wishlist btn-icon-action">
                     <span class="icon icon-heart"></span>
-                    <span class="tooltip">Wishlist</span>
+                    <span class="tooltip">Add to Favorites</span>
                 </a>
                 <a
                     href="#compare"
@@ -165,7 +161,7 @@ const contestantLink = computed(() => `/contestants/${props.contestant.slug}`);
                     class="box-icon compare btn-icon-action"
                 >
                     <span class="icon icon-gitDiff"></span>
-                    <span class="tooltip">Compare</span>
+                    <span class="tooltip">Compare Contestants</span>
                 </a>
                 <a
                     href="#quickView"
@@ -173,7 +169,7 @@ const contestantLink = computed(() => `/contestants/${props.contestant.slug}`);
                     @click.prevent="emit('quick-view', contestant)"
                 >
                     <span class="icon icon-eye"></span>
-                    <span class="tooltip">Quick View</span>
+                    <span class="tooltip">Quick Preview</span>
                 </a>
             </div>
             <div class="list-btn-main">
@@ -182,15 +178,45 @@ const contestantLink = computed(() => `/contestants/${props.contestant.slug}`);
                     class="btn-main-product"
                     @click.prevent="emit('add-to-cart', contestant)"
                 >
-                    Add To cart
+                    Vote Now
                 </a>
             </div>
         </div>
         <div class="card-product-info">
-            <Link :href="contestantLink" class="title link">
+            <Link :href="contestantLink" class="title link mb_6 d-block">
                 {{ contestant.name }}
             </Link>
-            <span class="price current-price">{{ contestant.price }}</span>
+            <p class="text-caption-1 text-secondary mb_8">{{ contestant.contestName }}</p>
+            <span class="price current-price d-block mb_10">{{ formattedVotes }}</span>
+            <Link :href="contestantLink" class="btn-line mt_12">View Profile</Link>
+        </div>
+    </div>
+
+    <div
+        v-else-if="layout === 'leaderboard'"
+        class="collection-position-2 radius-lg style-3 hover-img position-relative"
+    >
+        <Link class="img-style" :href="contestantLink">
+            <img
+                class="lazyload"
+                :data-src="contestant.image"
+                :src="contestant.image"
+                alt="banner-cls"
+            />
+        </Link>
+        <div
+            v-if="rankMeta.number"
+            class="position-absolute top-0 end-0 m-3 rounded-circle d-flex align-items-center justify-content-center"
+            :style="rankBadgeStyle"
+        >
+            {{ rankMeta.number }}
+        </div>
+        <div class="content">
+            <Link :href="contestantLink" class="cls-btn d-flex flex-row align-items-start">
+                <h6 class="text mb-0">{{ contestant.name }}</h6>
+                <span class="count-item" :style="voteStyle">{{ formattedVotes }}</span>
+                <i class="icon icon-arrowUpRight"></i>
+            </Link>
         </div>
     </div>
 </template>

@@ -4,13 +4,17 @@ export type ModalContestant = {
     id: number;
     slug: string;
     name: string;
+    contestName: string;
+    category: string;
+    location: string;
+    gender: string;
+    votes: number;
+    contestStart: string;
+    contestEnd: string;
+    createdAt: string;
     image: string;
     hoverImage: string;
-    price: string;
-    oldPrice?: string;
     description: string;
-    availability: string;
-    brand: string;
 };
 
 type BootstrapLike = {

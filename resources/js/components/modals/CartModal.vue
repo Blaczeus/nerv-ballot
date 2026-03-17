@@ -1,9 +1,16 @@
 <script setup lang="ts">
+import { computed } from 'vue';
 import type { ModalContestant } from '@/composables/useGlobalModals';
 
-defineProps<{
+const props = defineProps<{
     contestant: ModalContestant | null;
 }>();
+
+const voteFormatter = new Intl.NumberFormat('en-US');
+const formattedVotes = computed(() => {
+    if (!props.contestant) return '0 Votes';
+    return `${voteFormatter.format(props.contestant.votes)} Votes`;
+});
 </script>
 
 <template>
@@ -11,7 +18,7 @@ defineProps<{
         <div class="modal-dialog">
             <div class="modal-content">
                 <div class="tf-minicart-recommendations">
-                    <h6 class="title">You May Also Like</h6>
+                    <h6 class="title">More Contestants</h6>
                     <div class="wrap-recommendations">
                         <div class="list-cart">
                             <div class="list-cart-item">
@@ -23,8 +30,8 @@ defineProps<{
                                         <a class="link text-line-clamp-1" :href="contestant ? `/contestants/${contestant.slug}` : 'product-detail.html'">{{ contestant?.name ?? 'Belt wrap dress' }}</a>
                                     </div>
                                     <div class="cart-item-bot">
-                                        <div class="text-button price">{{ contestant?.price ?? '$59.99' }}</div>
-                                        <a class="link text-button" href="#">Add to cart</a>
+                                        <div class="text-button price">{{ formattedVotes }}</div>
+                                        <a class="link text-button" href="#">Add votes</a>
                                     </div>
                                 </div>
                             </div>
@@ -37,8 +44,8 @@ defineProps<{
                                         <a class="link text-line-clamp-1" href="product-detail.html">Double-button coat</a>
                                     </div>
                                     <div class="cart-item-bot">
-                                        <div class="text-button price">$59.99</div>
-                                        <a class="link text-button" href="#">Add to cart</a>
+                                        <div class="text-button price">{{ formattedVotes }}</div>
+                                        <a class="link text-button" href="#">Add votes</a>
                                     </div>
                                 </div>
                             </div>
@@ -51,8 +58,8 @@ defineProps<{
                                         <a class="link text-line-clamp-1" href="product-detail.html">Belted Manteco coat</a>
                                     </div>
                                     <div class="cart-item-bot">
-                                        <div class="text-button price">$59.99</div>
-                                        <a class="link text-button" href="#">Add to cart</a>
+                                        <div class="text-button price">{{ formattedVotes }}</div>
+                                        <a class="link text-button" href="#">Add votes</a>
                                     </div>
                                 </div>
                             </div>
@@ -65,8 +72,8 @@ defineProps<{
                                         <a class="link text-line-clamp-1" href="product-detail.html">Belt wrap dress</a>
                                     </div>
                                     <div class="cart-item-bot">
-                                        <div class="text-button price">$59.99</div>
-                                        <a class="link text-button" href="#">Add to cart</a>
+                                        <div class="text-button price">{{ formattedVotes }}</div>
+                                        <a class="link text-button" href="#">Add votes</a>
                                     </div>
                                 </div>
                             </div>
@@ -79,8 +86,8 @@ defineProps<{
                                         <a class="link text-line-clamp-1" href="product-detail.html">Belt wrap dress</a>
                                     </div>
                                     <div class="cart-item-bot">
-                                        <div class="text-button price">$59.99</div>
-                                        <a class="link text-button" href="#">Add to cart</a>
+                                        <div class="text-button price">{{ formattedVotes }}</div>
+                                        <a class="link text-button" href="#">Add votes</a>
                                     </div>
                                 </div>
                             </div>
@@ -93,8 +100,8 @@ defineProps<{
                                         <a class="link text-line-clamp-1" href="product-detail.html">Belt wrap dress</a>
                                     </div>
                                     <div class="cart-item-bot">
-                                        <div class="text-button price">$59.99</div>
-                                        <a class="link text-button" href="#">Add to cart</a>
+                                        <div class="text-button price">{{ formattedVotes }}</div>
+                                        <a class="link text-button" href="#">Add votes</a>
                                     </div>
                                 </div>
                             </div>
@@ -103,7 +110,7 @@ defineProps<{
                 </div>
                 <div class="d-flex flex-column grow h-100">
                     <div class="header">
-                        <h5 class="title">Shopping Cart</h5>
+                        <h5 class="title">Vote Cart</h5>
                         <span class="icon-close icon-close-popup" data-bs-dismiss="modal"></span>
                     </div>
                     <div class="wrap">
@@ -131,8 +138,8 @@ defineProps<{
                                                     <div class="text-button tf-btn-remove remove">Remove</div>
                                                 </div>
                                                 <div class="d-flex align-items-center justify-content-between flex-wrap gap-12">
-                                                    <div class="text-secondary-2">XL/Blue</div>
-                                                    <div class="text-button">1 X $60.00</div>
+                                                    <div class="text-secondary-2">Number of Votes: 1</div>
+                                                    <div class="text-button">Vote Cost: {{ formattedVotes }}</div>
                                                 </div>
                                             </div>
                                         </div>
@@ -146,8 +153,8 @@ defineProps<{
                                                     <div class="text-button tf-btn-remove remove">Remove</div>
                                                 </div>
                                                 <div class="d-flex align-items-center justify-content-between flex-wrap gap-12">
-                                                    <div class="text-secondary-2">XL/Blue</div>
-                                                    <div class="text-button">1 X {{ contestant?.price ?? '$60.00' }}</div>
+                                                    <div class="text-secondary-2">Number of Votes: 1</div>
+                                                    <div class="text-button">Vote Cost: {{ formattedVotes }}</div>
                                                 </div>
                                             </div>
                                         </div>
@@ -161,8 +168,8 @@ defineProps<{
                                                     <div class="text-button tf-btn-remove remove">Remove</div>
                                                 </div>
                                                 <div class="d-flex align-items-center justify-content-between flex-wrap gap-12">
-                                                    <div class="text-secondary-2">XL/Blue</div>
-                                                    <div class="text-button">1 X $60.00</div>
+                                                    <div class="text-secondary-2">Number of Votes: 1</div>
+                                                    <div class="text-button">Vote Cost: {{ formattedVotes }}</div>
                                                 </div>
                                             </div>
                                         </div>
@@ -176,8 +183,8 @@ defineProps<{
                                                     <div class="text-button tf-btn-remove remove">Remove</div>
                                                 </div>
                                                 <div class="d-flex align-items-center justify-content-between flex-wrap gap-12">
-                                                    <div class="text-secondary-2">XL/Blue</div>
-                                                    <div class="text-button">1 X $60.00</div>
+                                                    <div class="text-secondary-2">Number of Votes: 1</div>
+                                                    <div class="text-button">Vote Cost: {{ formattedVotes }}</div>
                                                 </div>
                                             </div>
                                         </div>
@@ -191,8 +198,8 @@ defineProps<{
                                                     <div class="text-button tf-btn-remove remove">Remove</div>
                                                 </div>
                                                 <div class="d-flex align-items-center justify-content-between flex-wrap gap-12">
-                                                    <div class="text-secondary-2">XL/Blue</div>
-                                                    <div class="text-button">1 X $60.00</div>
+                                                    <div class="text-secondary-2">Number of Votes: 1</div>
+                                                    <div class="text-button">Vote Cost: {{ formattedVotes }}</div>
                                                 </div>
                                             </div>
                                         </div>
@@ -244,8 +251,8 @@ defineProps<{
                                 </div>
                                 <div class="tf-mini-cart-bottom-wrap">
                                     <div class="tf-cart-totals-discounts">
-                                        <h5>Subtotal</h5>
-                                        <h5 class="tf-totals-total-value">$186,99</h5>
+                                        <h5>Vote Total</h5>
+                                        <h5 class="tf-totals-total-value">{{ formattedVotes }}</h5>
                                     </div>
                                     <div class="tf-cart-checkbox">
                                         <div class="tf-checkbox-wrapp">
@@ -260,11 +267,11 @@ defineProps<{
                                         </label>
                                     </div>
                                     <div class="tf-mini-cart-view-checkout">
-                                        <a href="shopping-cart.html" class="tf-btn w-100 btn-white radius-4 has-border"><span class="text">View cart</span></a>
-                                        <a href="shopping-cart.html" class="tf-btn w-100 btn-fill radius-4"><span class="text">Check Out</span></a>
+                                        <a href="shopping-cart.html" class="tf-btn w-100 btn-white radius-4 has-border"><span class="text">View vote cart</span></a>
+                                        <a href="shopping-cart.html" class="tf-btn w-100 btn-fill radius-4"><span class="text">Confirm Votes</span></a>
                                     </div>
                                     <div class="text-center">
-                                        <a class="link text-btn-uppercase" href="shop-default-grid.html">Or continue shopping</a>
+                                        <a class="link text-btn-uppercase" href="shop-default-grid.html">Or continue voting</a>
                                     </div>
                                 </div>
                             </div>
@@ -382,7 +389,7 @@ defineProps<{
                                             <div class="tf-gift-wrap-infos">
                                                 <p>Do you want a gift wrap?</p>
                                                 Only
-                                                <span class="price fw-6">$5.00</span>
+                                                <span class="price fw-6">{{ formattedVotes }}</span>
                                             </div>
                                         </div>
                                         <div class="tf-cart-tool-btns tf-mini-cart-tool-wrap">
@@ -429,3 +436,6 @@ defineProps<{
         </div>
     </div>
 </template>
+
+
+

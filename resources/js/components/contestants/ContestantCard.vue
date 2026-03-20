@@ -2,6 +2,7 @@
 import { Link } from '@inertiajs/vue3';
 import { computed } from 'vue';
 import type { ModalContestant } from '@/composables/useGlobalModals';
+import { formatVotes } from '@/utils/formatVotes';
 
 type CardLayout = 'list' | 'grid' | 'leaderboard';
 
@@ -19,11 +20,8 @@ const emit = defineEmits<{
 }>();
 
 const contestantLink = computed(() => `/contestants/${props.contestant.slug}`);
-const voteFormatter = new Intl.NumberFormat('en-US');
 const formattedVotes = computed(() => {
-    const votes = props.contestant.votes;
-    if (typeof votes !== 'number' || Number.isNaN(votes)) return '0 Votes';
-    return `${voteFormatter.format(votes)} Votes`;
+    return formatVotes(props.contestant.votes);
 });
 
 const rankMeta = computed(() => {
@@ -206,7 +204,7 @@ const voteStyle = computed(() => ({
         </Link>
         <div
             v-if="rankMeta.number"
-            class="position-absolute top-0 end-0 m-3 rounded-circle d-flex align-items-center justify-content-center"
+            class="position-absolute top-0 inset-e-0 m-3 rounded-circle d-flex align-items-center justify-content-center"
             :style="rankBadgeStyle"
         >
             {{ rankMeta.number }}

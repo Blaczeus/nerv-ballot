@@ -9,6 +9,7 @@ import Breadcrumb from '@/components/ui/Breadcrumb.vue';
 import { useGlobalModals } from '@/composables/useGlobalModals';
 import { contestants } from '@/data/contestants';
 import Layout from '@/layouts/Layout.vue';
+import { formatVotes } from '@/utils/formatVotes';
 
 type Contestant = (typeof contestants)[number];
 
@@ -53,8 +54,7 @@ const contestant = computed<Contestant>(() => {
 
 const { state: modalState } = useGlobalModals();
 
-const voteFormatter = new Intl.NumberFormat('en-US');
-const formattedVotes = computed(() => voteFormatter.format(contestant.value.votes));
+const formattedVotes = computed(() => formatVotes(contestant.value.votes));
 
 const basePrice = computed<number>(() => contestant.value.votes);
 
@@ -165,7 +165,7 @@ const breadcrumbNav = {
                         <Link class="link" :href="`/contestants/${contestant.slug}`">{{ contestant.name }}</Link>
                     </div>
                     <div class="text-caption-1 text-secondary-2">Contestant Profile</div>
-                    <div class="text-title">{{ formattedVotes }} Votes</div>
+                    <div class="text-title">{{ formattedVotes }}</div>
                 </div>
             </div>
             <a href="#shoppingCart" data-bs-toggle="modal" class="tf-btn w-100 btn-fill radius-4">
@@ -203,7 +203,7 @@ const breadcrumbNav = {
                                 <div class="content">
                                     <div class="text-title">{{ contestant.name }}</div>
                                     <div class="text-caption-1 text-secondary-2">{{ contestant.category }} · {{ contestant.location }}</div>
-                                    <div class="text-title">{{ formattedVotes }} Votes</div>
+                                    <div class="text-title">{{ formattedVotes }}</div>
                                 </div>
                             </div>
                             <div class="tf-sticky-atc-infos">
@@ -262,4 +262,3 @@ const breadcrumbNav = {
         </template>
     </Layout>
 </template>
-

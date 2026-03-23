@@ -64,7 +64,7 @@
         <script type="text/javascript" src="/tmp/js/drift.min.js"></script>
         <script type="text/javascript" src="/tmp/js/multiple-modal.js"></script>
         <script type="text/javascript" src="/tmp/js/carousel.js"></script>
-        <script type="text/javascript" src="/tmp/js/main.js"></script>
+        <script type="text/javascript" src="/tmp/js/main.js?v={{ filemtime(public_path('tmp/js/main.js')) }}"></script>
 
         <!-- <script src="/tmp/js/sibforms.js" defer></script> -->
 

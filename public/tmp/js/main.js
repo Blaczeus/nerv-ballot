@@ -1272,9 +1272,20 @@
         $(window).on("scroll", function () {
             var scrollPosition = $(this).scrollTop();
             var myElement = $(".tf-sticky-btn-atc");
+            var triggerElement = $(".tf-product-info-by-btn");
+
+            if (!myElement.length || !triggerElement.length) {
+                return;
+            }
+
+            var triggerOffset = triggerElement.first().offset();
+
+            if (!triggerOffset) {
+                return;
+            }
 
             // .tf-product-info-by-btn.offset().top
-            var height = $(".tf-product-info-by-btn").offset().top + 50;
+            var height = triggerOffset.top + 50;
             // console.log(height);
 
             if (scrollPosition >= height) {

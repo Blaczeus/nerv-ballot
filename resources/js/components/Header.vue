@@ -1,10 +1,19 @@
 <script setup lang="ts">
-import { Link } from '@inertiajs/vue3';
+import { Link, usePage } from '@inertiajs/vue3';
+import { computed } from 'vue';
+import { useGlobalModals } from '@/composables/useGlobalModals';
+import { useVoteCart } from '@/composables/useVoteCart';
 import type { ResolvedNavItem } from '@/config/navigation';
 
 defineProps<{
     items: ResolvedNavItem[];
 }>();
+
+const { openCart, openSearch } = useGlobalModals();
+const { totalVotes } = useVoteCart();
+const page = usePage();
+const currentUser = computed(() => page.props.auth?.user as Record<string, unknown> | null);
+const isAuthenticated = computed(() => Boolean(currentUser.value));
 
 const isExternal = (item: ResolvedNavItem): boolean => item.external === true;
 const usesAnchorTag = (item: ResolvedNavItem): boolean =>
@@ -21,7 +30,7 @@ const getRel = (item: ResolvedNavItem): string | undefined =>
             <div class="tf-topbar_wrap d-flex align-items-center justify-content-center justify-content-xl-between">
                 <ul class="topbar-left">
                     <li>
-                        <a class="text-caption-1 text-white" href="#">support@nervego.com</a>
+                        <a class="text-caption-1 text-white" href="mailto:support@nervego.com">support@nervego.com</a>
                     </li>
                 </ul>
                 <div class="topbar-right d-none d-xl-block">
@@ -116,7 +125,7 @@ const getRel = (item: ResolvedNavItem): string | undefined =>
                 <div class="col-xl-3 col-md-4 col-3">
                     <ul class="nav-icon d-flex justify-content-end align-items-center">
                         <li class="nav-search">
-                            <a href="#search" data-bs-toggle="modal" class="nav-icon-item">
+                            <button type="button" class="nav-icon-item border-0 bg-transparent p-0" @click="openSearch" aria-label="Open search">
                                 <svg class="icon" width="24" height="24" viewBox="0 0 24 24" fill="none"
                                     xmlns="http://www.w3.org/2000/svg">
                                     <path
@@ -126,10 +135,10 @@ const getRel = (item: ResolvedNavItem): string | undefined =>
                                     <path d="M21.35 21.0004L17 16.6504" stroke="#181818" stroke-width="2"
                                         stroke-linecap="round" stroke-linejoin="round" />
                                 </svg>
-                            </a>
+                            </button>
                         </li>
                         <li class="nav-account">
-                            <a href="#" class="nav-icon-item">
+                            <button type="button" class="nav-icon-item border-0 bg-transparent p-0" aria-label="Open account menu">
                                 <svg class="icon" width="24" height="24" viewBox="0 0 24 24" fill="none"
                                     xmlns="http://www.w3.org/2000/svg">
                                     <path
@@ -141,22 +150,38 @@ const getRel = (item: ResolvedNavItem): string | undefined =>
                                         stroke="#181818" stroke-width="2" stroke-linecap="round"
                                         stroke-linejoin="round" />
                                 </svg>
-                            </a>
+                            </button>
                             <div class="dropdown-account dropdown-login">
-                                <div class="sub-top">
-                                    <a href="login.html" class="tf-btn btn-reset">Login</a>
-                                    <p class="text-secondary-2 text-center">
-                                        Don&rsquo;t have an account?
-                                        <a href="register.html">Register</a>
-                                    </p>
-                                </div>
-                                <div class="sub-bot">
-                                    <span class="body-text-">Support</span>
-                                </div>
+                                <template v-if="!isAuthenticated">
+                                    <div class="sub-top">
+                                        <Link href="/login" class="tf-btn btn-reset">Login</Link>
+                                        <p class="text-secondary-2 text-center">
+                                            Don&rsquo;t have an account?
+                                            <Link href="/register">Register</Link>
+                                        </p>
+                                    </div>
+                                </template>
+                                <template v-else>
+                                    <div class="sub-top">
+                                        <Link href="/dashboard" class="tf-btn btn-reset">Dashboard</Link>
+                                        <div class="text-center d-flex flex-column gap-8">
+                                            <Link href="/settings/profile" class="text-secondary-2">Profile</Link>
+                                            <Link
+                                                href="/logout"
+                                                method="post"
+                                                as="button"
+                                                type="button"
+                                                class="text-secondary-2"
+                                            >
+                                                Logout
+                                            </Link>
+                                        </div>
+                                    </div>
+                                </template>
                             </div>
                         </li>
                         <li class="nav-cart">
-                            <a href="#shoppingCart" data-bs-toggle="modal" class="nav-icon-item">
+                            <button type="button" class="nav-icon-item border-0 bg-transparent p-0" @click="openCart()" aria-label="Open vote cart">
                                 <svg class="icon" width="24" height="24" viewBox="0 0 24 24" fill="none"
                                     xmlns="http://www.w3.org/2000/svg">
                                     <path
@@ -164,8 +189,8 @@ const getRel = (item: ResolvedNavItem): string | undefined =>
                                         stroke="#181818" stroke-width="2" stroke-linecap="round"
                                         stroke-linejoin="round" />
                                 </svg>
-                                <span class="count-box">1</span>
-                            </a>
+                                <span class="count-box">{{ totalVotes }}</span>
+                            </button>
                         </li>
                     </ul>
                 </div>

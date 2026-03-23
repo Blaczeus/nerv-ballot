@@ -1,3 +1,10 @@
+<script setup lang="ts">
+import { Link } from '@inertiajs/vue3';
+import { useGlobalModals } from '@/composables/useGlobalModals';
+
+const { openAskQuestion } = useGlobalModals();
+</script>
+
 <template>
     <footer id="footer" class="footer">
         <div class="footer-wrap">
@@ -7,23 +14,24 @@
                         <div class="col-lg-4">
                             <div class="footer-infor">
                                 <div class="footer-logo">
-                                    <a href="/">
+                                    <Link href="/">
                                         <img src="/tmp/images/logo/logo.svg" alt="logo" />
-                                    </a>
+                                    </Link>
                                 </div>
                                 <div class="footer-address">
-                                    <p>549 Oak St.Crystal Lake, IL 60014</p>
-                                    <a href="#" class="tf-btn-default fw-6">GET DIRECTION<i
-                                            class="icon-arrowUpRight"></i></a>
+                                    <p>Explore contestants, cast verified votes, and follow contest results in real time.</p>
+                                    <Link href="/contestants" class="tf-btn-default fw-6">EXPLORE CONTESTANTS<i
+                                            class="icon-arrowUpRight"></i>
+                                    </Link>
                                 </div>
                                 <ul class="footer-info">
                                     <li>
                                         <i class="icon-mail"></i>
-                                        <p>themesflat@gmail.com</p>
+                                        <p>support@nervego.com</p>
                                     </li>
                                     <li>
                                         <i class="icon-phone"></i>
-                                        <p>315-666-6688</p>
+                                        <p>+234 800 000 0000</p>
                                     </li>
                                 </ul>
                                 <ul class="tf-social-icon">
@@ -42,57 +50,48 @@
                             <div class="footer-menu">
                                 <div class="footer-col-block">
                                     <div class="footer-heading text-button footer-heading-mobile">
-                                        Infomation
+                                        Platform
                                     </div>
                                     <div class="tf-collapse-content">
                                         <ul class="footer-menu-list">
                                             <li class="text-caption-1">
-                                                <a href="/about" class="footer-menu_item">About Us</a>
+                                                <Link href="/contestants" class="footer-menu_item">Contestants</Link>
                                             </li>
                                             <li class="text-caption-1">
-                                                <a href="#" class="footer-menu_item">Our Stories</a>
+                                                <Link href="/cart" class="footer-menu_item">Vote Cart</Link>
                                             </li>
                                             <li class="text-caption-1">
-                                                <a href="#" class="footer-menu_item">Size Guide</a>
+                                                <Link href="/about" class="footer-menu_item">How Voting Works</Link>
                                             </li>
                                             <li class="text-caption-1">
-                                                <a href="#" class="footer-menu_item">Contact us</a>
+                                                <Link href="/leaderboard" class="footer-menu_item">Leaderboard</Link>
                                             </li>
                                             <li class="text-caption-1">
-                                                <a href="#" class="footer-menu_item">Career</a>
+                                                <Link href="/about" class="footer-menu_item">About</Link>
                                             </li>
                                             <li class="text-caption-1">
-                                                <a href="#" class="footer-menu_item">My Account</a>
+                                                <a href="mailto:support@nervego.com" class="footer-menu_item">Contact</a>
                                             </li>
                                         </ul>
                                     </div>
                                 </div>
                                 <div class="footer-col-block">
                                     <div class="footer-heading text-button footer-heading-mobile">
-                                        Customer Services
+                                        Support
                                     </div>
                                     <div class="tf-collapse-content">
                                         <ul class="footer-menu-list">
                                             <li class="text-caption-1">
-                                                <a href="#" class="footer-menu_item">Shipping</a>
-                                            </li>
-                                            <li class="text-caption-1">
-                                                <a href="#" class="footer-menu_item">Return & Refund</a>
-                                            </li>
-                                            <li class="text-caption-1">
-                                                <a href="#" class="footer-menu_item">Privacy Policy</a>
+                                                <a href="#" class="footer-menu_item">Help / FAQ</a>
                                             </li>
                                             <li class="text-caption-1">
                                                 <a href="#" class="footer-menu_item">Terms & Conditions</a>
                                             </li>
                                             <li class="text-caption-1">
-                                                <a href="#" class="footer-menu_item">Orders FAQs</a>
+                                                <a href="#" class="footer-menu_item">Privacy Policy</a>
                                             </li>
                                             <li class="text-caption-1">
-                                                <a href="#" class="footer-menu_item">My Wishlist</a>
-                                            </li>
-                                            <li class="text-caption-1">
-                                                <a href="#ask_question" data-bs-toggle="modal" class="footer-menu_item">
+                                                <a href="#" class="footer-menu_item" @click.prevent="openAskQuestion">
                                                     Ask a Question
                                                 </a>
                                             </li>
@@ -104,12 +103,11 @@
                         <div class="col-lg-4">
                             <div class="footer-col-block">
                                 <div class="footer-heading text-button footer-heading-mobile">
-                                    Newletter
+                                    Engagement
                                 </div>
                                 <div class="tf-collapse-content">
                                     <div class="footer-newsletter">
-                                        <p class="text-caption-1">Sign up for our newsletter and get 10% off your first
-                                            purchase</p>
+                                        <p class="text-caption-1">Get updates on active contests, rankings, and new voting opportunities.</p>
                                         <div class="sib-form">
                                             <div id="sib-form-container" class="sib-form-container">
                                                 <div id="error-message" class="sib-form-message-panel">
@@ -150,7 +148,7 @@
                                                                 <div class="form__entry entry_block">
                                                                     <div class="form__label-row ">
                                                                         <label class="entry__label" for="EMAIL"></label>
-                                                                        <div class="entry__field">
+                                                                    <div class="entry__field">
                                                                             <input class="input radius-60" type="text"
                                                                                 id="EMAIL" name="EMAIL"
                                                                                 autocomplete="off"
@@ -217,7 +215,7 @@
                                                 </div>
                                             </div>
                                             <label class="text-caption-1" for="footer-Form_agree">
-                                                By clicking subcribe, you agree to the
+                                                By clicking subscribe, you agree to the
                                                 <a class="fw-6 link" href="#">Terms of Service</a> and
                                                 <a class="fw-6 link" href="#">Privacy Policy</a>.
                                             </label>
@@ -233,34 +231,17 @@
                 <div class="container">
                     <div class="row">
                         <div class="col-12">
-                            <div class="footer-bottom-wrap">
-                                <div class="left">
-                                    <p class="text-caption-1">&copy;2024 Modave. All Rights Reserved.</p>
+                            <div class="footer-bottom-wrap justify-content-center">
+                                <div class="left text-center">
+                                    <p class="text-caption-1">
+                                        &copy;2026
+                                        <a href="https://nervego.com" target="_blank" rel="noopener noreferrer" class="link">
+                                            Nervego
+                                        </a>.
+                                        All Rights Reserved.
+                                    </p>
                                     <div class="tf-cur justify-content-end">
                                     </div>
-                                </div>
-                                <div class="tf-payment">
-                                    <p class="text-caption-1">Payment:</p>
-                                    <ul>
-                                        <li>
-                                            <img src="/tmp/images/payment/img-1.png" alt="payment-1" />
-                                        </li>
-                                        <li>
-                                            <img src="/tmp/images/payment/img-2.png" alt="payment-2" />
-                                        </li>
-                                        <li>
-                                            <img src="/tmp/images/payment/img-3.png" alt="payment-3" />
-                                        </li>
-                                        <li>
-                                            <img src="/tmp/images/payment/img-4.png" alt="payment-4" />
-                                        </li>
-                                        <li>
-                                            <img src="/tmp/images/payment/img-5.png" alt="payment-5" />
-                                        </li>
-                                        <li>
-                                            <img src="/tmp/images/payment/img-6.png" alt="payment-6" />
-                                        </li>
-                                    </ul>
                                 </div>
                             </div>
                         </div>

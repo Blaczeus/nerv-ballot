@@ -13,6 +13,11 @@ export const contestants = [
         createdAt: '2026-03-05',
         image: '/tmp/images/products/womens/women-19.jpg',
         hoverImage: '/tmp/images/products/womens/women-20.jpg',
+        images: [
+            '/tmp/images/products/womens/women-19.jpg',
+            '/tmp/images/products/womens/women-20.jpg',
+            '/tmp/images/products/womens/women-1.jpg',
+        ],
         description:
             'John is a first-generation graduate who returned to mentor students in his hometown. He uses his platform to sponsor school supplies for local kids. Friends describe him as calm, focused, and quietly determined. His campaign is powered by small donations and community support. Voting for him feels like backing a bigger purpose beyond the contest.',
     },
@@ -30,6 +35,11 @@ export const contestants = [
         createdAt: '2026-02-20',
         image: '/tmp/images/products/womens/women-29.jpg',
         hoverImage: '/tmp/images/products/womens/women-31.jpg',
+        images: [
+            '/tmp/images/products/womens/women-29.jpg',
+            '/tmp/images/products/womens/women-31.jpg',
+            '/tmp/images/products/womens/women-43.jpg',
+        ],
         description:
             'Amira is a volunteer tutor who turned a small after-school group into a citywide program. She speaks openly about the mentors who helped her find confidence. Her story resonates with students across campuses. She is known for showing up for others even when no one is watching. Supporters say her kindness is her strongest talent.',
     },
@@ -47,6 +57,11 @@ export const contestants = [
         createdAt: '2026-03-12',
         image: '/tmp/images/products/womens/women-63.jpg',
         hoverImage: '/tmp/images/products/womens/women-64.jpg',
+        images: [
+            '/tmp/images/products/womens/women-63.jpg',
+            '/tmp/images/products/womens/women-64.jpg',
+            '/tmp/images/products/womens/women-69.jpg',
+        ],
         description:
             'Emeka started as a self-taught performer recording videos in a shared dorm room. He now coaches younger creatives and shares his resources freely. His journey is a reminder that consistency beats quick fame. He is proud to represent his community on a bigger stage. A vote for Emeka is a vote for growth and grit.',
     },
@@ -64,6 +79,11 @@ export const contestants = [
         createdAt: '2026-01-20',
         image: '/tmp/images/products/womens/women-37.jpg',
         hoverImage: '/tmp/images/products/womens/women-38.jpg',
+        images: [
+            '/tmp/images/products/womens/women-37.jpg',
+            '/tmp/images/products/womens/women-38.jpg',
+            '/tmp/images/products/womens/women-41.jpg',
+        ],
         description:
             'Lina\'s campaign began as a tribute to her late mother who loved pageants. She balances competitions with community outreach projects in her neighborhood. Her supporters admire her poise and empathy. She often says her goal is to inspire others to lead with grace. She believes every vote is a shared celebration.',
     },
@@ -81,6 +101,11 @@ export const contestants = [
         createdAt: '2026-03-08',
         image: '/tmp/images/products/womens/women-133.jpg',
         hoverImage: '/tmp/images/products/womens/women-131.jpg',
+        images: [
+            '/tmp/images/products/womens/women-133.jpg',
+            '/tmp/images/products/womens/women-131.jpg',
+            '/tmp/images/products/womens/women-124.jpg',
+        ],
         description:
             'Grace is a community organizer who turns small ideas into real programs. She champions mental health awareness and safe spaces for students. Her story is about turning personal challenges into public impact. People vote for her because she listens and acts. She carries her community\'s hopes with humility.',
     },
@@ -98,6 +123,11 @@ export const contestants = [
         createdAt: '2026-03-01',
         image: '/tmp/images/products/womens/women-167.jpg',
         hoverImage: '/tmp/images/products/womens/women-168.jpg',
+        images: [
+            '/tmp/images/products/womens/women-167.jpg',
+            '/tmp/images/products/womens/women-168.jpg',
+            '/tmp/images/products/womens/women-162.jpg',
+        ],
         description:
             'Victor is a tech founder who built tools for local event organizers. He believes contests should uplift talent and create opportunities. He volunteers his weekends teaching coding to teens. His supporters appreciate his steady leadership and optimism. He wants this platform to spotlight hidden talent everywhere.',
     },

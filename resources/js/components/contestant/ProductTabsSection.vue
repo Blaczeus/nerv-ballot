@@ -1,15 +1,41 @@
 <script setup lang="ts">
+import { computed } from 'vue';
 import type { ModalContestant } from '@/composables/useGlobalModals';
+import { formatVotes } from '@/utils/formatVotes';
 
 defineOptions({ inheritAttrs: false });
 
-defineProps<{
+const props = defineProps<{
     contestant: ModalContestant;
 }>();
+
+const formattedVotes = computed(() => formatVotes(props.contestant.votes));
+
+const dateFormatter = new Intl.DateTimeFormat('en-US', {
+    weekday: 'long',
+    month: 'short',
+    day: 'numeric',
+});
+
+const formatDisplayDate = (value: string) => {
+    if (!value) return 'TBD';
+
+    const date = new Date(`${value}T00:00:00`);
+    if (Number.isNaN(date.getTime())) {
+        return value;
+    }
+
+    return dateFormatter.format(date);
+};
+
+const contestDateRange = computed(() => {
+    return `${formatDisplayDate(props.contestant.contestStart)} to ${formatDisplayDate(props.contestant.contestEnd)}`;
+});
+
+const joinedDate = computed(() => formatDisplayDate(props.contestant.createdAt));
 </script>
 
 <template>
-    <!-- Product_Description_Tabs -->
     <section>
         <div class="container">
             <div class="row">
@@ -17,16 +43,13 @@ defineProps<{
                     <div class="widget-tabs style-menu-tabs">
                         <ul class="widget-menu-tab">
                             <li class="item-title active">
-                                <span class="inner">Description</span>
+                                <span class="inner">About Contestant</span>
                             </li>
                             <li class="item-title">
-                                <span class="inner">Customer Reviews</span>
+                                <span class="inner">Contest Info</span>
                             </li>
                             <li class="item-title">
-                                <span class="inner">Shipping & Returns</span>
-                            </li>
-                            <li class="item-title">
-                                <span class="inner">Return Policies</span>
+                                <span class="inner">Voting Rules</span>
                             </li>
                         </ul>
                         <div class="widget-content-tab">
@@ -35,81 +58,63 @@ defineProps<{
                                     <div class="right">
                                         <div class="letter-1 text-btn-uppercase mb_12">{{ contestant.name }}</div>
                                         <p class="mb_12 text-secondary">{{ contestant.description }}</p>
-                                        <p class="text-secondary">This contestant profile mirrors the original product detail layout while preparing dynamic voting content.</p>
+                                        <p class="text-secondary">
+                                            This profile highlights the contestant's story, current standing, and the
+                                            details voters need before confirming support.
+                                        </p>
                                     </div>
                                     <div class="left">
-                                        <div class="letter-1 text-btn-uppercase mb_12">CONTESTANT DETAILS</div>
+                                        <div class="letter-1 text-btn-uppercase mb_12">PROFILE SNAPSHOT</div>
                                         <ul class="list-text type-disc mb_12 gap-6">
                                             <li class="font-2">Contest: {{ contestant.contestName }}</li>
                                             <li class="font-2">Category: {{ contestant.category }}</li>
                                             <li class="font-2">Location: {{ contestant.location }}</li>
-                                            <li class="font-2">Gender: {{ contestant.gender }}</li>
-                                            <li class="font-2">Votes: {{ contestant.votes }}</li>
+                                            <li class="font-2">Current Votes: {{ formattedVotes }}</li>
                                         </ul>
                                     </div>
                                 </div>
                             </div>
 
                             <div class="widget-content-inner">
-                                <div class="tab-reviews write-cancel-review-wrap">
-                                    <div class="reply-comment style-1">
-                                        <div class="reply-comment-heading">
-                                            <h4>2 reviews for {{ contestant.name }}</h4>
-                                        </div>
-                                        <div class="reply-comment-wrap">
-                                            <div class="reply-comment-item">
-                                                <div class="user">
-                                                    <div class="image">
-                                                        <img src="/tmp/images/avatar/user-default.jpg" alt="user-default" />
-                                                    </div>
-                                                    <div>
-                                                        <h6><a href="#" class="link">Excellent contestant profile layout</a></h6>
-                                                        <div class="day text-secondary-2 text-caption-1">1 day ago</div>
-                                                    </div>
-                                                </div>
-                                                <p class="text-secondary">The section structure and interaction are smooth and clear for public voting flows.</p>
-                                            </div>
-                                        </div>
+                                <div class="tab-description">
+                                    <div class="right">
+                                        <div class="letter-1 text-btn-uppercase mb_12">CONTEST DETAILS</div>
+                                        <p class="mb_12 text-secondary">
+                                            {{ contestant.name }} is competing in {{ contestant.contestName }} in the
+                                            {{ contestant.category.toLowerCase() }} category.
+                                        </p>
+                                        <p class="text-secondary">
+                                            Voting for this contest runs {{ contestDateRange }}.
+                                        </p>
                                     </div>
-                                    <form class="form-write-review write-review-wrap" @submit.prevent>
-                                        <div class="heading">
-                                            <h4>Write a review:</h4>
-                                        </div>
-                                        <div class="mb_32">
-                                            <div class="mb_8">Review Title</div>
-                                            <fieldset class="mb_20">
-                                                <input type="text" placeholder="Give your review a title" />
-                                            </fieldset>
-                                            <div class="mb_8">Review</div>
-                                            <fieldset class="d-flex mb_20">
-                                                <textarea rows="4" placeholder="Write your comment here"></textarea>
-                                            </fieldset>
-                                        </div>
-                                        <div class="button-submit">
-                                            <button class="text-btn-uppercase" type="submit">Submit Reviews</button>
-                                        </div>
-                                    </form>
-                                </div>
-                            </div>
-
-                            <div class="widget-content-inner">
-                                <div class="tab-shipping">
-                                    <div class="w-100">
-                                        <div class="text-btn-uppercase mb_12">Voting information</div>
-                                        <p class="mb_12">Votes are processed immediately after confirmation.</p>
-                                        <p>Once submitted, votes are final and cannot be reversed.</p>
+                                    <div class="left">
+                                        <div class="letter-1 text-btn-uppercase mb_12">OVERVIEW</div>
+                                        <ul class="list-text type-disc mb_12 gap-6">
+                                            <li class="font-2">Contestant ID: {{ contestant.id }}</li>
+                                            <li class="font-2">Gender: {{ contestant.gender }}</li>
+                                            <li class="font-2">Joined: {{ joinedDate }}</li>
+                                            <li class="font-2">Location: {{ contestant.location }}</li>
+                                        </ul>
                                     </div>
                                 </div>
                             </div>
 
                             <div class="widget-content-inner">
                                 <div class="tab-policies">
-                                    <div class="text-btn-uppercase mb_12">Voting policies</div>
-                                    <p class="mb_12 text-secondary">Please verify your selections before submitting votes.</p>
+                                    <div class="text-btn-uppercase mb_12">Voting rules</div>
+                                    <p class="mb_12 text-secondary">
+                                        Review your selections carefully before completing payment.
+                                    </p>
                                     <ul class="list-text type-number">
-                                        <li class="text-secondary font-2">Select a contestant and the number of votes.</li>
-                                        <li class="text-secondary font-2">Confirm your vote cart before submitting.</li>
-                                        <li class="text-secondary font-2">Votes are recorded once payment is confirmed.</li>
+                                        <li class="text-secondary font-2">
+                                            Select the number of votes you want to assign to this contestant.
+                                        </li>
+                                        <li class="text-secondary font-2">
+                                            Added votes appear in your vote cart before final confirmation.
+                                        </li>
+                                        <li class="text-secondary font-2">
+                                            Votes are recorded once payment is confirmed and cannot be reversed.
+                                        </li>
                                     </ul>
                                 </div>
                             </div>
@@ -119,5 +124,4 @@ defineProps<{
             </div>
         </div>
     </section>
-    <!-- /Product_Description_Tabs -->
 </template>

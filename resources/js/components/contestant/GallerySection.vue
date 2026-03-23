@@ -3,7 +3,7 @@ defineOptions({ inheritAttrs: false });
 
 defineProps<{
     contestantSlug: string;
-    gallerySlides: Array<{ color: string; label: string; image: string }>;
+    galleryImages: string[];
 }>();
 </script>
 
@@ -15,13 +15,12 @@ defineProps<{
                 <div dir="ltr" class="swiper tf-product-media-thumbs other-image-zoom" data-direction="vertical">
                     <div class="swiper-wrapper stagger-wrap">
                         <div
-                            v-for="(slide, imageIndex) in gallerySlides"
+                            v-for="(image, imageIndex) in galleryImages"
                             :key="`${contestantSlug}-thumb-${imageIndex}`"
                             class="swiper-slide stagger-item"
-                            :data-color="slide.color"
                         >
                             <div class="item">
-                                <img class="lazyload" :data-src="slide.image" :src="slide.image" alt="contestant-thumbnail" />
+                                <img class="lazyload" :data-src="image" :src="image" alt="contestant-thumbnail" />
                             </div>
                         </div>
                     </div>
@@ -29,13 +28,12 @@ defineProps<{
                 <div dir="ltr" class="swiper tf-product-media-main" id="gallery-swiper-started">
                     <div class="swiper-wrapper">
                         <div
-                            v-for="(slide, imageIndex) in gallerySlides"
+                            v-for="(image, imageIndex) in galleryImages"
                             :key="`${contestantSlug}-main-${imageIndex}`"
                             class="swiper-slide"
-                            :data-color="slide.color"
                         >
                             <a
-                                :href="slide.image"
+                                :href="image"
                                 target="_blank"
                                 class="item"
                                 data-pswp-width="600px"
@@ -43,9 +41,9 @@ defineProps<{
                             >
                                 <img
                                     class="tf-image-zoom lazyload"
-                                    :data-zoom="slide.image"
-                                    :data-src="slide.image"
-                                    :src="slide.image"
+                                    :data-zoom="image"
+                                    :data-src="image"
+                                    :src="image"
                                     alt="contestant-image"
                                 />
                             </a>

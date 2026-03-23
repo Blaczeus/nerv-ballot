@@ -3,9 +3,11 @@ import { usePage } from '@inertiajs/vue3';
 import { computed, onMounted, useSlots, watch } from 'vue';
 import Footer from '@/components/Footer.vue';
 import Header from '@/components/Header.vue';
+import ProductModalsSection from '@/components/contestant/ProductModalsSection.vue';
 import CartModal from '@/components/modals/CartModal.vue';
 import FilterModal from '@/components/modals/FilterModal.vue';
 import QuickViewModal from '@/components/modals/QuickViewModal.vue';
+import SearchModal from '@/components/modals/SearchModal.vue';
 import ScrollToTop from '@/components/ui/ScrollToTop.vue';
 import { useGlobalModals } from '@/composables/useGlobalModals';
 import { navigation } from '@/config/navigation';
@@ -21,8 +23,9 @@ const page = usePage<{
     };
 }>();
 const slots = useSlots();
-const hasOverlaySlot = computed(() => Boolean(slots.overlays));
-const { state: modalState } = useGlobalModals();
+const hasFilterModalSlot = computed(() => Boolean(slots.filterModal));
+const { state: modalState, closeAllModals, closeModal } = useGlobalModals();
+const hasFrontendModalOpen = computed(() => Boolean(modalState.activeModal));
 
 const user = computed<AuthUser>(() => {
     const authProp = page.props.auth as AuthUser | { user?: AuthUser } | undefined;
@@ -163,8 +166,23 @@ onMounted(() => {
 watch(
     () => page.url,
     () => {
+        closeAllModals();
         scheduleTemplateInit();
     },
+);
+
+watch(
+    () => modalState.activeModal,
+    (activeModal) => {
+        if (typeof document === 'undefined') return;
+
+        document.body.classList.toggle('modal-open', Boolean(activeModal));
+
+        if (!activeModal) {
+            document.body.style.removeProperty('padding-right');
+        }
+    },
+    { immediate: true },
 );
 </script>
 
@@ -177,20 +195,35 @@ watch(
             <Footer />
         </div>
         <!-- Global Modals -->
-        <QuickViewModal v-if="!hasOverlaySlot" :contestant="modalState.contestant" />
-        <CartModal v-if="!hasOverlaySlot" :contestant="modalState.contestant" />
-        <FilterModal v-if="!hasOverlaySlot" />
+        <div
+            v-if="hasFrontendModalOpen"
+            class="modal-backdrop fade show"
+            style="z-index: 1050;"
+            @click="closeModal()"
+        ></div>
+        <SearchModal />
+        <QuickViewModal />
+        <CartModal />
+        <ProductModalsSection />
+        <slot v-if="hasFilterModalSlot" name="filterModal" />
+        <FilterModal v-else />
         <slot name="overlays" />
         <!-- modal ask_question -->
-        <div class="modal modalCentered fade tf-product-modal modal-part-content" id="ask_question">
+        <div
+            v-if="modalState.activeModal === 'askQuestion'"
+            class="modal modalCentered fade show tf-product-modal modal-part-content"
+            id="ask_question"
+            style="display: block;"
+            @click.self="closeModal('askQuestion')"
+        >
             <div class="modal-dialog modal-dialog-centered">
                 <div class="modal-content">
                     <div class="header">
                         <div class="demo-title">Ask a question</div>
-                        <span class="icon-close icon-close-popup" data-bs-dismiss="modal"></span>
+                        <span class="icon-close icon-close-popup" @click="closeModal('askQuestion')"></span>
                     </div>
                     <div class="overflow-y-auto">
-                        <form @submit.prevent>
+                        <form @submit.prevent="closeModal('askQuestion')">
                             <fieldset>
                                 <label>Name *</label>
                                 <input type="text" required />

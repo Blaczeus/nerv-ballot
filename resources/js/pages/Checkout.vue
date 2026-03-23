@@ -1,21 +1,9 @@
 <script setup lang="ts">
 import { Head, Link, usePage } from '@inertiajs/vue3';
 import { computed } from 'vue';
-import { COST_PER_VOTE } from '@/config/voting';
 import Breadcrumb from '@/components/ui/Breadcrumb.vue';
-import { contestants as contestantsData } from '@/data/contestants';
-import { voteCart as voteCartData } from '@/data/voteCart';
+import { useVoteCart } from '@/composables/useVoteCart';
 import Layout from '@/layouts/Layout.vue';
-
-type Contestant = (typeof contestantsData)[number];
-type VoteSelection = (typeof voteCartData)[number];
-
-type VoteConfirmationItem = {
-    id: VoteSelection['id'];
-    contestant: Contestant;
-    votes: number;
-    totalCost: number;
-};
 
 type AuthUser = {
     id: number;
@@ -25,40 +13,7 @@ type AuthUser = {
 
 const page = usePage();
 const currentUser = computed(() => page.props.auth?.user as AuthUser);
-
-const currencyFormatter = new Intl.NumberFormat('en-NG', {
-    style: 'currency',
-    currency: 'NGN',
-    currencyDisplay: 'narrowSymbol',
-    maximumFractionDigits: 0,
-});
-
-const formatCurrency = (amount: number) => currencyFormatter.format(amount);
-
-const cartItems = computed<VoteConfirmationItem[]>(() => {
-    return voteCartData.reduce<VoteConfirmationItem[]>((items, selection) => {
-        const contestant = contestantsData.find(
-            (entry) => entry.id === selection.contestantId,
-        );
-
-        if (!contestant) return items;
-
-        items.push({
-            id: selection.id,
-            contestant,
-            votes: selection.votes,
-            totalCost: selection.votes * COST_PER_VOTE,
-        });
-
-        return items;
-    }, []);
-});
-
-const totalVotes = computed(() => {
-    return cartItems.value.reduce((sum, item) => sum + item.votes, 0);
-});
-
-const finalTotal = computed(() => totalVotes.value * COST_PER_VOTE);
+const { cartItems, totalVotes, finalTotal, costPerVote, formatCurrency } = useVoteCart();
 </script>
 
 <template>
@@ -215,7 +170,7 @@ const finalTotal = computed(() => totalVotes.value * COST_PER_VOTE);
                                                     {{ item.contestant.contestName }}
                                                 </div>
                                                 <div class="variant text-caption-1 text-secondary">
-                                                    Votes: {{ item.votes }} x {{ formatCurrency(COST_PER_VOTE) }}
+                                                    Votes: {{ item.votes }} x {{ formatCurrency(costPerVote) }}
                                                 </div>
                                             </div>
                                             <div class="total-price text-button">{{ formatCurrency(item.totalCost) }}</div>
@@ -237,7 +192,7 @@ const finalTotal = computed(() => totalVotes.value * COST_PER_VOTE);
                                         </div>
                                         <div class="item d-flex align-items-center justify-content-between text-button">
                                             <span>Cost per Vote</span>
-                                            <span>{{ formatCurrency(COST_PER_VOTE) }}</span>
+                                            <span>{{ formatCurrency(costPerVote) }}</span>
                                         </div>
                                     </div>
                                     <div class="bottom">

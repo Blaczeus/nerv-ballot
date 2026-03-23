@@ -17,68 +17,74 @@ export type ModalContestant = {
     description: string;
 };
 
-type BootstrapLike = {
-    Modal?: {
-        getOrCreateInstance: (element: Element) => { show: () => void };
-    };
-    Offcanvas?: {
-        getOrCreateInstance: (element: Element) => { show: () => void };
-    };
-};
+export type FrontendModalName =
+    | 'search'
+    | 'quickView'
+    | 'cart'
+    | 'filter'
+    | 'share'
+    | 'askQuestion'
+    | null;
 
 const state = reactive<{
+    activeModal: FrontendModalName;
     contestant: ModalContestant | null;
 }>({
+    activeModal: null,
     contestant: null,
 });
-
-const showBootstrapModal = (id: string) => {
-    const element = document.getElementById(id);
-    if (!element) return;
-
-    const bootstrap = (window as unknown as { bootstrap?: BootstrapLike }).bootstrap;
-    if (bootstrap?.Modal) {
-        bootstrap.Modal.getOrCreateInstance(element).show();
-        return;
-    }
-
-    const jq = (window as unknown as { jQuery?: (selector: string) => { modal: (arg: string) => void } }).jQuery;
-    jq?.(`#${id}`)?.modal?.('show');
-};
-
-const showBootstrapOffcanvas = (id: string) => {
-    const element = document.getElementById(id);
-    if (!element) return;
-
-    const bootstrap = (window as unknown as { bootstrap?: BootstrapLike }).bootstrap;
-    if (bootstrap?.Offcanvas) {
-        bootstrap.Offcanvas.getOrCreateInstance(element).show();
-        return;
-    }
-
-    const jq = (window as unknown as { jQuery?: (selector: string) => { offcanvas: (arg: string) => void } }).jQuery;
-    jq?.(`#${id}`)?.offcanvas?.('show');
-};
 
 export const useGlobalModals = () => {
     const openQuickView = (contestant: ModalContestant) => {
         state.contestant = contestant;
-        showBootstrapModal('quickView');
+        state.activeModal = 'quickView';
     };
 
-    const openCart = (contestant: ModalContestant) => {
-        state.contestant = contestant;
-        showBootstrapModal('shoppingCart');
+    const openSearch = () => {
+        state.activeModal = 'search';
+    };
+
+    const openCart = (contestant?: ModalContestant | null) => {
+        if (contestant) {
+            state.contestant = contestant;
+        }
+        state.activeModal = 'cart';
     };
 
     const openFilter = () => {
-        showBootstrapOffcanvas('filterShop');
+        state.activeModal = 'filter';
+    };
+
+    const openShare = (contestant?: ModalContestant | null) => {
+        if (contestant) {
+            state.contestant = contestant;
+        }
+        state.activeModal = 'share';
+    };
+
+    const openAskQuestion = () => {
+        state.activeModal = 'askQuestion';
+    };
+
+    const closeModal = (modalName?: Exclude<FrontendModalName, null>) => {
+        if (!modalName || state.activeModal === modalName) {
+            state.activeModal = null;
+        }
+    };
+
+    const closeAllModals = () => {
+        state.activeModal = null;
     };
 
     return {
         state,
+        openSearch,
         openQuickView,
         openCart,
         openFilter,
+        openShare,
+        openAskQuestion,
+        closeModal,
+        closeAllModals,
     };
 };

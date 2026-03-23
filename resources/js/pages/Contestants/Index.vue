@@ -5,6 +5,7 @@ import ContestantCard from '@/components/contestants/ContestantCard.vue';
 import FilterModal from '@/components/modals/FilterModal.vue';
 import Breadcrumb from '@/components/ui/Breadcrumb.vue';
 import { useGlobalModals } from '@/composables/useGlobalModals';
+import { useVoteCart } from '@/composables/useVoteCart';
 import { contestants as contestantsData } from '@/data/contestants';
 import Layout from '@/layouts/Layout.vue';
 
@@ -235,6 +236,7 @@ const toggleActiveContests = () => {
 };
 
 const { openQuickView, openCart, openFilter } = useGlobalModals();
+const { addVotes } = useVoteCart();
 type GridLayoutClass = 'tf-col-2' | 'tf-col-3' | 'tf-col-4' | 'tf-col-5';
 type LayoutMode = 'list' | GridLayoutClass;
 
@@ -274,6 +276,11 @@ const setLayoutMode = (mode: LayoutMode) => {
     }
 };
 
+const handleAddVotes = (contestant: Contestant) => {
+    addVotes(contestant.id, 1);
+    openCart(contestant);
+};
+
 const breadcrumbItems = [
     { label: 'Home', link: '/' },
     { label: 'Contestants' },
@@ -284,7 +291,7 @@ const breadcrumbItems = [
     <Head title="Contestants" />
 
     <Layout>
-        <template #overlays>
+        <template #filterModal>
             <FilterModal
                 :filters="filters"
                 :bounds="voteBounds"
@@ -514,7 +521,7 @@ const breadcrumbItems = [
                             :contestant="contestant"
                             layout="list"
                             @quick-view="openQuickView"
-                            @add-to-cart="openCart"
+                            @add-to-cart="handleAddVotes"
                         />
                         <!-- pagination -->
                         <ul class="wg-pagination">
@@ -537,7 +544,7 @@ const breadcrumbItems = [
                             :contestant="contestant"
                             layout="grid"
                             @quick-view="openQuickView"
-                            @add-to-cart="openCart"
+                            @add-to-cart="handleAddVotes"
                         />
                         <!-- pagination -->
                         <ul class="wg-pagination">

@@ -1,78 +1,19 @@
 <script setup lang="ts">
 import { Head, Link } from '@inertiajs/vue3';
-import { computed, ref } from 'vue';
-import { COST_PER_VOTE } from '@/config/voting';
-import { contestants as contestantsData } from '@/data/contestants';
-import { voteCart as voteCartData } from '@/data/voteCart';
 import Breadcrumb from '@/components/ui/Breadcrumb.vue';
+import { useVoteCart } from '@/composables/useVoteCart';
 import Layout from '@/layouts/Layout.vue';
 import { formatVotes } from '@/utils/formatVotes';
 
-type Contestant = (typeof contestantsData)[number];
-type VoteSelection = (typeof voteCartData)[number];
+const { cartItems, totalVotes, finalTotal, costPerVote, formatCurrency, updateVotes, removeVotes } =
+    useVoteCart();
 
-type VoteCartItem = {
-    id: VoteSelection['id'];
-    contestant: Contestant;
-    votes: number;
-    totalCost: number;
+const decreaseVotes = (selectionId: number, currentVotes: number) => {
+    updateVotes(selectionId, currentVotes - 1);
 };
 
-const voteSelections = ref<VoteSelection[]>(
-    voteCartData.map((selection) => ({ ...selection })),
-);
-
-const currencyFormatter = new Intl.NumberFormat('en-NG', {
-    style: 'currency',
-    currency: 'NGN',
-    maximumFractionDigits: 0,
-});
-
-const formatCurrency = (amount: number) => currencyFormatter.format(amount);
-
-const cartItems = computed<VoteCartItem[]>(() => {
-    return voteSelections.value.reduce<VoteCartItem[]>((items, selection) => {
-        const contestant = contestantsData.find(
-            (entry) => entry.id === selection.contestantId,
-        );
-
-        if (!contestant) return items;
-
-        items.push({
-            id: selection.id,
-            contestant,
-            votes: selection.votes,
-            totalCost: selection.votes * COST_PER_VOTE,
-        });
-
-        return items;
-    }, []);
-});
-
-const totalVotes = computed(() => {
-    return cartItems.value.reduce((sum, item) => sum + item.votes, 0);
-});
-
-const finalTotal = computed(() => totalVotes.value * COST_PER_VOTE);
-
-const decreaseVotes = (selectionId: number) => {
-    const selection = voteSelections.value.find((item) => item.id === selectionId);
-    if (!selection || selection.votes <= 1) return;
-
-    selection.votes -= 1;
-};
-
-const increaseVotes = (selectionId: number) => {
-    const selection = voteSelections.value.find((item) => item.id === selectionId);
-    if (!selection) return;
-
-    selection.votes += 1;
-};
-
-const removeSelection = (selectionId: number) => {
-    voteSelections.value = voteSelections.value.filter(
-        (item) => item.id !== selectionId,
-    );
+const increaseVotes = (selectionId: number, currentVotes: number) => {
+    updateVotes(selectionId, currentVotes + 1);
 };
 </script>
 
@@ -147,7 +88,7 @@ const removeSelection = (selectionId: number) => {
                                             class="tf-cart-item_price text-center"
                                         >
                                             <div class="cart-price text-button vote-cost-value">
-                                                {{ formatCurrency(COST_PER_VOTE) }}
+                                                {{ formatCurrency(costPerVote) }}
                                             </div>
                                         </td>
                                         <td
@@ -157,7 +98,7 @@ const removeSelection = (selectionId: number) => {
                                             <div class="wg-quantity mx-md-auto">
                                                 <span
                                                     class="btn-quantity vote-stepper-btn"
-                                                    @click="decreaseVotes(item.id)"
+                                                    @click="decreaseVotes(item.id, item.votes)"
                                                 >
                                                     -
                                                 </span>
@@ -170,7 +111,7 @@ const removeSelection = (selectionId: number) => {
                                                 >
                                                 <span
                                                     class="btn-quantity vote-stepper-btn"
-                                                    @click="increaseVotes(item.id)"
+                                                    @click="increaseVotes(item.id, item.votes)"
                                                 >
                                                     +
                                                 </span>
@@ -190,7 +131,7 @@ const removeSelection = (selectionId: number) => {
                                         >
                                             <span
                                                 class="vote-remove icon icon-close"
-                                                @click="removeSelection(item.id)"
+                                                @click="removeVotes(item.id)"
                                             ></span>
                                         </td>
                                     </tr>
@@ -208,7 +149,7 @@ const removeSelection = (selectionId: number) => {
                                 </div>
                                 <div class="discount text-button d-flex justify-content-between align-items-center">
                                     <span>Cost per Vote</span>
-                                    <span class="total">{{ formatCurrency(COST_PER_VOTE) }}</span>
+                                    <span class="total">{{ formatCurrency(costPerVote) }}</span>
                                 </div>
                                 <h5 class="total-order d-flex justify-content-between align-items-center">
                                     <span>Final Total</span>

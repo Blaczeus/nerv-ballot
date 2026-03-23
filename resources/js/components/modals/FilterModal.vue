@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { computed, reactive, ref, watch } from 'vue';
+import { useGlobalModals } from '@/composables/useGlobalModals';
 
 type FilterState = {
     contest: string | null;
@@ -59,8 +60,10 @@ const emit = defineEmits<{
     (event: 'reset'): void;
 }>();
 
+const { state, closeModal } = useGlobalModals();
 const localFilters = reactive<FilterState>({ ...props.filters });
 const isSyncing = ref(false);
+const isOpen = computed(() => state.activeModal === 'filter');
 
 const voteFormatter = new Intl.NumberFormat('en-US');
 const formatVotes = (value: number) => voteFormatter.format(value);
@@ -157,11 +160,21 @@ const resolveLocationColor = (location: string) => {
 </script>
 
 <template>
-    <div class="offcanvas offcanvas-start canvas-filter" id="filterShop">
+    <div
+        v-if="isOpen"
+        class="offcanvas offcanvas-start canvas-filter show"
+        id="filterShop"
+        style="visibility: visible;"
+        @click.self="closeModal('filter')"
+    >
         <div class="canvas-wrapper">
             <div class="canvas-header">
                 <h5>Filter Contestants</h5>
-                <span class="icon-close icon-close-popup" data-bs-dismiss="offcanvas" aria-label="Close"></span>
+                <span
+                    class="icon-close icon-close-popup"
+                    aria-label="Close"
+                    @click="closeModal('filter')"
+                ></span>
             </div>
             <div class="canvas-body">
                 <div class="widget-facet facet-categories">
@@ -219,17 +232,20 @@ const resolveLocationColor = (location: string) => {
                 </div>
                 <div class="widget-facet facet-size">
                     <h6 class="facet-title">Category</h6>
-                    <div class="facet-size-box size-box d-flex flex-wrap gap-12">
-                        <button
+                    <div class="facet-size-box size-box category-filter-box">
+                        <span
                             v-for="category in props.options.categories"
                             :key="category"
-                            type="button"
-                            class="size-item size-check"
+                            class="size-item size-check category-pill"
                             :class="{ active: localFilters.category === category }"
                             @click="selectCategory(category)"
+                            @keydown.enter.prevent="selectCategory(category)"
+                            @keydown.space.prevent="selectCategory(category)"
+                            role="button"
+                            tabindex="0"
                         >
                             {{ category }}
-                        </button>
+                        </span>
                     </div>
                 </div>
                 <div class="widget-facet facet-color">
@@ -273,3 +289,41 @@ const resolveLocationColor = (location: string) => {
         </div>
     </div>
 </template>
+
+<style scoped>
+.category-filter-box {
+    padding-right: 0;
+}
+
+.category-filter-box .category-pill {
+    width: auto !important;
+    min-width: 0;
+    height: auto !important;
+    padding: 10px 18px;
+    display: inline-flex !important;
+    align-items: center;
+    justify-content: center;
+    background-color: var(--main);
+    border-color: var(--main);
+    color: var(--white);
+    font-size: 14px;
+    line-height: 20px;
+    text-transform: none;
+    white-space: nowrap;
+    text-align: center;
+}
+
+.category-filter-box .category-pill:hover,
+.category-filter-box .category-pill:focus-visible {
+    background-color: var(--white);
+    color: var(--main);
+    border-color: var(--main);
+    outline: none;
+}
+
+.category-filter-box .category-pill.active {
+    background-color: var(--main);
+    color: var(--white);
+    border-color: var(--main);
+}
+</style>

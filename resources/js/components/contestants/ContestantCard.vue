@@ -107,15 +107,6 @@ const voteStyle = computed(() => ({
                         <span class="tooltip">Add to Favorites</span>
                     </a>
                     <a
-                        href="#compare"
-                        data-bs-toggle="offcanvas"
-                        aria-controls="compare"
-                        class="box-icon compare btn-icon-action"
-                    >
-                        <span class="icon icon-gitDiff"></span>
-                        <span class="tooltip">Compare Contestants</span>
-                    </a>
-                    <a
                         href="#quickView"
                         class="box-icon quickview tf-btn-loading"
                         @click.prevent="emit('quick-view', contestant)"
@@ -151,15 +142,6 @@ const voteStyle = computed(() => ({
                 <a href="javascript:void(0);" class="box-icon wishlist btn-icon-action">
                     <span class="icon icon-heart"></span>
                     <span class="tooltip">Add to Favorites</span>
-                </a>
-                <a
-                    href="#compare"
-                    data-bs-toggle="offcanvas"
-                    aria-controls="compare"
-                    class="box-icon compare btn-icon-action"
-                >
-                    <span class="icon icon-gitDiff"></span>
-                    <span class="tooltip">Compare Contestants</span>
                 </a>
                 <a
                     href="#quickView"

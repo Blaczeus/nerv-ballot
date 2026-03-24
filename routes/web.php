@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\CheckoutController;
 use Inertia\Inertia;
 use Illuminate\Support\Facades\Route;
 
@@ -8,6 +9,9 @@ Route::inertia('/contestants', 'Contestants/Index')->name('contestants');
 Route::inertia('/about', 'About')->name('about');
 Route::inertia('/cart', 'Cart')->name('cart');
 Route::inertia('/checkout', 'Checkout')->name('checkout');
+Route::post('/checkout', [CheckoutController::class, 'process'])
+    ->middleware('auth')
+    ->name('checkout.process');
 Route::inertia('/vote-success', 'VoteSuccess')->name('voteSuccess');
 Route::inertia('/leaderboard', 'Leaderboard')->name('leaderboard');
 Route::get('/contestants/{slug}', function (string $slug) {

@@ -11,8 +11,28 @@ type AuthUser = {
     email: string;
 } | null;
 
-const page = usePage();
+type PageProps = {
+    auth?: {
+        user?: AuthUser;
+    };
+    errors?: {
+        checkout?: string;
+        system?: string;
+        items?: string;
+    };
+    flash?: {
+        success?: string;
+    };
+};
+
+const page = usePage<PageProps>();
 const currentUser = computed(() => page.props.auth?.user as AuthUser);
+const errors = computed(() => page.props.errors ?? {});
+const successMessage = computed(() => page.props.flash?.success ?? '');
+const checkoutNotice = computed(() => {
+    return errors.value.checkout ?? errors.value.system ?? '';
+});
+const itemsError = computed(() => errors.value.items ?? '');
 const { cartItems, totalVotes, finalTotal, costPerVote, formatCurrency } = useVoteCart();
 </script>
 
@@ -33,6 +53,29 @@ const { cartItems, totalVotes, finalTotal, costPerVote, formatCurrency } = useVo
 
         <section>
             <div class="container">
+                <div v-if="successMessage || checkoutNotice || itemsError" class="mb_24">
+                    <div
+                        v-if="successMessage"
+                        class="tf-notice text-center"
+                        style="padding: 14px 18px; border: 1px solid #d1fae5; background: #ecfdf5; color: #065f46;"
+                    >
+                        {{ successMessage }}
+                    </div>
+                    <div
+                        v-if="checkoutNotice"
+                        class="tf-notice text-center"
+                        style="padding: 14px 18px; border: 1px solid #fecaca; background: #fef2f2; color: #991b1b;"
+                    >
+                        {{ checkoutNotice }}
+                    </div>
+                    <div
+                        v-if="itemsError"
+                        class="tf-notice text-center"
+                        style="padding: 14px 18px; border: 1px solid #fed7aa; background: #fff7ed; color: #9a3412;"
+                    >
+                        {{ itemsError }}
+                    </div>
+                </div>
                 <div class="row">
                     <div class="col-xl-6">
                         <div class="flat-spacing tf-page-checkout">
@@ -49,6 +92,9 @@ const { cartItems, totalVotes, finalTotal, costPerVote, formatCurrency } = useVo
                             <template v-else>
                                 <div class="wrap">
                                     <h5 class="title">Voter Details</h5>
+                                    <p v-if="checkoutNotice" class="text-caption-1 text-danger mb_16">
+                                        {{ checkoutNotice }}
+                                    </p>
                                     <form class="info-box">
                                         <div class="grid-2">
                                             <input type="text" placeholder="First Name*">
@@ -149,6 +195,9 @@ const { cartItems, totalVotes, finalTotal, costPerVote, formatCurrency } = useVo
                         <div class="flat-spacing flat-sidebar-checkout">
                             <div class="sidebar-checkout-content">
                                 <h5 class="title">Your Vote Selection</h5>
+                                <p v-if="itemsError" class="text-caption-1 text-danger mb_16">
+                                    {{ itemsError }}
+                                </p>
                                 <div class="list-product">
                                     <div
                                         v-for="item in cartItems"

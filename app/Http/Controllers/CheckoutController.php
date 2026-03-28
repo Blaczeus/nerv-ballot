@@ -10,6 +10,7 @@ use Illuminate\Database\QueryException;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Collection;
+use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Validation\ValidationException;
@@ -93,6 +94,16 @@ class CheckoutController extends Controller
                         ->whereKey($item['contestant_id'])
                         ->increment('total_votes', $item['votes']);
                 }
+
+                Cache::forget('leaderboard_all_page_1');
+
+                $contestants
+                    ->pluck('contest_id')
+                    ->filter()
+                    ->unique()
+                    ->each(function ($contestId): void {
+                        Cache::forget("leaderboard_{$contestId}_page_1");
+                    });
 
                 Log::info('Checkout processed successfully.', [
                     'user_id' => $userId,

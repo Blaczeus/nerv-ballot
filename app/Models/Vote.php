@@ -10,6 +10,25 @@ class Vote extends Model
 {
     use HasFactory;
 
+    protected static function booted(): void
+    {
+        static::saved(function (Vote $vote): void {
+            $contestId = Contestant::query()
+                ->whereKey($vote->contestant_id)
+                ->value('contest_id');
+
+            Contestant::flushLeaderboardCache($contestId ? (int) $contestId : null);
+        });
+
+        static::deleted(function (Vote $vote): void {
+            $contestId = Contestant::query()
+                ->whereKey($vote->contestant_id)
+                ->value('contest_id');
+
+            Contestant::flushLeaderboardCache($contestId ? (int) $contestId : null);
+        });
+    }
+
     /**
      * The attributes that are mass assignable.
      *

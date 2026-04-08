@@ -4,6 +4,7 @@ namespace Database\Seeders;
 
 use App\Models\Setting;
 use Illuminate\Database\Seeder;
+use Illuminate\Support\Facades\Cache;
 
 class SettingSeeder extends Seeder
 {
@@ -21,5 +22,8 @@ class SettingSeeder extends Seeder
             ['key' => 'voting_enabled'],
             ['value' => 'true', 'type' => 'boolean'],
         );
+
+        Cache::forget('setting_vote_price');
+        Cache::forget('setting_voting_enabled');
     }
 }

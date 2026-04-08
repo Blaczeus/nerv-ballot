@@ -22,6 +22,8 @@ class VoteSeeder extends Seeder
         DB::transaction(function (): void {
             $users = User::query()->pluck('id');
             $contestants = Contestant::query()->with('contest')->orderBy('id')->get();
+            $anonymousTokensByContest = [];
+            $userVotesByContest = [];
 
             $targetVotes = [
                 0, 0, 1, 3, 7, 9, 12, 18, 56, 74, 98, 132, 176, 540, 1180,
@@ -44,9 +46,46 @@ class VoteSeeder extends Seeder
                         $contestant->contest?->start_date ?? Carbon::now()->subDays(10),
                         $contestant->contest?->end_date ?? Carbon::now(),
                     );
+                    $contestId = $contestant->contest_id;
+                    $isAnonymous = random_int(0, 1) === 1;
+                    $voterToken = null;
+                    $userId = null;
+
+                    if (! $isAnonymous) {
+                        $contestUserVotes = $userVotesByContest[$contestId] ?? [];
+                        $eligibleUsers = $users
+                            ->filter(fn ($id) => (($contestUserVotes[$id] ?? 0) + $voteBatch) <= 50)
+                            ->values();
+
+                        if ($eligibleUsers->isNotEmpty()) {
+                            $userId = $eligibleUsers->random();
+                            $contestUserVotes[$userId] = ($contestUserVotes[$userId] ?? 0) + $voteBatch;
+                            $userVotesByContest[$contestId] = $contestUserVotes;
+                        } else {
+                            $isAnonymous = true;
+                        }
+                    }
+
+                    if ($isAnonymous) {
+                        $contestAnonymousVotes = $anonymousTokensByContest[$contestId] ?? [];
+                        $eligibleTokens = collect(array_keys($contestAnonymousVotes))
+                            ->filter(fn ($token) => (($contestAnonymousVotes[$token] ?? 0) + $voteBatch) <= 50)
+                            ->values();
+
+                        if ($eligibleTokens->isEmpty() || random_int(0, 2) === 0) {
+                            $voterToken = (string) Str::uuid();
+                            $contestAnonymousVotes[$voterToken] = $voteBatch;
+                        } else {
+                            $voterToken = $eligibleTokens->random();
+                            $contestAnonymousVotes[$voterToken] += $voteBatch;
+                        }
+
+                        $anonymousTokensByContest[$contestId] = $contestAnonymousVotes;
+                    }
 
                     $transaction = Transaction::query()->create([
-                        'user_id' => $users->random(),
+                        'user_id' => $userId,
+                        'voter_token' => $voterToken,
                         'checkout_token' => (string) Str::uuid(),
                         'total_votes' => $voteBatch,
                         'price_per_vote' => 100,
@@ -60,7 +99,9 @@ class VoteSeeder extends Seeder
                     Vote::query()->create([
                         'transaction_id' => $transaction->id,
                         'user_id' => $transaction->user_id,
+                        'voter_token' => $transaction->voter_token,
                         'contestant_id' => $contestant->id,
+                        'contest_id' => $contestant->contest_id,
                         'votes_count' => $voteBatch,
                         'created_at' => $timestamp,
                         'updated_at' => $timestamp,

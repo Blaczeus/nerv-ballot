@@ -25,11 +25,11 @@ class DatabaseSeeder extends Seeder
         Setting::query()->whereIn('key', ['vote_price', 'voting_enabled'])->delete();
 
         User::query()->firstOrCreate([
-            'email' => 'test@example.com',
+            'email' => 'admin@test.com',
         ], [
-            'name' => 'Test User',
-            'email' => 'test@example.com',
-            'password' => 'password',
+            'name' => 'Admin User',
+            'email' => 'admin@test.com',
+            'password' => bcrypt('password'),
         ]);
 
         if (User::query()->count() < 15) {

@@ -1,9 +1,9 @@
 <script setup lang="ts">
 import { usePage } from '@inertiajs/vue3';
 import { computed, onMounted, useSlots, watch } from 'vue';
+import ProductModalsSection from '@/components/contestant/ProductModalsSection.vue';
 import Footer from '@/components/Footer.vue';
 import Header from '@/components/Header.vue';
-import ProductModalsSection from '@/components/contestant/ProductModalsSection.vue';
 import CartModal from '@/components/modals/CartModal.vue';
 import FilterModal from '@/components/modals/FilterModal.vue';
 import QuickViewModal from '@/components/modals/QuickViewModal.vue';
@@ -93,7 +93,13 @@ const currentPath = computed<string>(() => {
 const routes = routeRegistry as Record<string, unknown>;
 
 const resolveRouteUrl = (routeName: string): string | null => {
-    const resolver = routes[routeName];
+    const resolver = routeName
+        .split('.')
+        .reduce<unknown>((current, segment) => {
+            if (!current || typeof current !== 'object') return null;
+            return (current as Record<string, unknown>)[segment] ?? null;
+        }, routes);
+
     if (typeof resolver !== 'function') return null;
 
     const route = (resolver as () => { url?: unknown })();

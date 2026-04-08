@@ -24,7 +24,7 @@ export const navigation: NavItem[] = [
     },
     {
         label: 'Contestants',
-        route: 'contestants',
+        url: '/contestants',
     },
     {
         label: 'Leaderboard',

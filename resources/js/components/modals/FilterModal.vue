@@ -7,53 +7,56 @@ type FilterState = {
     category: string | null;
     location: string | null;
     gender: string | null;
-    minVotes: number;
-    maxVotes: number;
-    activeContestsOnly: boolean;
+    min_votes: number;
+    max_votes: number;
+    active: boolean;
+};
+
+type ContestOption = {
+    label: string;
+    value: string;
 };
 
 type FilterOptions = {
-    contests: string[];
+    contests: ContestOption[];
     categories: string[];
     locations: string[];
     genders: string[];
 };
 
 type VoteBounds = {
-    minVotes: number;
-    maxVotes: number;
+    min_votes: number;
+    max_votes: number;
 };
 
-const props = withDefaults(defineProps<{
-    filters?: FilterState;
-    bounds?: VoteBounds;
-    options?: FilterOptions;
-}>(), {
-    filters: () => ({
-        contest: null,
-        category: null,
-        location: null,
-        gender: null,
-        minVotes: 0,
-        maxVotes: 5000,
-        activeContestsOnly: false,
-    }),
-    bounds: () => ({
-        minVotes: 0,
-        maxVotes: 5000,
-    }),
-    options: () => ({
-        contests: [
-            'Campus Queen 2026',
-            'Global Talent Showcase',
-            'Mr & Miss Tech Fest',
-            'Community Awards',
-        ],
-        categories: ['Beauty', 'Talent', 'Personality', 'Innovation', 'Leadership'],
-        locations: ['Lagos', 'Abuja', 'Accra', 'London', 'Nairobi'],
-        genders: ['Male', 'Female', 'Mixed'],
-    }),
-});
+const props = withDefaults(
+    defineProps<{
+        filters?: FilterState;
+        bounds?: VoteBounds;
+        options?: FilterOptions;
+    }>(),
+    {
+        filters: () => ({
+            contest: null,
+            category: null,
+            location: null,
+            gender: null,
+            min_votes: 0,
+            max_votes: 10000,
+            active: false,
+        }),
+        bounds: () => ({
+            min_votes: 0,
+            max_votes: 10000,
+        }),
+        options: () => ({
+            contests: [],
+            categories: [],
+            locations: [],
+            genders: [],
+        }),
+    },
+);
 
 const emit = defineEmits<{
     (event: 'update:filters', value: FilterState): void;
@@ -69,14 +72,14 @@ const voteFormatter = new Intl.NumberFormat('en-US');
 const formatVotes = (value: number) => voteFormatter.format(value);
 
 const normalizeVotes = () => {
-    if (localFilters.minVotes < props.bounds.minVotes) {
-        localFilters.minVotes = props.bounds.minVotes;
+    if (localFilters.min_votes < props.bounds.min_votes) {
+        localFilters.min_votes = props.bounds.min_votes;
     }
-    if (localFilters.maxVotes > props.bounds.maxVotes) {
-        localFilters.maxVotes = props.bounds.maxVotes;
+    if (localFilters.max_votes > props.bounds.max_votes) {
+        localFilters.max_votes = props.bounds.max_votes;
     }
-    if (localFilters.minVotes > localFilters.maxVotes) {
-        localFilters.maxVotes = localFilters.minVotes;
+    if (localFilters.min_votes > localFilters.max_votes) {
+        localFilters.max_votes = localFilters.min_votes;
     }
 };
 
@@ -129,22 +132,22 @@ const selectLocation = (location: string) => {
 
 const updateMinVotes = (event: Event) => {
     const value = Number((event.target as HTMLInputElement).value);
-    localFilters.minVotes = Math.min(
-        Math.max(value, props.bounds.minVotes),
-        localFilters.maxVotes,
+    localFilters.min_votes = Math.min(
+        Math.max(value, props.bounds.min_votes),
+        localFilters.max_votes,
     );
 };
 
 const updateMaxVotes = (event: Event) => {
     const value = Number((event.target as HTMLInputElement).value);
-    localFilters.maxVotes = Math.max(
-        Math.min(value, props.bounds.maxVotes),
-        localFilters.minVotes,
+    localFilters.max_votes = Math.max(
+        Math.min(value, props.bounds.max_votes),
+        localFilters.min_votes,
     );
 };
 
-const minVotesLabel = computed(() => formatVotes(localFilters.minVotes));
-const maxVotesLabel = computed(() => formatVotes(localFilters.maxVotes));
+const minVotesLabel = computed(() => formatVotes(localFilters.min_votes));
+const maxVotesLabel = computed(() => formatVotes(localFilters.max_votes));
 
 const locationColorMap: Record<string, string> = {
     Lagos: 'bg-light-pink-2',
@@ -180,14 +183,17 @@ const resolveLocationColor = (location: string) => {
                 <div class="widget-facet facet-categories">
                     <h6 class="facet-title">Contests</h6>
                     <ul class="facet-content">
-                        <li v-for="contest in props.options.contests" :key="contest">
+                        <li v-if="props.options.contests.length === 0" class="text-secondary text-caption-1">
+                            No contests available yet.
+                        </li>
+                        <li v-for="contest in props.options.contests" :key="contest.value">
                             <button
                                 type="button"
                                 class="categories-item"
-                                :class="{ active: localFilters.contest === contest }"
-                                @click="selectContest(contest)"
+                                :class="{ active: localFilters.contest === contest.value }"
+                                @click="selectContest(contest.value)"
                             >
-                                {{ contest }}
+                                {{ contest.label }}
                             </button>
                         </li>
                     </ul>
@@ -197,24 +203,24 @@ const resolveLocationColor = (location: string) => {
                     <div
                         class="price-val-range"
                         id="votes-value-range"
-                        :data-min="props.bounds.minVotes"
-                        :data-max="props.bounds.maxVotes"
+                        :data-min="props.bounds.min_votes"
+                        :data-max="props.bounds.max_votes"
                     >
                         <div class="range-inputs d-flex flex-column gap-12">
                             <input
                                 type="range"
                                 class="tf-range-input"
-                                :min="props.bounds.minVotes"
-                                :max="props.bounds.maxVotes"
-                                :value="localFilters.minVotes"
+                                :min="props.bounds.min_votes"
+                                :max="props.bounds.max_votes"
+                                :value="localFilters.min_votes"
                                 @input="updateMinVotes"
                             />
                             <input
                                 type="range"
                                 class="tf-range-input"
-                                :min="props.bounds.minVotes"
-                                :max="props.bounds.maxVotes"
-                                :value="localFilters.maxVotes"
+                                :min="props.bounds.min_votes"
+                                :max="props.bounds.max_votes"
+                                :value="localFilters.max_votes"
                                 @input="updateMaxVotes"
                             />
                         </div>
@@ -233,16 +239,19 @@ const resolveLocationColor = (location: string) => {
                 <div class="widget-facet facet-size">
                     <h6 class="facet-title">Category</h6>
                     <div class="facet-size-box size-box category-filter-box">
+                        <p v-if="props.options.categories.length === 0" class="text-secondary text-caption-1 mb-0">
+                            No categories available yet.
+                        </p>
                         <span
                             v-for="category in props.options.categories"
                             :key="category"
                             class="size-item size-check category-pill"
                             :class="{ active: localFilters.category === category }"
+                            role="button"
+                            tabindex="0"
                             @click="selectCategory(category)"
                             @keydown.enter.prevent="selectCategory(category)"
                             @keydown.space.prevent="selectCategory(category)"
-                            role="button"
-                            tabindex="0"
                         >
                             {{ category }}
                         </span>
@@ -251,6 +260,9 @@ const resolveLocationColor = (location: string) => {
                 <div class="widget-facet facet-color">
                     <h6 class="facet-title">Location</h6>
                     <div class="facet-color-box d-flex flex-wrap gap-12">
+                        <p v-if="props.options.locations.length === 0" class="text-secondary text-caption-1 mb-0">
+                            No locations available yet.
+                        </p>
                         <button
                             v-for="location in props.options.locations"
                             :key="location"
@@ -267,7 +279,14 @@ const resolveLocationColor = (location: string) => {
                 <div class="widget-facet facet-fieldset">
                     <h6 class="facet-title">Gender</h6>
                     <div class="box-fieldset-item">
-                        <fieldset class="fieldset-item" v-for="gender in props.options.genders" :key="gender">
+                        <p v-if="props.options.genders.length === 0" class="text-secondary text-caption-1 mb-0">
+                            No gender options available yet.
+                        </p>
+                        <fieldset
+                            v-for="gender in props.options.genders"
+                            :key="gender"
+                            class="fieldset-item"
+                        >
                             <input
                                 :id="`gender-${gender}`"
                                 v-model="localFilters.gender"

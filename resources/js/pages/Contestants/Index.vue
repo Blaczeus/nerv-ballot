@@ -1,168 +1,221 @@
 <script setup lang="ts">
-import { Head } from '@inertiajs/vue3';
+import { useDebounceFn } from '@vueuse/core';
+import { Head, router, usePage } from '@inertiajs/vue3';
 import { computed, ref } from 'vue';
 import ContestantCard from '@/components/contestants/ContestantCard.vue';
 import FilterModal from '@/components/modals/FilterModal.vue';
 import Breadcrumb from '@/components/ui/Breadcrumb.vue';
+import Pagination from '@/components/ui/Pagination.vue';
+import type { ModalContestant } from '@/composables/useGlobalModals';
 import { useGlobalModals } from '@/composables/useGlobalModals';
 import { useVoteCart } from '@/composables/useVoteCart';
-import { contestants as contestantsData } from '@/data/contestants';
 import Layout from '@/layouts/Layout.vue';
 
-type Contestant = (typeof contestantsData)[number];
+type SortOption = 'most-votes' | 'recent' | 'name-az';
 
 type FiltersState = {
     contest: string | null;
     category: string | null;
     location: string | null;
     gender: string | null;
-    minVotes: number;
-    maxVotes: number;
-    activeContestsOnly: boolean;
+    min_votes: number;
+    max_votes: number;
+    active: boolean;
 };
 
-type SortOption = 'most-votes' | 'trending' | 'recent' | 'name-az';
-
-type FilterChipKey =
-    | 'active'
-    | 'contest'
-    | 'category'
-    | 'location'
-    | 'gender'
-    | 'votes';
+type FilterChipKey = 'active' | 'contest' | 'category' | 'location' | 'gender' | 'votes';
 
 type FilterChip = {
     key: FilterChipKey;
     label: string;
 };
 
-const contestants = contestantsData;
+type GridLayoutClass = 'tf-col-2' | 'tf-col-3' | 'tf-col-4' | 'tf-col-5';
+type LayoutMode = 'list' | GridLayoutClass;
+
+type BackendContestant = {
+    id: number;
+    name: string;
+    slug: string;
+    image: string | null;
+    total_votes: number;
+    contest_id: number;
+    category: string | null;
+    gender: string | null;
+    location: string | null;
+    description: string | null;
+    created_at: string | null;
+    contest: {
+        id: number;
+        name: string;
+        slug: string;
+        start_date: string | null;
+        end_date: string | null;
+    } | null;
+};
+
+type PaginationLink = {
+    url: string | null;
+    label: string;
+    active: boolean;
+};
+
+type PageProps = {
+    contestants: {
+        data: BackendContestant[];
+        meta: {
+            total: number;
+            links: PaginationLink[];
+        };
+    };
+    filterOptions: {
+        contests: Array<{ label: string; value: string }>;
+        categories: string[];
+        locations: string[];
+        genders: string[];
+    };
+    voteBounds: {
+        min_votes: number;
+        max_votes: number;
+    };
+};
+
+const FALLBACK_IMAGE = '/tmp/images/products/womens/women-19.jpg';
+const LAYOUT_STORAGE_KEY = 'contestants.layout';
+const layoutOptions: LayoutMode[] = ['list', 'tf-col-2', 'tf-col-3', 'tf-col-4', 'tf-col-5'];
+
+const page = usePage<PageProps>();
+const { openQuickView, openCart, openFilter } = useGlobalModals();
+const { addVotes } = useVoteCart();
 
 const voteFormatter = new Intl.NumberFormat('en-US');
-const formatVotes = (value: number) => voteFormatter.format(value);
+const formatVoteNumber = (value: number) => voteFormatter.format(value);
 
-const voteBounds = computed(() => {
-    const values = contestants.map((contestant) => contestant.votes);
-    const minVotes = Math.min(...values);
-    const maxVotes = Math.max(...values);
-    return { minVotes, maxVotes };
+const rawContestants = computed(() => page.props.contestants?.data ?? []);
+const meta = computed(() => {
+    return page.props.contestants?.meta ?? { total: 0, links: [] };
 });
 
-const createDefaultFilters = (): FiltersState => ({
-    contest: null,
-    category: null,
-    location: null,
-    gender: null,
-    minVotes: voteBounds.value.minVotes,
-    maxVotes: voteBounds.value.maxVotes,
-    activeContestsOnly: false,
-});
-
-const filters = ref<FiltersState>(createDefaultFilters());
+const voteBounds = computed(() => ({
+    min_votes: meta.value.total === 0 ? 0 : Number(page.props.voteBounds?.min_votes ?? 0),
+    max_votes: meta.value.total === 0 ? 10000 : Number(page.props.voteBounds?.max_votes ?? 10000),
+}));
 
 const filterOptions = computed(() => {
-    const uniqueSorted = (items: string[]) => {
-        return [...new Set(items)].sort((a, b) => a.localeCompare(b));
-    };
-
-    return {
-        contests: uniqueSorted(contestants.map((contestant) => contestant.contestName)),
-        categories: uniqueSorted(contestants.map((contestant) => contestant.category)),
-        locations: uniqueSorted(contestants.map((contestant) => contestant.location)),
-        genders: uniqueSorted(contestants.map((contestant) => contestant.gender)),
-    };
+    return (
+        page.props.filterOptions ?? {
+            contests: [],
+            categories: [],
+            locations: [],
+            genders: [],
+        }
+    );
 });
 
+const contestants = computed<ModalContestant[]>(() => {
+    return rawContestants.value.map((contestant) => ({
+        id: contestant.id,
+        slug: contestant.slug,
+        name: contestant.name,
+        contestName: contestant.contest?.name ?? 'Contest',
+        category: contestant.category ?? 'Uncategorized',
+        gender: contestant.gender ?? 'unknown',
+        location: contestant.location ?? 'unspecified',
+        votes: contestant.total_votes ?? 0,
+        contestStart: contestant.contest?.start_date?.slice(0, 10) ?? '',
+        contestEnd: contestant.contest?.end_date?.slice(0, 10) ?? '',
+        createdAt: contestant.created_at?.slice(0, 10) ?? '',
+        image: contestant.image ?? FALLBACK_IMAGE,
+        hoverImage: contestant.image ?? FALLBACK_IMAGE,
+        description: contestant.description ?? '',
+    }));
+});
+
+const createDefaultFilters = (bounds = voteBounds.value): FiltersState => {
+    return {
+        contest: null,
+        category: null,
+        location: null,
+        gender: null,
+        min_votes: bounds.min_votes,
+        max_votes: bounds.max_votes,
+        active: false,
+    };
+};
+
+const resolveInitialFilters = (): FiltersState => {
+    const query = typeof window !== 'undefined' ? new URLSearchParams(window.location.search) : new URLSearchParams();
+    const defaults = createDefaultFilters(voteBounds.value);
+
+    return {
+        contest: query.get('contest'),
+        category: query.get('category'),
+        location: query.get('location'),
+        gender: query.get('gender'),
+        min_votes: Number(query.get('min_votes')) || defaults.min_votes,
+        max_votes: Number(query.get('max_votes')) || defaults.max_votes,
+        active: query.get('active') === '1',
+    };
+};
+
+const filters = ref<FiltersState>(resolveInitialFilters());
 const sortOptions: Array<{ value: SortOption; label: string }> = [
     { value: 'most-votes', label: 'Highest Votes' },
-    { value: 'trending', label: 'Trending' },
     { value: 'recent', label: 'Recently Added' },
     { value: 'name-az', label: 'Alphabetical (A-Z)' },
 ];
 
-const sortOption = ref<SortOption>('most-votes');
+const sortOption = ref<SortOption>(
+    (() => {
+        const query = typeof window !== 'undefined' ? new URLSearchParams(window.location.search) : new URLSearchParams();
+        const sort = query.get('sort');
+        return sort === 'recent' || sort === 'name-az' || sort === 'most-votes' ? sort : 'most-votes';
+    })(),
+);
 
-const setSortOption = (value: SortOption) => {
-    sortOption.value = value;
+const buildFilterParams = () => {
+    const defaults = createDefaultFilters(voteBounds.value);
+
+    return {
+        contest: filters.value.contest ?? undefined,
+        category: filters.value.category ?? undefined,
+        location: filters.value.location ?? undefined,
+        gender: filters.value.gender ?? undefined,
+        min_votes:
+            filters.value.min_votes !== defaults.min_votes ? filters.value.min_votes : undefined,
+        max_votes:
+            filters.value.max_votes !== defaults.max_votes ? filters.value.max_votes : undefined,
+        active: filters.value.active ? 1 : undefined,
+        sort: sortOption.value !== 'most-votes' ? sortOption.value : undefined,
+    };
 };
+
+const applyFilters = useDebounceFn(() => {
+    router.get(
+        route('contestants.index'),
+        buildFilterParams(),
+        {
+            preserveState: true,
+            preserveScroll: true,
+            replace: true,
+        },
+    );
+}, 300);
 
 const currentSortLabel = computed(() => {
     return sortOptions.find((option) => option.value === sortOption.value)?.label ?? 'Highest Votes';
 });
 
-const parseDate = (value: string) => new Date(`${value}T00:00:00`);
-
-const isContestActive = (contestant: Contestant) => {
-    const startDate = parseDate(contestant.contestStart);
-    const endDate = parseDate(contestant.contestEnd);
-    const today = new Date();
-    return today >= startDate && today <= endDate;
-};
-
-const filteredContestants = computed(() => {
-    return contestants.filter((contestant) => {
-        if (filters.value.activeContestsOnly && !isContestActive(contestant)) {
-            return false;
-        }
-        if (filters.value.contest && contestant.contestName !== filters.value.contest) {
-            return false;
-        }
-        if (filters.value.category && contestant.category !== filters.value.category) {
-            return false;
-        }
-        if (filters.value.location && contestant.location !== filters.value.location) {
-            return false;
-        }
-        if (filters.value.gender && contestant.gender !== filters.value.gender) {
-            return false;
-        }
-        if (
-            contestant.votes < filters.value.minVotes ||
-            contestant.votes > filters.value.maxVotes
-        ) {
-            return false;
-        }
-        return true;
-    });
-});
-
-const getTrendingScore = (contestant: Contestant) => {
-    const today = new Date();
-    const createdDate = parseDate(contestant.createdAt);
-    const ageDays = Math.max(1, (today.getTime() - createdDate.getTime()) / 86400000);
-    return contestant.votes / ageDays;
-};
-
-const sortedContestants = computed(() => {
-    const list = [...filteredContestants.value];
-    switch (sortOption.value) {
-        case 'most-votes':
-            return list.sort((a, b) => b.votes - a.votes);
-        case 'trending':
-            return list.sort((a, b) => getTrendingScore(b) - getTrendingScore(a));
-        case 'recent':
-            return list.sort(
-                (a, b) => parseDate(b.createdAt).getTime() - parseDate(a.createdAt).getTime(),
-            );
-        case 'name-az':
-            return list.sort((a, b) => a.name.localeCompare(b.name));
-        default:
-            return list;
-    }
-});
-
-const displayedContestants = computed(() => sortedContestants.value);
-
 const hasVoteRangeFilter = computed(() => {
     return (
-        filters.value.minVotes > voteBounds.value.minVotes ||
-        filters.value.maxVotes < voteBounds.value.maxVotes
+        filters.value.min_votes > voteBounds.value.min_votes ||
+        filters.value.max_votes < voteBounds.value.max_votes
     );
 });
 
 const hasActiveFilters = computed(() => {
     return Boolean(
-        filters.value.activeContestsOnly ||
+        filters.value.active ||
             filters.value.contest ||
             filters.value.category ||
             filters.value.location ||
@@ -171,14 +224,23 @@ const hasActiveFilters = computed(() => {
     );
 });
 
+const contestLabelMap = computed(() => {
+    return Object.fromEntries(
+        filterOptions.value.contests.map((contest) => [contest.value, contest.label]),
+    );
+});
+
 const filterChips = computed<FilterChip[]>(() => {
     const chips: FilterChip[] = [];
 
-    if (filters.value.activeContestsOnly) {
+    if (filters.value.active) {
         chips.push({ key: 'active', label: 'Active Contests' });
     }
     if (filters.value.contest) {
-        chips.push({ key: 'contest', label: `Contest: ${filters.value.contest}` });
+        chips.push({
+            key: 'contest',
+            label: `Contest: ${contestLabelMap.value[filters.value.contest] ?? filters.value.contest}`,
+        });
     }
     if (filters.value.category) {
         chips.push({ key: 'category', label: `Category: ${filters.value.category}` });
@@ -192,67 +254,77 @@ const filterChips = computed<FilterChip[]>(() => {
     if (hasVoteRangeFilter.value) {
         chips.push({
             key: 'votes',
-            label: `Votes: ${formatVotes(filters.value.minVotes)} - ${formatVotes(filters.value.maxVotes)}`,
+            label: `Votes: ${formatVoteNumber(filters.value.min_votes)} - ${formatVoteNumber(filters.value.max_votes)}`,
         });
     }
 
     return chips;
 });
 
-const removeFilter = (key: FilterChipKey) => {
-    switch (key) {
-        case 'active':
-            filters.value.activeContestsOnly = false;
-            break;
-        case 'contest':
-            filters.value.contest = null;
-            break;
-        case 'category':
-            filters.value.category = null;
-            break;
-        case 'location':
-            filters.value.location = null;
-            break;
-        case 'gender':
-            filters.value.gender = null;
-            break;
-        case 'votes':
-            filters.value.minVotes = voteBounds.value.minVotes;
-            filters.value.maxVotes = voteBounds.value.maxVotes;
-            break;
-    }
-};
-
-const resetFilters = () => {
-    filters.value = createDefaultFilters();
-};
-
 const updateFilters = (nextFilters: FiltersState) => {
     filters.value = { ...filters.value, ...nextFilters };
+    applyFilters();
+};
+
+const setSortOption = (value: SortOption) => {
+    sortOption.value = value;
+    applyFilters();
 };
 
 const toggleActiveContests = () => {
-    filters.value.activeContestsOnly = !filters.value.activeContestsOnly;
+    filters.value = { ...filters.value, active: !filters.value.active };
+    applyFilters();
 };
 
-const { openQuickView, openCart, openFilter } = useGlobalModals();
-const { addVotes } = useVoteCart();
-type GridLayoutClass = 'tf-col-2' | 'tf-col-3' | 'tf-col-4' | 'tf-col-5';
-type LayoutMode = 'list' | GridLayoutClass;
+const removeFilter = (key: FilterChipKey) => {
+    const defaults = createDefaultFilters(voteBounds.value);
 
-const LAYOUT_STORAGE_KEY = 'contestants.layout';
-const layoutOptions: LayoutMode[] = ['list', 'tf-col-2', 'tf-col-3', 'tf-col-4', 'tf-col-5'];
+    switch (key) {
+        case 'active':
+            filters.value = { ...filters.value, active: false };
+            break;
+        case 'contest':
+            filters.value = { ...filters.value, contest: null };
+            break;
+        case 'category':
+            filters.value = { ...filters.value, category: null };
+            break;
+        case 'location':
+            filters.value = { ...filters.value, location: null };
+            break;
+        case 'gender':
+            filters.value = { ...filters.value, gender: null };
+            break;
+        case 'votes':
+            filters.value = {
+                ...filters.value,
+                min_votes: defaults.min_votes,
+                max_votes: defaults.max_votes,
+            };
+            break;
+    }
+
+    applyFilters();
+};
+
+const resetFilters = () => {
+    filters.value = createDefaultFilters(voteBounds.value);
+    sortOption.value = 'most-votes';
+    applyFilters();
+};
+
 const resolveInitialLayout = (): LayoutMode => {
     if (typeof window === 'undefined') return 'tf-col-4';
     const stored = window.localStorage.getItem(LAYOUT_STORAGE_KEY);
+
     if (stored && layoutOptions.includes(stored as LayoutMode)) {
         return stored as LayoutMode;
     }
+
     return 'tf-col-4';
 };
 
 const layoutMode = ref<LayoutMode>(resolveInitialLayout());
-
 const isListLayout = computed(() => layoutMode.value === 'list');
 const activeGridLayout = computed<GridLayoutClass>(() => {
     return layoutMode.value === 'list' ? 'tf-col-4' : layoutMode.value;
@@ -271,14 +343,27 @@ const gridLayoutClass = computed(() => {
 
 const setLayoutMode = (mode: LayoutMode) => {
     layoutMode.value = mode;
+
     if (typeof window !== 'undefined') {
         window.localStorage.setItem(LAYOUT_STORAGE_KEY, mode);
     }
 };
 
-const handleAddVotes = (contestant: Contestant) => {
+const handleAddVotes = (contestant: ModalContestant) => {
     addVotes(contestant.id, 1);
     openCart(contestant);
+};
+
+const handlePagination = (url: string) => {
+    router.get(
+        url,
+        {},
+        {
+            preserveState: true,
+            preserveScroll: true,
+            replace: true,
+        },
+    );
 };
 
 const breadcrumbItems = [
@@ -309,7 +394,6 @@ const breadcrumbItems = [
             container-class="container-full"
             :use-row="true"
         />
-        <!-- Section product -->
         <section class="flat-spacing">
             <div class="container">
                 <div class="tf-shop-control">
@@ -325,12 +409,12 @@ const breadcrumbItems = [
                         <button
                             type="button"
                             class="d-none d-lg-flex shop-sale-text align-items-center gap-8"
-                            :aria-pressed="filters.activeContestsOnly"
+                            :aria-pressed="filters.active"
                             @click="toggleActiveContests"
                         >
                             <i
                                 class="icon icon-checkCircle"
-                                :class="{ 'text-success': filters.activeContestsOnly }"
+                                :class="{ 'text-success': filters.active }"
                             ></i>
                             <p class="text-caption-1 mb-0">Active Contests</p>
                         </button>
@@ -493,7 +577,7 @@ const breadcrumbItems = [
                 <div :class="wrapperControlShopClass">
                     <div v-if="hasActiveFilters" class="meta-filter-shop">
                         <div class="count-text">
-                            <span class="count">{{ displayedContestants.length }}</span> Contestants Found
+                            <span class="count">{{ meta.total }}</span> Contestants Found
                         </div>
                         <div id="applied-filters" class="text-caption-1">
                             <span v-for="chip in filterChips" :key="chip.key" class="filter-tag">
@@ -514,55 +598,38 @@ const breadcrumbItems = [
                             REMOVE ALL <i class="icon icon-close"></i>
                         </button>
                     </div>
-                    <div v-show="isListLayout" class="tf-list-layout wrapper-shop" id="listLayout">
-                        <ContestantCard
-                            v-for="contestant in displayedContestants"
-                            :key="contestant.id"
-                            :contestant="contestant"
-                            layout="list"
-                            @quick-view="openQuickView"
-                            @add-to-cart="handleAddVotes"
-                        />
-                        <!-- pagination -->
-                        <ul class="wg-pagination">
-                            <li><a href="#" class="pagination-item text-button">1</a></li>
-                            <li class="active">
-                                <div class="pagination-item text-button">2</div>
-                            </li>
-                            <li><a href="#" class="pagination-item text-button">3</a></li>
-                            <li>
-                                <a href="#" class="pagination-item text-button">
-                                    <i class="icon-arrRight"></i>
-                                </a>
-                            </li>
-                        </ul>
+
+                    <div v-if="contestants.length === 0" class="text-center py-10">
+                        No contestants found.
                     </div>
-                    <div v-show="!isListLayout" :class="gridLayoutClass" id="gridLayout">
-                        <ContestantCard
-                            v-for="contestant in displayedContestants"
-                            :key="`grid-${contestant.id}`"
-                            :contestant="contestant"
-                            layout="grid"
-                            @quick-view="openQuickView"
-                            @add-to-cart="handleAddVotes"
-                        />
-                        <!-- pagination -->
-                        <ul class="wg-pagination">
-                            <li><a href="#" class="pagination-item text-button">1</a></li>
-                            <li class="active">
-                                <div class="pagination-item text-button">2</div>
-                            </li>
-                            <li><a href="#" class="pagination-item text-button">3</a></li>
-                            <li>
-                                <a href="#" class="pagination-item text-button">
-                                    <i class="icon-arrRight"></i>
-                                </a>
-                            </li>
-                        </ul>
+
+                    <div v-else>
+                        <div v-show="isListLayout" class="tf-list-layout wrapper-shop" id="listLayout">
+                            <ContestantCard
+                                v-for="contestant in contestants"
+                                :key="contestant.id"
+                                :contestant="contestant"
+                                layout="list"
+                                @quick-view="openQuickView"
+                                @add-to-cart="handleAddVotes"
+                            />
+                            <Pagination :links="meta.links" @navigate="handlePagination" />
+                        </div>
+
+                        <div v-show="!isListLayout" :class="gridLayoutClass" id="gridLayout">
+                            <ContestantCard
+                                v-for="contestant in contestants"
+                                :key="`grid-${contestant.id}`"
+                                :contestant="contestant"
+                                layout="grid"
+                                @quick-view="openQuickView"
+                                @add-to-cart="handleAddVotes"
+                            />
+                            <Pagination :links="meta.links" @navigate="handlePagination" />
+                        </div>
                     </div>
                 </div>
             </div>
         </section>
-        <!-- /Section product -->
     </Layout>
 </template>

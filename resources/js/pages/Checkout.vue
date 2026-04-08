@@ -1,20 +1,11 @@
 <script setup lang="ts">
-import { Head, Link, usePage } from '@inertiajs/vue3';
-import { computed } from 'vue';
+import { Head, Link, router, usePage } from '@inertiajs/vue3';
+import { computed, onMounted, reactive, ref } from 'vue';
 import Breadcrumb from '@/components/ui/Breadcrumb.vue';
 import { useVoteCart } from '@/composables/useVoteCart';
 import Layout from '@/layouts/Layout.vue';
 
-type AuthUser = {
-    id: number;
-    name: string;
-    email: string;
-} | null;
-
 type PageProps = {
-    auth?: {
-        user?: AuthUser;
-    };
     errors?: {
         checkout?: string;
         system?: string;
@@ -26,14 +17,98 @@ type PageProps = {
 };
 
 const page = usePage<PageProps>();
-const currentUser = computed(() => page.props.auth?.user as AuthUser);
-const errors = computed(() => page.props.errors ?? {});
+const serverErrors = computed(() => page.props.errors ?? {});
 const successMessage = computed(() => page.props.flash?.success ?? '');
 const checkoutNotice = computed(() => {
-    return errors.value.checkout ?? errors.value.system ?? '';
+    return serverErrors.value.checkout ?? serverErrors.value.system ?? '';
 });
-const itemsError = computed(() => errors.value.items ?? '');
-const { cartItems, totalVotes, finalTotal, costPerVote, formatCurrency } = useVoteCart();
+const itemsError = computed(() => formErrors.value.items ?? serverErrors.value.items ?? '');
+const { cartItems, totalVotes, finalTotal, costPerVote, formatCurrency, clearCart } = useVoteCart();
+
+const voterToken = ref('');
+const form = reactive({
+    email: '',
+});
+const formErrors = ref<Record<string, string>>({});
+
+const generateUuid = () => {
+    if (typeof crypto !== 'undefined') {
+        if (typeof crypto.randomUUID === 'function') {
+            return crypto.randomUUID();
+        }
+
+        if (typeof crypto.getRandomValues === 'function') {
+            const array = new Uint8Array(16);
+            crypto.getRandomValues(array);
+
+            array[6] = (array[6] & 0x0f) | 0x40;
+            array[8] = (array[8] & 0x3f) | 0x80;
+
+            const hex = [...array].map((byte) => byte.toString(16).padStart(2, '0'));
+
+            return `${hex.slice(0, 4).join('')}-${hex.slice(4, 6).join('')}-${hex.slice(6, 8).join('')}-${hex.slice(8, 10).join('')}-${hex.slice(10, 16).join('')}`;
+        }
+    }
+
+    return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, (character) => {
+        const random = Math.random() * 16 | 0;
+        const value = character === 'x' ? random : (random & 0x3) | 0x8;
+        return value.toString(16);
+    });
+};
+
+const checkoutItems = computed(() => {
+    return cartItems.value.map((item) => ({
+        contestant_id: item.contestant_id,
+        votes: item.votes,
+    }));
+});
+
+const validateForm = () => {
+    formErrors.value = {};
+
+    if (!form.email.trim()) {
+        formErrors.value.email = 'Email is required';
+    } else if (!/^\S+@\S+\.\S+$/.test(form.email)) {
+        formErrors.value.email = 'Enter a valid email';
+    }
+
+    if (!cartItems.value.length) {
+        formErrors.value.items = 'Your cart is empty';
+    }
+
+    return Object.keys(formErrors.value).length === 0;
+};
+
+const handleCheckout = () => {
+    if (!validateForm() || !voterToken.value) {
+        return;
+    }
+
+    router.post('/checkout', {
+        email: form.email.trim(),
+        voter_token: voterToken.value,
+        checkout_token: generateUuid(),
+        items: checkoutItems.value,
+    }, {
+        preserveScroll: true,
+        onSuccess: () => {
+            clearCart();
+        },
+    });
+};
+
+onMounted(() => {
+    const storedToken = window.localStorage.getItem('voter_token');
+
+    if (storedToken) {
+        voterToken.value = storedToken;
+        return;
+    }
+
+    voterToken.value = generateUuid();
+    window.localStorage.setItem('voter_token', voterToken.value);
+});
 </script>
 
 <template>
@@ -66,6 +141,7 @@ const { cartItems, totalVotes, finalTotal, costPerVote, formatCurrency } = useVo
                         class="tf-notice text-center"
                         style="padding: 14px 18px; border: 1px solid #fecaca; background: #fef2f2; color: #991b1b;"
                     >
+                        <strong class="d-block mb_4">Checkout notice</strong>
                         {{ checkoutNotice }}
                     </div>
                     <div
@@ -73,119 +149,63 @@ const { cartItems, totalVotes, finalTotal, costPerVote, formatCurrency } = useVo
                         class="tf-notice text-center"
                         style="padding: 14px 18px; border: 1px solid #fed7aa; background: #fff7ed; color: #9a3412;"
                     >
+                        <strong class="d-block mb_4">Vote submission issue</strong>
                         {{ itemsError }}
                     </div>
                 </div>
                 <div class="row">
                     <div class="col-xl-6">
                         <div class="flat-spacing tf-page-checkout">
-                            <div v-if="!currentUser" class="wrap">
-                                <h5 class="title">Authentication Required</h5>
-                                <p class="text-secondary mb_16">
-                                    Login or create an account to complete your vote.
+                            <div class="wrap">
+                                <h5 class="title">Voter Details</h5>
+                                <p v-if="checkoutNotice" class="text-caption-1 text-danger mb_16">
+                                    {{ checkoutNotice }}
                                 </p>
-                                <div class="d-flex flex-wrap gap-12">
-                                    <Link href="/login" class="tf-btn btn-reset">Login</Link>
-                                    <Link href="/register" class="tf-btn">Create Account</Link>
-                                </div>
+                                <form class="info-box">
+                                    <div>
+                                        <input v-model="form.email" type="email" placeholder="Email Address*" required>
+                                        <p v-if="formErrors.email" class="text-danger mt_8 mb-0">{{ formErrors.email }}</p>
+                                    </div>
+                                </form>
                             </div>
-                            <template v-else>
-                                <div class="wrap">
-                                    <h5 class="title">Voter Details</h5>
-                                    <p v-if="checkoutNotice" class="text-caption-1 text-danger mb_16">
-                                        {{ checkoutNotice }}
-                                    </p>
-                                    <form class="info-box">
-                                        <div class="grid-2">
-                                            <input type="text" placeholder="First Name*">
-                                            <input type="text" placeholder="Last Name*">
-                                        </div>
-                                        <div class="grid-2">
-                                            <input type="text" placeholder="Email Address*">
-                                            <input type="text" placeholder="Phone Number*">
-                                        </div>
-                                    </form>
-                                </div>
-                                <div class="wrap">
-                                    <h5 class="title">Choose Payment Method</h5>
-                                    <form class="form-payment">
-                                        <div class="payment-box" id="payment-box">
-                                            <div class="payment-item payment-choose-card active">
-                                                <label
-                                                    for="credit-card-method"
-                                                    class="payment-header"
-                                                    data-bs-toggle="collapse"
-                                                    data-bs-target="#credit-card-payment"
-                                                    aria-controls="credit-card-payment"
+                            <div class="wrap">
+                                <h5 class="title">Choose Payment Method</h5>
+                                <form class="form-payment" @submit.prevent="handleCheckout">
+                                    <div class="payment-box" id="payment-box">
+                                        <div class="payment-item payment-choose-card active">
+                                            <label
+                                                for="credit-card-method"
+                                                class="payment-header"
+                                                data-bs-toggle="collapse"
+                                                data-bs-target="#credit-card-payment"
+                                                aria-controls="credit-card-payment"
+                                            >
+                                                <input
+                                                    type="radio"
+                                                    name="payment-method"
+                                                    class="tf-check-rounded"
+                                                    id="credit-card-method"
+                                                    checked
                                                 >
-                                                    <input
-                                                        type="radio"
-                                                        name="payment-method"
-                                                        class="tf-check-rounded"
-                                                        id="credit-card-method"
-                                                        checked
-                                                    >
-                                                    <span class="text-title">Card Payment</span>
-                                                </label>
-                                                <div id="credit-card-payment" class="collapse show" data-bs-parent="#payment-box">
-                                                    <div class="payment-body">
-                                                        <p class="text-secondary">
-                                                            Enter your card details to confirm your vote selection securely.
-                                                        </p>
-                                                        <div class="input-payment-box">
-                                                            <input type="text" placeholder="Name On Card*">
-                                                            <div class="ip-card">
-                                                                <input type="text" placeholder="Card Numbers*">
-                                                                <div class="list-card">
-                                                                    <img src="/tmp/images/payment/img-7.png" width="48" height="16" alt="card">
-                                                                    <img src="/tmp/images/payment/img-8.png" width="21" height="16" alt="card">
-                                                                    <img src="/tmp/images/payment/img-9.png" width="22" height="16" alt="card">
-                                                                    <img src="/tmp/images/payment/img-10.png" width="24" height="16" alt="card">
-                                                                </div>
-                                                            </div>
-                                                            <div class="grid-2">
-                                                                <input type="date">
-                                                                <input type="text" placeholder="CVV*">
-                                                            </div>
-                                                        </div>
-                                                        <div class="check-save">
-                                                            <input type="checkbox" class="tf-check" id="check-card" checked>
-                                                            <label for="check-card">Save Card Details</label>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                            <div class="payment-item paypal-item">
-                                                <label
-                                                    for="paypal-method"
-                                                    class="payment-header collapsed"
-                                                    data-bs-toggle="collapse"
-                                                    data-bs-target="#paypal-method-payment"
-                                                    aria-controls="paypal-method-payment"
-                                                >
-                                                    <input
-                                                        type="radio"
-                                                        name="payment-method"
-                                                        class="tf-check-rounded"
-                                                        id="paypal-method"
-                                                    >
-                                                    <span class="paypal-title">
-                                                        <img src="/tmp/images/payment/paypal.png" alt="paypal">
-                                                    </span>
-                                                </label>
-                                                <div id="paypal-method-payment" class="collapse" data-bs-parent="#payment-box">
-                                                    <div class="payment-body">
-                                                        <p class="text-secondary mb-0">
-                                                            Continue with PayPal to complete payment and submit your votes.
-                                                        </p>
-                                                    </div>
+                                                <span class="text-title">Secure Payment</span>
+                                            </label>
+                                            <div id="credit-card-payment" class="collapse show" data-bs-parent="#payment-box">
+                                                <div class="payment-body">
+                                                    <p class="text-secondary">
+                                                        Payments are processed securely via our payment provider.
+                                                    </p>
+                                                    <p class="text-secondary mb-0">
+                                                        You will be redirected to complete your payment.
+                                                    </p>
                                                 </div>
                                             </div>
                                         </div>
-                                        <button class="tf-btn btn-reset">Confirm &amp; Pay</button>
-                                    </form>
-                                </div>
-                            </template>
+                                    </div>
+                                    <button class="tf-btn btn-reset" type="submit" :disabled="!cartItems.length || !voterToken">
+                                        Proceed to Payment
+                                    </button>
+                                </form>
+                            </div>
                         </div>
                     </div>
                     <div class="col-xl-1">
@@ -201,7 +221,7 @@ const { cartItems, totalVotes, finalTotal, costPerVote, formatCurrency } = useVo
                                 <div class="list-product">
                                     <div
                                         v-for="item in cartItems"
-                                        :key="item.id"
+                                        :key="item.contestant_id"
                                         class="item-product"
                                     >
                                         <Link :href="`/contestants/${item.contestant.slug}`" class="img-product">

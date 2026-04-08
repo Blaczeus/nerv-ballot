@@ -10,12 +10,12 @@ const { cartItems, totalVotes, finalTotal, costPerVote, formatCurrency, updateVo
 
 const isOpen = computed(() => state.activeModal === 'cart');
 
-const decreaseVotes = (entryId: number, currentVotes: number) => {
-    updateVotes(entryId, currentVotes - 1);
+const decreaseVotes = (contestantId: number, currentVotes: number) => {
+    updateVotes(contestantId, currentVotes - 1);
 };
 
-const increaseVotes = (entryId: number, currentVotes: number) => {
-    updateVotes(entryId, currentVotes + 1);
+const increaseVotes = (contestantId: number, currentVotes: number) => {
+    updateVotes(contestantId, currentVotes + 1);
 };
 
 const closeCart = () => {
@@ -45,7 +45,7 @@ const closeCart = () => {
                                     <div v-if="cartItems.length" class="tf-mini-cart-items">
                                         <div
                                             v-for="item in cartItems"
-                                            :key="item.id"
+                                            :key="item.contestant_id"
                                             class="tf-mini-cart-item file-delete"
                                         >
                                             <div class="tf-mini-cart-image">
@@ -74,7 +74,7 @@ const closeCart = () => {
                                                     </div>
                                                     <span
                                                         class="remove icon-close"
-                                                        @click="removeVotes(item.id)"
+                                                        @click="removeVotes(item.contestant_id)"
                                                     ></span>
                                                 </div>
                                                 <div
@@ -83,7 +83,7 @@ const closeCart = () => {
                                                     <div class="wg-quantity">
                                                         <span
                                                             class="btn-quantity btn-decrease"
-                                                            @click="decreaseVotes(item.id, item.votes)"
+                                                            @click="decreaseVotes(item.contestant_id, item.votes)"
                                                         >
                                                             -
                                                         </span>
@@ -95,7 +95,7 @@ const closeCart = () => {
                                                         />
                                                         <span
                                                             class="btn-quantity btn-increase"
-                                                            @click="increaseVotes(item.id, item.votes)"
+                                                            @click="increaseVotes(item.contestant_id, item.votes)"
                                                         >
                                                             +
                                                         </span>

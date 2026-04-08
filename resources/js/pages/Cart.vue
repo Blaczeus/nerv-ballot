@@ -8,12 +8,12 @@ import { formatVotes } from '@/utils/formatVotes';
 const { cartItems, totalVotes, finalTotal, costPerVote, formatCurrency, updateVotes, removeVotes } =
     useVoteCart();
 
-const decreaseVotes = (selectionId: number, currentVotes: number) => {
-    updateVotes(selectionId, currentVotes - 1);
+const decreaseVotes = (contestantId: number, currentVotes: number) => {
+    updateVotes(contestantId, currentVotes - 1);
 };
 
-const increaseVotes = (selectionId: number, currentVotes: number) => {
-    updateVotes(selectionId, currentVotes + 1);
+const increaseVotes = (contestantId: number, currentVotes: number) => {
+    updateVotes(contestantId, currentVotes + 1);
 };
 </script>
 
@@ -55,7 +55,7 @@ const increaseVotes = (selectionId: number, currentVotes: number) => {
                                 <tbody>
                                     <tr
                                         v-for="item in cartItems"
-                                        :key="item.id"
+                                        :key="item.contestant_id"
                                         class="tf-cart-item"
                                     >
                                         <td class="tf-cart-item_product">
@@ -98,7 +98,7 @@ const increaseVotes = (selectionId: number, currentVotes: number) => {
                                             <div class="wg-quantity mx-md-auto">
                                                 <span
                                                     class="btn-quantity vote-stepper-btn"
-                                                    @click="decreaseVotes(item.id, item.votes)"
+                                                    @click="decreaseVotes(item.contestant_id, item.votes)"
                                                 >
                                                     -
                                                 </span>
@@ -111,7 +111,7 @@ const increaseVotes = (selectionId: number, currentVotes: number) => {
                                                 >
                                                 <span
                                                     class="btn-quantity vote-stepper-btn"
-                                                    @click="increaseVotes(item.id, item.votes)"
+                                                    @click="increaseVotes(item.contestant_id, item.votes)"
                                                 >
                                                     +
                                                 </span>
@@ -131,7 +131,7 @@ const increaseVotes = (selectionId: number, currentVotes: number) => {
                                         >
                                             <span
                                                 class="vote-remove icon icon-close"
-                                                @click="removeVotes(item.id)"
+                                                @click="removeVotes(item.contestant_id)"
                                             ></span>
                                         </td>
                                     </tr>
@@ -167,7 +167,7 @@ const increaseVotes = (selectionId: number, currentVotes: number) => {
                                             <a href="term-of-use.html">voting terms and conditions</a>
                                         </label>
                                     </fieldset>
-                                    <a href="/checkout" class="tf-btn btn-reset">Proceed to Vote</a>
+                                    <Link href="/checkout" class="tf-btn btn-reset">Proceed to Vote</Link>
                                     <div class="text-center">
                                         <Link href="/contestants" class="text-button">Continue Voting</Link>
                                     </div>

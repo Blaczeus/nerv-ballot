@@ -37,7 +37,9 @@ class Vote extends Model
     protected $fillable = [
         'transaction_id',
         'user_id',
+        'voter_token',
         'contestant_id',
+        'contest_id',
         'votes_count',
     ];
 

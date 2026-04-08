@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Contest;
 use App\Models\Contestant;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
 use Inertia\Response;
@@ -172,6 +173,52 @@ class ContestantController extends Controller
 
         return Inertia::render('Contestants/Show', [
             'contestant' => $contestant,
+        ]);
+    }
+
+    /**
+     * Return contestant summaries for vote cart rendering.
+     */
+    public function cartItems(Request $request): JsonResponse
+    {
+        $ids = collect($request->input('ids', []))
+            ->map(fn ($id) => (int) $id)
+            ->filter(fn ($id) => $id > 0)
+            ->unique()
+            ->values();
+
+        if ($ids->isEmpty()) {
+            return response()->json([
+                'contestants' => [],
+            ]);
+        }
+
+        $contestants = Contestant::query()
+            ->select([
+                'id',
+                'name',
+                'slug',
+                'image',
+                'total_votes',
+                'contest_id',
+            ])
+            ->with('contest:id,name')
+            ->whereIn('id', $ids)
+            ->whereNull('deleted_at')
+            ->get()
+            ->map(fn (Contestant $contestant): array => [
+                'id' => $contestant->id,
+                'name' => $contestant->name,
+                'slug' => $contestant->slug,
+                'image' => $contestant->image,
+                'total_votes' => $contestant->total_votes,
+                'contest_id' => $contestant->contest_id,
+                'contest_name' => $contestant->contest?->name,
+            ])
+            ->values();
+
+        return response()->json([
+            'contestants' => $contestants,
         ]);
     }
 }

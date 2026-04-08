@@ -22,25 +22,31 @@ class CheckoutController extends Controller
      */
     public function process(Request $request): RedirectResponse
     {
-        $userId = $request->user()->id;
+        $userId = $request->user()?->id;
+        $voterToken = (string) $request->input('voter_token', '');
         $checkoutToken = (string) $request->input('checkout_token', '');
 
-        if ($response = $this->ensureVotingIsEnabled($userId, $checkoutToken)) {
+        if ($response = $this->ensureVotingIsEnabled($userId, $checkoutToken, $voterToken)) {
             return $response;
         }
 
         $validated = $request->validate([
             'checkout_token' => ['required', 'string'],
+            'voter_token' => ['required', 'uuid'],
+            'email' => ['nullable', 'email'],
             'items' => ['required', 'array', 'min:1'],
             'items.*.contestant_id' => ['required', 'exists:contestants,id'],
             'items.*.votes' => ['required', 'integer', 'min:1', 'max:1000'],
         ]);
 
         $checkoutToken = $validated['checkout_token'];
+        $voterToken = $validated['voter_token'];
+        $email = $validated['email'] ?? null;
 
         if (Transaction::query()->where('checkout_token', $checkoutToken)->exists()) {
             Log::warning('Duplicate checkout request detected before processing.', [
                 'user_id' => $userId,
+                'voter_token' => $voterToken,
                 'checkout_token' => $checkoutToken,
             ]);
 
@@ -51,7 +57,7 @@ class CheckoutController extends Controller
         $items = $this->normalizeItems($validated['items']);
 
         try {
-            DB::transaction(function () use ($items, $checkoutToken, $pricePerVote, $userId): void {
+            DB::transaction(function () use ($items, $checkoutToken, $pricePerVote, $userId, $voterToken, $email): void {
                 $contestantIds = $items->pluck('contestant_id')->all();
 
                 $contestants = Contestant::query()
@@ -69,12 +75,16 @@ class CheckoutController extends Controller
                 }
 
                 $this->validateContestAvailability($contestants, $userId, $checkoutToken);
+                $contestId = $this->resolveContestId($contestants);
+                $this->enforceVoteLimit($userId, $voterToken, $contestId, $items);
 
                 $totalVotes = $items->sum('votes');
                 $totalAmount = number_format($totalVotes * (float) $pricePerVote, 2, '.', '');
 
                 $transaction = Transaction::query()->create([
                     'user_id' => $userId,
+                    'voter_token' => $voterToken,
+                    'email' => $email,
                     'checkout_token' => $checkoutToken,
                     'total_votes' => $totalVotes,
                     'price_per_vote' => $pricePerVote,
@@ -82,33 +92,40 @@ class CheckoutController extends Controller
                     'status' => 'completed',
                 ]);
 
-                foreach ($items as $item) {
-                    Vote::query()->create([
-                        'transaction_id' => $transaction->id,
-                        'user_id' => $userId,
-                        'contestant_id' => $item['contestant_id'],
-                        'votes_count' => $item['votes'],
-                    ]);
+                if (config('app.voting_mode') === 'free') {
+                    foreach ($items as $item) {
+                        Vote::query()->create([
+                            'transaction_id' => $transaction->id,
+                            'user_id' => $userId,
+                            'voter_token' => $voterToken,
+                            'contestant_id' => $item['contestant_id'],
+                            'contest_id' => $contestId,
+                            'votes_count' => $item['votes'],
+                        ]);
 
-                    Contestant::query()
-                        ->whereKey($item['contestant_id'])
-                        ->increment('total_votes', $item['votes']);
+                        Contestant::query()
+                            ->whereKey($item['contestant_id'])
+                            ->increment('total_votes', $item['votes']);
+                    }
+
+                    Cache::forget('leaderboard_all_page_1');
+
+                    $contestants
+                        ->pluck('contest_id')
+                        ->filter()
+                        ->unique()
+                        ->each(function ($contestId): void {
+                            Cache::forget("leaderboard_{$contestId}_page_1");
+                        });
                 }
-
-                Cache::forget('leaderboard_all_page_1');
-
-                $contestants
-                    ->pluck('contest_id')
-                    ->filter()
-                    ->unique()
-                    ->each(function ($contestId): void {
-                        Cache::forget("leaderboard_{$contestId}_page_1");
-                    });
 
                 Log::info('Checkout processed successfully.', [
                     'user_id' => $userId,
+                    'voter_token' => $voterToken,
+                    'email' => $email,
                     'checkout_token' => $checkoutToken,
                     'transaction_id' => $transaction->id,
+                    'contest_id' => $contestId,
                     'total_votes' => $totalVotes,
                     'total_amount' => $totalAmount,
                 ]);
@@ -117,6 +134,7 @@ class CheckoutController extends Controller
             if ($this->isCheckoutTokenConflict($exception)) {
                 Log::warning('Duplicate checkout request blocked by database constraint.', [
                     'user_id' => $userId,
+                    'voter_token' => $voterToken,
                     'checkout_token' => $checkoutToken,
                 ]);
 
@@ -132,7 +150,7 @@ class CheckoutController extends Controller
     /**
      * Ensure voting is currently enabled system-wide.
      */
-    protected function ensureVotingIsEnabled(int $userId, string $checkoutToken): ?RedirectResponse
+    protected function ensureVotingIsEnabled(?int $userId, string $checkoutToken, string $voterToken): ?RedirectResponse
     {
         $votingEnabled = filter_var(
             Setting::get('voting_enabled', true),
@@ -143,6 +161,7 @@ class CheckoutController extends Controller
         if ($votingEnabled === false) {
             Log::warning('Voting attempt blocked because voting is disabled.', [
                 'user_id' => $userId,
+                'voter_token' => $voterToken,
                 'checkout_token' => $checkoutToken,
             ]);
 
@@ -199,7 +218,7 @@ class CheckoutController extends Controller
     /**
      * Ensure all selected contestants belong to active contests.
      */
-    protected function validateContestAvailability(Collection $contestants, int $userId, string $checkoutToken): void
+    protected function validateContestAvailability(Collection $contestants, ?int $userId, string $checkoutToken): void
     {
         $now = now();
 
@@ -222,6 +241,52 @@ class CheckoutController extends Controller
                     'items' => 'One or more selected contestants are not available for voting right now.',
                 ]);
             }
+        }
+    }
+
+    /**
+     * Ensure all selected contestants belong to the same contest.
+     */
+    protected function resolveContestId(Collection $contestants): int
+    {
+        $contestIds = $contestants
+            ->pluck('contest_id')
+            ->filter()
+            ->unique()
+            ->values();
+
+        if ($contestIds->count() !== 1) {
+            throw ValidationException::withMessages([
+                'items' => 'All selected contestants must belong to the same contest.',
+            ]);
+        }
+
+        return (int) $contestIds->first();
+    }
+
+    /**
+     * Enforce the contest vote limit for the provided voter token.
+     */
+    protected function enforceVoteLimit(?int $userId, string $voterToken, int $contestId, Collection $items): void
+    {
+        $incomingVotes = (int) $items->sum('votes');
+
+        $voteLimitQuery = Vote::query()
+            ->where('contest_id', $contestId)
+            ->lockForUpdate();
+
+        if ($userId) {
+            $voteLimitQuery->where('user_id', $userId);
+        } else {
+            $voteLimitQuery->where('voter_token', $voterToken);
+        }
+
+        $existingVotes = (int) $voteLimitQuery->sum('votes_count');
+
+        if (($existingVotes + $incomingVotes) > 50) {
+            throw ValidationException::withMessages([
+                'items' => 'Vote limit exceeded for this contest',
+            ]);
         }
     }
 

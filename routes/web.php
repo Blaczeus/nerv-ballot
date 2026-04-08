@@ -1,22 +1,23 @@
 <?php
 
+use App\Http\Controllers\ContestantController;
 use App\Http\Controllers\CheckoutController;
+use App\Http\Controllers\LeaderboardController;
 use Inertia\Inertia;
 use Illuminate\Support\Facades\Route;
 
 Route::inertia('/', 'Home')->name('home');
-Route::inertia('/contestants', 'Contestants/Index')->name('contestants');
+Route::get('/contestants', [ContestantController::class, 'index'])->name('contestants.index');
+Route::get('/contestants/cart-items', [ContestantController::class, 'cartItems'])->name('contestants.cart-items');
 Route::inertia('/about', 'About')->name('about');
 Route::inertia('/cart', 'Cart')->name('cart');
 Route::inertia('/checkout', 'Checkout')->name('checkout');
 Route::post('/checkout', [CheckoutController::class, 'process'])
-    ->middleware('auth')
+    ->middleware('throttle:10,1')
     ->name('checkout.process');
 Route::inertia('/vote-success', 'VoteSuccess')->name('voteSuccess');
-Route::inertia('/leaderboard', 'Leaderboard')->name('leaderboard');
-Route::get('/contestants/{slug}', function (string $slug) {
-    return Inertia::render('Contestants/Show', ['slug' => $slug]);
-})->name('contestant');
+Route::get('/leaderboard', [LeaderboardController::class, 'index'])->name('leaderboard');
+Route::get('/contestants/{slug}', [ContestantController::class, 'show'])->name('contestant');
 
 Route::middleware(['auth', 'verified'])->group(function () {
     Route::inertia('/dashboard', 'Dashboard')->name('dashboard');

@@ -54,6 +54,8 @@ return [
 
     'url' => env('APP_URL', 'http://localhost'),
 
+    'voting_mode' => env('VOTING_MODE', 'free'),
+
     /*
     |--------------------------------------------------------------------------
     | Application Timezone

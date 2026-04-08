@@ -18,6 +18,8 @@ class Transaction extends Model
      */
     protected $fillable = [
         'user_id',
+        'voter_token',
+        'email',
         'checkout_token',
         'total_votes',
         'price_per_vote',

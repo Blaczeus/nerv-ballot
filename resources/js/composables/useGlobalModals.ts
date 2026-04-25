@@ -1,10 +1,13 @@
 import { reactive } from 'vue';
+import type { ContestStatus } from '@/utils/contestStatus';
 
 export type ModalContestant = {
     id: number;
+    contestId?: number | null;
     slug: string;
     name: string;
     contestName: string;
+    contestStatus: ContestStatus | null;
     category: string;
     location: string;
     gender: string;

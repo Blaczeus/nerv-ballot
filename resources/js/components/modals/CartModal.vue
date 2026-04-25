@@ -5,8 +5,18 @@ import { useGlobalModals } from '@/composables/useGlobalModals';
 import { useVoteCart } from '@/composables/useVoteCart';
 
 const { state, closeModal } = useGlobalModals();
-const { cartItems, totalVotes, finalTotal, costPerVote, formatCurrency, updateVotes, removeVotes } =
-    useVoteCart();
+const {
+    cartItems,
+    cartNotice,
+    totalVotes,
+    finalTotal,
+    costPerVote,
+    formatCurrency,
+    isCartReady,
+    getMaxVotesAllowed,
+    updateVotes,
+    removeVotes,
+} = useVoteCart();
 
 const isOpen = computed(() => state.activeModal === 'cart');
 
@@ -16,6 +26,17 @@ const decreaseVotes = (contestantId: number, currentVotes: number) => {
 
 const increaseVotes = (contestantId: number, currentVotes: number) => {
     updateVotes(contestantId, currentVotes + 1);
+};
+
+const setVotesFromInput = (contestantId: number, event: Event) => {
+    const target = event.target as HTMLInputElement | null;
+    const value = target?.value ?? '1';
+    const parsedValue = Number(value);
+    updateVotes(contestantId, Number.isFinite(parsedValue) ? parsedValue : 1);
+};
+
+const addVoteBatch = (contestantId: number, currentVotes: number, amount: number) => {
+    updateVotes(contestantId, currentVotes + amount);
 };
 
 const closeCart = () => {
@@ -40,6 +61,13 @@ const closeCart = () => {
                     </div>
                     <div class="wrap">
                         <div class="tf-mini-cart-wrap">
+                            <div
+                                v-if="cartNotice"
+                                class="tf-notice text-center mb_16"
+                                style="padding: 14px 18px; border: 1px solid #fed7aa; background: #fff7ed; color: #9a3412;"
+                            >
+                                {{ cartNotice }}
+                            </div>
                             <div class="tf-mini-cart-main">
                                 <div class="tf-mini-cart-sroll">
                                     <div v-if="cartItems.length" class="tf-mini-cart-items">
@@ -50,6 +78,7 @@ const closeCart = () => {
                                         >
                                             <div class="tf-mini-cart-image">
                                                 <img
+                                                    v-if="item.contestant.image"
                                                     class="lazyload"
                                                     :data-src="item.contestant.image"
                                                     :src="item.contestant.image"
@@ -80,25 +109,33 @@ const closeCart = () => {
                                                 <div
                                                     class="d-flex align-items-center justify-content-between flex-wrap gap-12 mb_12"
                                                 >
-                                                    <div class="wg-quantity">
-                                                        <span
-                                                            class="btn-quantity btn-decrease"
-                                                            @click="decreaseVotes(item.contestant_id, item.votes)"
-                                                        >
-                                                            -
-                                                        </span>
-                                                        <input
-                                                            :value="item.votes"
-                                                            type="text"
-                                                            class="quantity-product"
-                                                            readonly
-                                                        />
-                                                        <span
-                                                            class="btn-quantity btn-increase"
-                                                            @click="increaseVotes(item.contestant_id, item.votes)"
-                                                        >
-                                                            +
-                                                        </span>
+                                                    <div class="mini-cart-vote-controls">
+                                                        <div class="wg-quantity">
+                                                            <span
+                                                                class="btn-quantity btn-decrease"
+                                                                @click="decreaseVotes(item.contestant_id, item.votes)"
+                                                            >
+                                                                -
+                                                            </span>
+                                                            <input
+                                                                :value="item.votes"
+                                                                type="number"
+                                                                min="1"
+                                                                :max="getMaxVotesAllowed(item.contestant_id)"
+                                                                class="quantity-product"
+                                                                @input="setVotesFromInput(item.contestant_id, $event)"
+                                                            />
+                                                            <span
+                                                                class="btn-quantity btn-increase"
+                                                                @click="increaseVotes(item.contestant_id, item.votes)"
+                                                            >
+                                                                +
+                                                            </span>
+                                                        </div>
+                                                        <div class="mini-cart-batch-actions">
+                                                            <button type="button" class="mini-cart-batch-btn" @click="addVoteBatch(item.contestant_id, item.votes, 5)">+5</button>
+                                                            <button type="button" class="mini-cart-batch-btn" @click="addVoteBatch(item.contestant_id, item.votes, 10)">+10</button>
+                                                        </div>
                                                     </div>
                                                     <div class="text-secondary-2">
                                                         {{ formatCurrency(costPerVote) }} per vote
@@ -117,8 +154,8 @@ const closeCart = () => {
                                             </div>
                                         </div>
                                     </div>
-                                    <div v-else class="text-center py-5">
-                                        <p class="text-secondary mb_12">No votes selected yet.</p>
+                                    <div v-else-if="isCartReady" class="text-center py-5">
+                                        <p class="text-secondary mb_12">No contestants selected yet.</p>
                                         <Link href="/contestants" class="btn-line" @click="closeCart">
                                             Explore Contestants
                                         </Link>
@@ -171,3 +208,41 @@ const closeCart = () => {
         </div>
     </div>
 </template>
+
+<style scoped>
+.mini-cart-vote-controls {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.mini-cart-vote-controls .quantity-product {
+    width: 72px;
+    text-align: center;
+}
+
+.mini-cart-batch-actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+}
+
+.mini-cart-batch-btn {
+    border: 1px solid rgba(24, 24, 24, 0.14);
+    border-radius: 999px;
+    background: #fff;
+    color: #181818;
+    font-size: 11px;
+    font-weight: 600;
+    line-height: 1;
+    padding: 7px 10px;
+}
+
+.mini-cart-batch-btn:hover,
+.mini-cart-batch-btn:focus-visible {
+    border-color: #181818;
+    background: #181818;
+    color: #fff;
+    outline: none;
+}
+</style>

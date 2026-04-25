@@ -1,13 +1,14 @@
 <script setup lang="ts">
-import { Link } from '@inertiajs/vue3';
+import { Link, router } from '@inertiajs/vue3';
 import { computed, ref, watch } from 'vue';
 import { useGlobalModals } from '@/composables/useGlobalModals';
 import { useVoteCart } from '@/composables/useVoteCart';
 import { COST_PER_VOTE } from '@/config/voting';
+import { getContestStatusLabel, isVotingOpen } from '@/utils/contestStatus';
 import { formatVotes } from '@/utils/formatVotes';
 
 const { state, openCart, closeModal } = useGlobalModals();
-const { addVotes, formatCurrency } = useVoteCart();
+const { addVotes, cartNotice, formatCurrency, getMaxVotesAllowed, maxVotesPerContest } = useVoteCart();
 
 const votes = ref(1);
 
@@ -19,23 +20,43 @@ const formattedVoteCount = computed(() => {
 });
 const costPerVoteLabel = computed(() => formatCurrency(COST_PER_VOTE));
 const totalCostLabel = computed(() => formatCurrency(votes.value * COST_PER_VOTE));
+const contestStatusLabel = computed(() => getContestStatusLabel(contestant.value?.contestStatus));
+const canVote = computed(() => isVotingOpen(contestant.value?.contestStatus));
+const maxVotesAllowed = computed(() => {
+    if (!contestant.value) return maxVotesPerContest;
+    return Math.max(1, getMaxVotesAllowed(contestant.value.id, contestant.value));
+});
 
 const updateVotes = (nextVotes: number) => {
-    votes.value = Math.max(1, nextVotes);
+    votes.value = Math.min(maxVotesAllowed.value, Math.max(1, Math.floor(nextVotes)));
+};
+
+const setVotesFromInput = (event: Event) => {
+    const target = event.target as HTMLInputElement | null;
+    const value = target?.value ?? '1';
+    const parsedValue = Number(value);
+    updateVotes(Number.isFinite(parsedValue) ? parsedValue : 1);
+};
+
+const addQuickVotes = (amount: number) => {
+    updateVotes(votes.value + amount);
 };
 
 const handleAddVotes = () => {
     if (!contestant.value) return;
 
-    addVotes(contestant.value.id, votes.value);
-    openCart(contestant.value);
+    if (addVotes(contestant.value.id, votes.value, contestant.value)) {
+        openCart(contestant.value);
+    }
 };
 
 const handleVoteNow = () => {
     if (!contestant.value) return;
 
-    addVotes(contestant.value.id, votes.value);
-    closeModal('quickView');
+    if (addVotes(contestant.value.id, votes.value, contestant.value)) {
+        closeModal('quickView');
+        router.visit('/cart');
+    }
 };
 
 watch(
@@ -78,6 +99,13 @@ watch(
                             <div class="tf-product-info-name">
                                 <div class="text text-btn-uppercase">{{ contestant?.contestName ?? 'Contest' }}</div>
                                 <h3 class="name">{{ contestant?.name ?? 'Contestant' }}</h3>
+                                <span
+                                    v-if="contestant"
+                                    class="contest-status-pill"
+                                    :class="`status-${contestant.contestStatus ?? 'ended'}`"
+                                >
+                                    {{ contestStatusLabel }}
+                                </span>
                             </div>
                             <div class="tf-product-info-desc">
                                 <div class="tf-product-info-price">
@@ -105,10 +133,12 @@ watch(
                                     </span>
                                     <input
                                         :value="votes"
-                                        type="text"
+                                        type="number"
                                         class="quantity-product"
                                         name="number"
-                                        readonly
+                                        min="1"
+                                        :max="maxVotesAllowed"
+                                        @input="setVotesFromInput($event)"
                                     />
                                     <span
                                         class="btn-quantity btn-increase"
@@ -117,12 +147,18 @@ watch(
                                         +
                                     </span>
                                 </div>
+                                <div class="quick-vote-batch-actions">
+                                    <button type="button" class="quick-vote-batch-btn" @click="addQuickVotes(5)">+5</button>
+                                    <button type="button" class="quick-vote-batch-btn" @click="addQuickVotes(10)">+10</button>
+                                    <button type="button" class="quick-vote-batch-btn" @click="addQuickVotes(20)">+20</button>
+                                </div>
                             </div>
                             <div>
                                 <div class="tf-product-info-by-btn mb_10">
                                     <button
                                         type="button"
                                         class="btn-style-2 flex-grow-1 text-btn-uppercase fw-6"
+                                        :class="{ 'is-disabled-action': !canVote }"
                                         @click="handleAddVotes"
                                     >
                                         <span>Add Votes -&nbsp;</span>
@@ -132,10 +168,14 @@ watch(
                                 <Link
                                     href="/cart"
                                     class="btn-style-3 text-btn-uppercase"
-                                    @click="handleVoteNow"
+                                    :class="{ 'is-disabled-action': !canVote }"
+                                    @click.prevent="handleVoteNow"
                                 >
                                     Vote Now
                                 </Link>
+                                <p v-if="cartNotice" class="text-caption-1 text-danger mt_12 mb-0">
+                                    {{ cartNotice }}
+                                </p>
                             </div>
                         </div>
                     </div>
@@ -144,3 +184,60 @@ watch(
         </div>
     </div>
 </template>
+
+<style scoped>
+.contest-status-pill {
+    display: inline-flex;
+    margin-top: 12px;
+    padding: 6px 12px;
+    border-radius: 999px;
+    font-size: 12px;
+    font-weight: 600;
+}
+
+.status-active {
+    background: #ecfdf5;
+    color: #047857;
+}
+
+.status-upcoming {
+    background: #eff6ff;
+    color: #1d4ed8;
+}
+
+.status-ended {
+    background: #fef2f2;
+    color: #b91c1c;
+}
+
+.is-disabled-action {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
+.quick-vote-batch-actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin-top: 12px;
+}
+
+.quick-vote-batch-btn {
+    border: 1px solid rgba(24, 24, 24, 0.14);
+    border-radius: 999px;
+    background: #fff;
+    color: #181818;
+    font-size: 12px;
+    font-weight: 600;
+    line-height: 1;
+    padding: 8px 12px;
+}
+
+.quick-vote-batch-btn:hover,
+.quick-vote-batch-btn:focus-visible {
+    border-color: #181818;
+    background: #181818;
+    color: #fff;
+    outline: none;
+}
+</style>

@@ -2,8 +2,8 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Contest;
 use App\Models\Contestant;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
@@ -17,46 +17,28 @@ class ContestantController extends Controller
     public function index(Request $request): Response
     {
         $page = max(1, min(100, (int) $request->input('page', 1)));
+        $category = trim((string) $request->input('category', ''));
+        $location = trim((string) $request->input('location', ''));
+        $gender = trim((string) $request->input('gender', ''));
+        $sort = trim((string) $request->input('sort', 'votes_desc'));
 
         $query = Contestant::query()
-            ->select([
-                'id',
-                'name',
-                'slug',
-                'image',
-                'total_votes',
-                'contest_id',
-                'category',
-                'gender',
-                'location',
-                'description',
-                'created_at',
-            ])
-            ->with([
-                'contest:id,name,slug,start_date,end_date',
-            ])
+            ->with('contest:id,name,slug,start_date,end_date')
             ->whereNull('deleted_at');
 
-        $query
-            ->when($request->filled('contest'), fn ($contestantQuery) => $contestantQuery->contestSlug($request->string('contest')->toString()))
-            ->when($request->filled('category'), fn ($contestantQuery) => $contestantQuery->category($request->string('category')->toString()))
-            ->when($request->filled('location'), fn ($contestantQuery) => $contestantQuery->location($request->string('location')->toString()))
-            ->when($request->filled('gender'), fn ($contestantQuery) => $contestantQuery->gender($request->string('gender')->toString()))
-            ->when($request->filled('min_votes'), fn ($contestantQuery) => $contestantQuery->minVotes((int) $request->input('min_votes')))
-            ->when($request->filled('max_votes'), fn ($contestantQuery) => $contestantQuery->maxVotes((int) $request->input('max_votes')))
-            ->when($request->boolean('active'), fn ($contestantQuery) => $contestantQuery->activeContest());
+        $query->when($request->filled('category'), fn (Builder $contestantQuery) => $contestantQuery->where('category', trim($category)));
+        $query->when($request->filled('gender'), fn (Builder $contestantQuery) => $contestantQuery->where('gender', trim($gender)));
+        $query->when($request->filled('location'), fn (Builder $contestantQuery) => $contestantQuery->where('location', trim($location)));
+        $query->when($request->boolean('active'), fn (Builder $contestantQuery) => $contestantQuery->whereHas('contest', function (Builder $contestQuery): void {
+            $contestQuery
+                ->where('start_date', '<=', now())
+                ->where('end_date', '>=', now());
+        }));
+        $query->when($sort === 'votes_desc', fn (Builder $contestantQuery) => $contestantQuery->orderByDesc('total_votes'));
+        $query->when($sort === 'votes_asc', fn (Builder $contestantQuery) => $contestantQuery->orderBy('total_votes'));
 
-        switch ($request->input('sort')) {
-            case 'name-az':
-                $query->orderBy('name');
-                break;
-            case 'recent':
-                $query->latest();
-                break;
-            case 'most-votes':
-            default:
-                $query->orderByDesc('total_votes');
-                break;
+        if (! in_array($sort, ['votes_desc', 'votes_asc'], true)) {
+            $query->orderByDesc('total_votes');
         }
 
         $contestants = $query->paginate(12, ['*'], 'page', $page)->withQueryString();
@@ -65,20 +47,6 @@ class ContestantController extends Controller
             $page = $contestants->lastPage();
             $contestants = $query->paginate(12, ['*'], 'page', $page)->withQueryString();
         }
-
-        $voteBounds = Contestant::query()
-            ->whereNull('deleted_at')
-            ->selectRaw('COALESCE(MIN(total_votes), 0) as min_votes, COALESCE(MAX(total_votes), 0) as max_votes')
-            ->first();
-
-        $contestOptions = Contest::query()
-            ->select(['id', 'name', 'slug'])
-            ->orderBy('name')
-            ->get()
-            ->map(fn (Contest $contest): array => [
-                'label' => $contest->name,
-                'value' => $contest->slug,
-            ]);
 
         $categoryOptions = Contestant::query()
             ->whereNull('deleted_at')
@@ -118,6 +86,7 @@ class ContestantController extends Controller
                     'location' => $contestant->location,
                     'description' => $contestant->description,
                     'created_at' => $contestant->created_at?->toISOString(),
+                    'contest_status' => $contestant->contest?->status(),
                     'contest' => $contestant->contest ? [
                         'id' => $contestant->contest->id,
                         'name' => $contestant->contest->name,
@@ -138,14 +107,16 @@ class ContestantController extends Controller
                 ],
             ],
             'filterOptions' => [
-                'contests' => $contestOptions,
                 'categories' => $categoryOptions,
                 'locations' => $locationOptions,
                 'genders' => $genderOptions,
             ],
-            'voteBounds' => [
-                'min_votes' => (int) ($voteBounds->min_votes ?? 0),
-                'max_votes' => (int) ($voteBounds->max_votes ?? 0),
+            'filters' => [
+                'category' => $category !== '' ? $category : null,
+                'gender' => $gender !== '' ? $gender : null,
+                'location' => $location !== '' ? $location : null,
+                'active' => $request->boolean('active'),
+                'sort' => in_array($sort, ['votes_desc', 'votes_asc'], true) ? $sort : 'votes_desc',
             ],
         ]);
     }
@@ -163,16 +134,107 @@ class ContestantController extends Controller
                 'image',
                 'total_votes',
                 'contest_id',
+                'category',
+                'gender',
+                'location',
+                'description',
+                'created_at',
             ])
             ->with([
-                'contest:id,name,slug',
+                'contest:id,name,slug,start_date,end_date',
             ])
             ->where('slug', $slug)
             ->whereNull('deleted_at')
             ->firstOrFail();
 
         return Inertia::render('Contestants/Show', [
-            'contestant' => $contestant,
+            'contestant' => [
+                'id' => $contestant->id,
+                'contest_id' => $contestant->contest_id,
+                'slug' => $contestant->slug,
+                'name' => $contestant->name,
+                'contestName' => $contestant->contest?->name ?? 'Contest',
+                'category' => $contestant->category ?? 'Uncategorized',
+                'gender' => $contestant->gender ?? 'unknown',
+                'location' => $contestant->location ?? 'unspecified',
+                'contest_status' => $contestant->contest?->status(),
+                'votes' => $contestant->total_votes,
+                'contestStart' => $contestant->contest?->start_date?->toISOString() ?? '',
+                'contestEnd' => $contestant->contest?->end_date?->toISOString() ?? '',
+                'createdAt' => $contestant->created_at?->toISOString() ?? '',
+                'image' => $contestant->image,
+                'hoverImage' => $contestant->image,
+                'images' => array_values(array_filter([
+                    $contestant->image,
+                ])),
+                'description' => $contestant->description ?? '',
+            ],
+        ]);
+    }
+
+    /**
+     * Return contestants for search and quick actions.
+     */
+    public function search(Request $request): JsonResponse
+    {
+        $query = trim((string) $request->input('q', ''));
+
+        if ($query === '') {
+            return response()->json([
+                'contestants' => [],
+            ]);
+        }
+
+        $contestants = Contestant::query()
+            ->select([
+                'id',
+                'name',
+                'slug',
+                'image',
+                'total_votes',
+                'contest_id',
+                'category',
+                'gender',
+                'location',
+                'description',
+                'created_at',
+            ])
+            ->with('contest:id,name,slug,start_date,end_date')
+            ->whereNull('deleted_at')
+            ->where(function ($contestantQuery) use ($query): void {
+                $contestantQuery
+                    ->where('name', 'like', "%{$query}%")
+                    ->orWhere('category', 'like', "%{$query}%")
+                    ->orWhere('location', 'like', "%{$query}%")
+                    ->orWhereHas('contest', function ($contestQuery) use ($query): void {
+                        $contestQuery->where('name', 'like', "%{$query}%");
+                    });
+            })
+            ->orderByDesc('total_votes')
+            ->limit(8)
+            ->get()
+            ->map(fn (Contestant $contestant): array => [
+                'id' => $contestant->id,
+                'contest_id' => $contestant->contest_id,
+                'slug' => $contestant->slug,
+                'name' => $contestant->name,
+                'contestName' => $contestant->contest?->name ?? 'Contest',
+                'category' => $contestant->category ?? 'Uncategorized',
+                'gender' => $contestant->gender ?? 'unknown',
+                'location' => $contestant->location ?? 'unspecified',
+                'contest_status' => $contestant->contest?->status(),
+                'votes' => $contestant->total_votes,
+                'contestStart' => $contestant->contest?->start_date?->toISOString() ?? '',
+                'contestEnd' => $contestant->contest?->end_date?->toISOString() ?? '',
+                'createdAt' => $contestant->created_at?->toISOString() ?? '',
+                'image' => $contestant->image ?? '/tmp/images/products/womens/women-19.jpg',
+                'hoverImage' => $contestant->image ?? '/tmp/images/products/womens/women-19.jpg',
+                'description' => $contestant->description ?? '',
+            ])
+            ->values();
+
+        return response()->json([
+            'contestants' => $contestants,
         ]);
     }
 
@@ -199,21 +261,20 @@ class ContestantController extends Controller
                 'name',
                 'slug',
                 'image',
-                'total_votes',
                 'contest_id',
             ])
-            ->with('contest:id,name')
+            ->with('contest:id,name,start_date,end_date')
             ->whereIn('id', $ids)
             ->whereNull('deleted_at')
             ->get()
             ->map(fn (Contestant $contestant): array => [
                 'id' => $contestant->id,
+                'contest_id' => $contestant->contest_id,
                 'name' => $contestant->name,
                 'slug' => $contestant->slug,
                 'image' => $contestant->image,
-                'total_votes' => $contestant->total_votes,
-                'contest_id' => $contestant->contest_id,
-                'contest_name' => $contestant->contest?->name,
+                'contest_name' => $contestant->contest?->name ?? 'Contest',
+                'contest_status' => $contestant->contest?->status(),
             ])
             ->values();
 

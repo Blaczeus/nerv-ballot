@@ -29,7 +29,7 @@ class LeaderboardController extends Controller
                     'contest_id',
                 ])
                 ->with([
-                    'contest:id,name,slug',
+                    'contest:id,name,slug,start_date,end_date',
                 ])
                 ->whereNull('deleted_at')
                 ->orderByDesc('total_votes');
@@ -56,7 +56,7 @@ class LeaderboardController extends Controller
                         'contest_id',
                     ])
                     ->with([
-                        'contest:id,name,slug',
+                        'contest:id,name,slug,start_date,end_date',
                     ])
                     ->whereNull('deleted_at')
                     ->orderByDesc('total_votes');
@@ -70,7 +70,23 @@ class LeaderboardController extends Controller
         }
 
         return Inertia::render('Leaderboard', [
-            'contestants' => $contestants,
+            'contestants' => [
+                'data' => $contestants->getCollection()->map(fn (Contestant $contestant): array => [
+                    'id' => $contestant->id,
+                    'name' => $contestant->name,
+                    'slug' => $contestant->slug,
+                    'image' => $contestant->image,
+                    'total_votes' => $contestant->total_votes,
+                    'contest_id' => $contestant->contest_id,
+                    'contest_status' => $contestant->contest?->status(),
+                    'contest' => $contestant->contest ? [
+                        'id' => $contestant->contest->id,
+                        'name' => $contestant->contest->name,
+                        'slug' => $contestant->contest->slug,
+                    ] : null,
+                ])->values(),
+                'links' => $contestants->linkCollection()->toArray(),
+            ],
         ]);
     }
 }

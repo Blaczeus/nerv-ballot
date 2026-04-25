@@ -95,16 +95,16 @@ class Contestant extends Model
     public function scopeActiveContest(Builder $query): Builder
     {
         return $query->whereHas('contest', function (Builder $contestQuery): void {
+            $now = now();
+
             $contestQuery
-                ->where(function (Builder $dateQuery): void {
-                    $dateQuery
-                        ->whereNull('start_date')
-                        ->orWhere('start_date', '<=', now());
+                ->where(function (Builder $q) use ($now): void {
+                    $q->whereNull('start_date')
+                        ->orWhere('start_date', '<=', $now);
                 })
-                ->where(function (Builder $dateQuery): void {
-                    $dateQuery
-                        ->whereNull('end_date')
-                        ->orWhere('end_date', '>=', now());
+                ->where(function (Builder $q) use ($now): void {
+                    $q->whereNull('end_date')
+                        ->orWhere('end_date', '>=', $now);
                 });
         });
     }

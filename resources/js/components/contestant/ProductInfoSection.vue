@@ -4,6 +4,7 @@ import { computed, ref } from 'vue';
 import { useGlobalModals } from '@/composables/useGlobalModals';
 import { useVoteCart } from '@/composables/useVoteCart';
 import { COST_PER_VOTE } from '@/config/voting';
+import { getContestStatusLabel, isVotingOpen } from '@/utils/contestStatus';
 import { formatVotes } from '@/utils/formatVotes';
 import type { ModalContestant } from '@/composables/useGlobalModals';
 
@@ -14,26 +15,44 @@ const props = defineProps<{
 }>();
 
 const { openCart, openAskQuestion, openShare } = useGlobalModals();
-const { addVotes, formatCurrency } = useVoteCart();
+const { addVotes, cartNotice, formatCurrency, getMaxVotesAllowed, maxVotesPerContest } = useVoteCart();
 
 const votes = ref(1);
 
 const formattedVoteCount = computed(() => formatVotes(props.contestant.votes));
 const voteCostLabel = computed(() => formatCurrency(COST_PER_VOTE));
 const selectedVotesTotal = computed(() => formatCurrency(votes.value * COST_PER_VOTE));
+const contestStatusLabel = computed(() => getContestStatusLabel(props.contestant.contestStatus));
+const canVote = computed(() => isVotingOpen(props.contestant.contestStatus));
+const maxVotesAllowed = computed(() => {
+    return Math.max(1, getMaxVotesAllowed(props.contestant.id, props.contestant) || maxVotesPerContest);
+});
 
 const updateVotes = (nextVotes: number) => {
-    votes.value = Math.max(1, nextVotes);
+    votes.value = Math.min(maxVotesAllowed.value, Math.max(1, Math.floor(nextVotes)));
+};
+
+const setVotesFromInput = (event: Event) => {
+    const target = event.target as HTMLInputElement | null;
+    const value = target?.value ?? '1';
+    const parsedValue = Number(value);
+    updateVotes(Number.isFinite(parsedValue) ? parsedValue : 1);
+};
+
+const addQuickVotes = (amount: number) => {
+    updateVotes(votes.value + amount);
 };
 
 const handleAddVotes = () => {
-    addVotes(props.contestant.id, votes.value);
-    openCart(props.contestant);
+    if (addVotes(props.contestant.id, votes.value, props.contestant)) {
+        openCart(props.contestant);
+    }
 };
 
 const handleVoteNow = () => {
-    addVotes(props.contestant.id, votes.value);
-    router.visit('/checkout');
+    if (addVotes(props.contestant.id, votes.value, props.contestant)) {
+        router.visit('/checkout');
+    }
 };
 </script>
 
@@ -46,6 +65,9 @@ const handleVoteNow = () => {
                     <div class="tf-product-info-name">
                         <div class="text text-btn-uppercase">{{ contestant.contestName }}</div>
                         <h3 class="name">{{ contestant.name }}</h3>
+                        <span class="contest-status-pill" :class="`status-${contestant.contestStatus ?? 'ended'}`">
+                            {{ contestStatusLabel }}
+                        </span>
                     </div>
                     <div class="tf-product-info-desc">
                         <div class="tf-product-info-price">
@@ -63,12 +85,19 @@ const handleVoteNow = () => {
                             <span class="btn-quantity btn-decrease" @click="updateVotes(votes - 1)">-</span>
                             <input
                                 class="quantity-product"
-                                type="text"
+                                type="number"
                                 name="number"
                                 :value="votes"
-                                readonly
+                                min="1"
+                                :max="maxVotesAllowed"
+                                @input="setVotesFromInput($event)"
                             />
                             <span class="btn-quantity btn-increase" @click="updateVotes(votes + 1)">+</span>
+                        </div>
+                        <div class="quick-vote-batch-actions">
+                            <button type="button" class="quick-vote-batch-btn" @click="addQuickVotes(5)">+5</button>
+                            <button type="button" class="quick-vote-batch-btn" @click="addQuickVotes(10)">+10</button>
+                            <button type="button" class="quick-vote-batch-btn" @click="addQuickVotes(20)">+20</button>
                         </div>
                     </div>
 
@@ -77,15 +106,24 @@ const handleVoteNow = () => {
                             <button
                                 type="button"
                                 class="btn-style-2 grow text-btn-uppercase fw-6"
+                                :class="{ 'is-disabled-action': !canVote }"
                                 @click="handleAddVotes"
                             >
                                 <span>Add Votes -&nbsp;</span>
                                 <span class="tf-qty-price total-price">{{ selectedVotesTotal }}</span>
                             </button>
                         </div>
-                        <button type="button" class="btn-style-3 text-btn-uppercase vote-now-btn" @click="handleVoteNow">
+                        <button
+                            type="button"
+                            class="btn-style-3 text-btn-uppercase vote-now-btn"
+                            :class="{ 'is-disabled-action': !canVote }"
+                            @click="handleVoteNow"
+                        >
                             Vote now
                         </button>
+                        <p v-if="cartNotice" class="text-caption-1 text-danger mt_12 mb-0">
+                            {{ cartNotice }}
+                        </p>
                     </div>
 
                     <div class="tf-product-info-help">
@@ -159,5 +197,60 @@ const handleVoteNow = () => {
 .vote-now-btn:hover,
 .vote-now-btn:focus-visible {
     color: #fff;
+}
+
+.contest-status-pill {
+    display: inline-flex;
+    margin-top: 12px;
+    padding: 6px 12px;
+    border-radius: 999px;
+    font-size: 12px;
+    font-weight: 600;
+}
+
+.status-active {
+    background: #ecfdf5;
+    color: #047857;
+}
+
+.status-upcoming {
+    background: #eff6ff;
+    color: #1d4ed8;
+}
+
+.status-ended {
+    background: #fef2f2;
+    color: #b91c1c;
+}
+
+.is-disabled-action {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
+.quick-vote-batch-actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin-top: 12px;
+}
+
+.quick-vote-batch-btn {
+    border: 1px solid rgba(24, 24, 24, 0.14);
+    border-radius: 999px;
+    background: #fff;
+    color: #181818;
+    font-size: 12px;
+    font-weight: 600;
+    line-height: 1;
+    padding: 8px 12px;
+}
+
+.quick-vote-batch-btn:hover,
+.quick-vote-batch-btn:focus-visible {
+    border-color: #181818;
+    background: #181818;
+    color: #fff;
+    outline: none;
 }
 </style>

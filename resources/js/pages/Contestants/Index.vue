@@ -1,7 +1,6 @@
 <script setup lang="ts">
-import { useDebounceFn } from '@vueuse/core';
 import { Head, router, usePage } from '@inertiajs/vue3';
-import { computed, ref } from 'vue';
+import { computed, ref, watch } from 'vue';
 import ContestantCard from '@/components/contestants/ContestantCard.vue';
 import FilterModal from '@/components/modals/FilterModal.vue';
 import Breadcrumb from '@/components/ui/Breadcrumb.vue';
@@ -11,19 +10,17 @@ import { useGlobalModals } from '@/composables/useGlobalModals';
 import { useVoteCart } from '@/composables/useVoteCart';
 import Layout from '@/layouts/Layout.vue';
 
-type SortOption = 'most-votes' | 'recent' | 'name-az';
+type SortOption = 'votes_desc' | 'votes_asc';
 
 type FiltersState = {
-    contest: string | null;
     category: string | null;
     location: string | null;
     gender: string | null;
-    min_votes: number;
-    max_votes: number;
     active: boolean;
+    sort: SortOption;
 };
 
-type FilterChipKey = 'active' | 'contest' | 'category' | 'location' | 'gender' | 'votes';
+type FilterChipKey = 'active' | 'category' | 'location' | 'gender';
 
 type FilterChip = {
     key: FilterChipKey;
@@ -45,6 +42,7 @@ type BackendContestant = {
     location: string | null;
     description: string | null;
     created_at: string | null;
+    contest_status: 'active' | 'upcoming' | 'ended' | null;
     contest: {
         id: number;
         name: string;
@@ -69,14 +67,16 @@ type PageProps = {
         };
     };
     filterOptions: {
-        contests: Array<{ label: string; value: string }>;
         categories: string[];
         locations: string[];
         genders: string[];
     };
-    voteBounds: {
-        min_votes: number;
-        max_votes: number;
+    filters?: {
+        category?: string | null;
+        location?: string | null;
+        gender?: string | null;
+        active?: boolean | number | string | null;
+        sort?: SortOption | null;
     };
 };
 
@@ -84,27 +84,60 @@ const FALLBACK_IMAGE = '/tmp/images/products/womens/women-19.jpg';
 const LAYOUT_STORAGE_KEY = 'contestants.layout';
 const layoutOptions: LayoutMode[] = ['list', 'tf-col-2', 'tf-col-3', 'tf-col-4', 'tf-col-5'];
 
-const page = usePage<PageProps>();
-const { openQuickView, openCart, openFilter } = useGlobalModals();
-const { addVotes } = useVoteCart();
+const sanitizeFilterValue = (value: string | null | undefined) => {
+    const trimmed = value?.trim() ?? '';
+    return trimmed === '' ? null : trimmed;
+};
 
-const voteFormatter = new Intl.NumberFormat('en-US');
-const formatVoteNumber = (value: number) => voteFormatter.format(value);
+const normalizeBooleanFilter = (value: unknown) => value === true || value === 1 || value === '1';
+const sanitizeSortValue = (value: unknown): SortOption => (value === 'votes_asc' ? 'votes_asc' : 'votes_desc');
 
-const rawContestants = computed(() => page.props.contestants?.data ?? []);
-const meta = computed(() => {
-    return page.props.contestants?.meta ?? { total: 0, links: [] };
+const createDefaultFilters = (): FiltersState => ({
+    category: null,
+    location: null,
+    gender: null,
+    active: false,
+    sort: 'votes_desc',
 });
 
-const voteBounds = computed(() => ({
-    min_votes: meta.value.total === 0 ? 0 : Number(page.props.voteBounds?.min_votes ?? 0),
-    max_votes: meta.value.total === 0 ? 10000 : Number(page.props.voteBounds?.max_votes ?? 10000),
-}));
+const page = usePage<PageProps>();
+const { openQuickView, openCart, openFilter } = useGlobalModals();
+const { addVotes, cartNotice } = useVoteCart();
+
+const sortOptions: Array<{ value: SortOption; label: string }> = [
+    { value: 'votes_desc', label: 'Highest Votes' },
+    { value: 'votes_asc', label: 'Lowest Votes' },
+];
+
+const resolveInitialFilters = (): FiltersState => {
+    const defaults = createDefaultFilters();
+    const incomingFilters = page.props.filters ?? {};
+
+    return {
+        category: sanitizeFilterValue(incomingFilters.category),
+        location: sanitizeFilterValue(incomingFilters.location),
+        gender: sanitizeFilterValue(incomingFilters.gender),
+        active: normalizeBooleanFilter(incomingFilters.active),
+        sort: sanitizeSortValue(incomingFilters.sort ?? defaults.sort),
+    };
+};
+
+const filters = ref<FiltersState>(resolveInitialFilters());
+
+watch(
+    () => page.props.filters,
+    () => {
+        filters.value = resolveInitialFilters();
+    },
+    { deep: true },
+);
+
+const rawContestants = computed(() => page.props.contestants?.data ?? []);
+const meta = computed(() => page.props.contestants?.meta ?? { total: 0, links: [] });
 
 const filterOptions = computed(() => {
     return (
         page.props.filterOptions ?? {
-            contests: [],
             categories: [],
             locations: [],
             genders: [],
@@ -115,9 +148,11 @@ const filterOptions = computed(() => {
 const contestants = computed<ModalContestant[]>(() => {
     return rawContestants.value.map((contestant) => ({
         id: contestant.id,
+        contestId: contestant.contest_id,
         slug: contestant.slug,
         name: contestant.name,
         contestName: contestant.contest?.name ?? 'Contest',
+        contestStatus: contestant.contest_status,
         category: contestant.category ?? 'Uncategorized',
         gender: contestant.gender ?? 'unknown',
         location: contestant.location ?? 'unspecified',
@@ -131,143 +166,33 @@ const contestants = computed<ModalContestant[]>(() => {
     }));
 });
 
-const createDefaultFilters = (bounds = voteBounds.value): FiltersState => {
-    return {
-        contest: null,
-        category: null,
-        location: null,
-        gender: null,
-        min_votes: bounds.min_votes,
-        max_votes: bounds.max_votes,
-        active: false,
-    };
+const cleanFiltersForRequest = () => ({
+    category: sanitizeFilterValue(filters.value.category) ?? undefined,
+    location: sanitizeFilterValue(filters.value.location) ?? undefined,
+    gender: sanitizeFilterValue(filters.value.gender) ?? undefined,
+    active: filters.value.active ? 1 : undefined,
+    sort: filters.value.sort !== 'votes_desc' ? filters.value.sort : undefined,
+});
+
+const applyFilters = () => {
+    router.get('/contestants', cleanFiltersForRequest(), {
+        preserveState: true,
+        preserveScroll: true,
+        replace: true,
+    });
 };
-
-const resolveInitialFilters = (): FiltersState => {
-    const query = typeof window !== 'undefined' ? new URLSearchParams(window.location.search) : new URLSearchParams();
-    const defaults = createDefaultFilters(voteBounds.value);
-
-    return {
-        contest: query.get('contest'),
-        category: query.get('category'),
-        location: query.get('location'),
-        gender: query.get('gender'),
-        min_votes: Number(query.get('min_votes')) || defaults.min_votes,
-        max_votes: Number(query.get('max_votes')) || defaults.max_votes,
-        active: query.get('active') === '1',
-    };
-};
-
-const filters = ref<FiltersState>(resolveInitialFilters());
-const sortOptions: Array<{ value: SortOption; label: string }> = [
-    { value: 'most-votes', label: 'Highest Votes' },
-    { value: 'recent', label: 'Recently Added' },
-    { value: 'name-az', label: 'Alphabetical (A-Z)' },
-];
-
-const sortOption = ref<SortOption>(
-    (() => {
-        const query = typeof window !== 'undefined' ? new URLSearchParams(window.location.search) : new URLSearchParams();
-        const sort = query.get('sort');
-        return sort === 'recent' || sort === 'name-az' || sort === 'most-votes' ? sort : 'most-votes';
-    })(),
-);
-
-const buildFilterParams = () => {
-    const defaults = createDefaultFilters(voteBounds.value);
-
-    return {
-        contest: filters.value.contest ?? undefined,
-        category: filters.value.category ?? undefined,
-        location: filters.value.location ?? undefined,
-        gender: filters.value.gender ?? undefined,
-        min_votes:
-            filters.value.min_votes !== defaults.min_votes ? filters.value.min_votes : undefined,
-        max_votes:
-            filters.value.max_votes !== defaults.max_votes ? filters.value.max_votes : undefined,
-        active: filters.value.active ? 1 : undefined,
-        sort: sortOption.value !== 'most-votes' ? sortOption.value : undefined,
-    };
-};
-
-const applyFilters = useDebounceFn(() => {
-    router.get(
-        route('contestants.index'),
-        buildFilterParams(),
-        {
-            preserveState: true,
-            preserveScroll: true,
-            replace: true,
-        },
-    );
-}, 300);
-
-const currentSortLabel = computed(() => {
-    return sortOptions.find((option) => option.value === sortOption.value)?.label ?? 'Highest Votes';
-});
-
-const hasVoteRangeFilter = computed(() => {
-    return (
-        filters.value.min_votes > voteBounds.value.min_votes ||
-        filters.value.max_votes < voteBounds.value.max_votes
-    );
-});
-
-const hasActiveFilters = computed(() => {
-    return Boolean(
-        filters.value.active ||
-            filters.value.contest ||
-            filters.value.category ||
-            filters.value.location ||
-            filters.value.gender ||
-            hasVoteRangeFilter.value,
-    );
-});
-
-const contestLabelMap = computed(() => {
-    return Object.fromEntries(
-        filterOptions.value.contests.map((contest) => [contest.value, contest.label]),
-    );
-});
-
-const filterChips = computed<FilterChip[]>(() => {
-    const chips: FilterChip[] = [];
-
-    if (filters.value.active) {
-        chips.push({ key: 'active', label: 'Active Contests' });
-    }
-    if (filters.value.contest) {
-        chips.push({
-            key: 'contest',
-            label: `Contest: ${contestLabelMap.value[filters.value.contest] ?? filters.value.contest}`,
-        });
-    }
-    if (filters.value.category) {
-        chips.push({ key: 'category', label: `Category: ${filters.value.category}` });
-    }
-    if (filters.value.location) {
-        chips.push({ key: 'location', label: `Location: ${filters.value.location}` });
-    }
-    if (filters.value.gender) {
-        chips.push({ key: 'gender', label: `Gender: ${filters.value.gender}` });
-    }
-    if (hasVoteRangeFilter.value) {
-        chips.push({
-            key: 'votes',
-            label: `Votes: ${formatVoteNumber(filters.value.min_votes)} - ${formatVoteNumber(filters.value.max_votes)}`,
-        });
-    }
-
-    return chips;
-});
 
 const updateFilters = (nextFilters: FiltersState) => {
-    filters.value = { ...filters.value, ...nextFilters };
-    applyFilters();
-};
+    filters.value = {
+        ...filters.value,
+        ...nextFilters,
+        category: sanitizeFilterValue(nextFilters.category ?? filters.value.category),
+        location: sanitizeFilterValue(nextFilters.location ?? filters.value.location),
+        gender: sanitizeFilterValue(nextFilters.gender ?? filters.value.gender),
+        active: nextFilters.active ?? filters.value.active,
+        sort: sanitizeSortValue(nextFilters.sort ?? filters.value.sort),
+    };
 
-const setSortOption = (value: SortOption) => {
-    sortOption.value = value;
     applyFilters();
 };
 
@@ -276,15 +201,15 @@ const toggleActiveContests = () => {
     applyFilters();
 };
 
-const removeFilter = (key: FilterChipKey) => {
-    const defaults = createDefaultFilters(voteBounds.value);
+const setSortOption = (value: SortOption) => {
+    filters.value = { ...filters.value, sort: value };
+    applyFilters();
+};
 
+const removeFilter = (key: FilterChipKey) => {
     switch (key) {
         case 'active':
             filters.value = { ...filters.value, active: false };
-            break;
-        case 'contest':
-            filters.value = { ...filters.value, contest: null };
             break;
         case 'category':
             filters.value = { ...filters.value, category: null };
@@ -295,26 +220,54 @@ const removeFilter = (key: FilterChipKey) => {
         case 'gender':
             filters.value = { ...filters.value, gender: null };
             break;
-        case 'votes':
-            filters.value = {
-                ...filters.value,
-                min_votes: defaults.min_votes,
-                max_votes: defaults.max_votes,
-            };
-            break;
     }
 
     applyFilters();
 };
 
 const resetFilters = () => {
-    filters.value = createDefaultFilters(voteBounds.value);
-    sortOption.value = 'most-votes';
+    filters.value = createDefaultFilters();
     applyFilters();
 };
 
+const hasActiveFilters = computed(() => {
+    return Boolean(
+        filters.value.active ||
+            filters.value.category ||
+            filters.value.location ||
+            filters.value.gender,
+    );
+});
+
+const filterChips = computed<FilterChip[]>(() => {
+    const chips: FilterChip[] = [];
+
+    if (filters.value.active) {
+        chips.push({ key: 'active', label: 'Active Contests' });
+    }
+
+    if (filters.value.category) {
+        chips.push({ key: 'category', label: `Category: ${filters.value.category}` });
+    }
+
+    if (filters.value.location) {
+        chips.push({ key: 'location', label: `Location: ${filters.value.location}` });
+    }
+
+    if (filters.value.gender) {
+        chips.push({ key: 'gender', label: `Gender: ${filters.value.gender}` });
+    }
+
+    return chips;
+});
+
+const currentSortLabel = computed(() => {
+    return sortOptions.find((option) => option.value === filters.value.sort)?.label ?? 'Highest Votes';
+});
+
 const resolveInitialLayout = (): LayoutMode => {
     if (typeof window === 'undefined') return 'tf-col-4';
+
     const stored = window.localStorage.getItem(LAYOUT_STORAGE_KEY);
 
     if (stored && layoutOptions.includes(stored as LayoutMode)) {
@@ -326,20 +279,14 @@ const resolveInitialLayout = (): LayoutMode => {
 
 const layoutMode = ref<LayoutMode>(resolveInitialLayout());
 const isListLayout = computed(() => layoutMode.value === 'list');
-const activeGridLayout = computed<GridLayoutClass>(() => {
-    return layoutMode.value === 'list' ? 'tf-col-4' : layoutMode.value;
-});
+const activeGridLayout = computed<GridLayoutClass>(() => (layoutMode.value === 'list' ? 'tf-col-4' : layoutMode.value));
 
-const wrapperControlShopClass = computed(() => {
-    return [
-        'wrapper-control-shop',
-        isListLayout.value ? 'listLayout-wrapper' : 'gridLayout-wrapper',
-    ];
-});
+const wrapperControlShopClass = computed(() => [
+    'wrapper-control-shop',
+    isListLayout.value ? 'listLayout-wrapper' : 'gridLayout-wrapper',
+]);
 
-const gridLayoutClass = computed(() => {
-    return `tf-grid-layout wrapper-shop ${activeGridLayout.value}`;
-});
+const gridLayoutClass = computed(() => `tf-grid-layout wrapper-shop ${activeGridLayout.value}`);
 
 const setLayoutMode = (mode: LayoutMode) => {
     layoutMode.value = mode;
@@ -350,20 +297,17 @@ const setLayoutMode = (mode: LayoutMode) => {
 };
 
 const handleAddVotes = (contestant: ModalContestant) => {
-    addVotes(contestant.id, 1);
-    openCart(contestant);
+    if (addVotes(contestant.id, 1, contestant)) {
+        openCart(contestant);
+    }
 };
 
 const handlePagination = (url: string) => {
-    router.get(
-        url,
-        {},
-        {
-            preserveState: true,
-            preserveScroll: true,
-            replace: true,
-        },
-    );
+    router.get(url, {}, {
+        preserveState: true,
+        preserveScroll: true,
+        replace: true,
+    });
 };
 
 const breadcrumbItems = [
@@ -379,7 +323,6 @@ const breadcrumbItems = [
         <template #filterModal>
             <FilterModal
                 :filters="filters"
-                :bounds="voteBounds"
                 :options="filterOptions"
                 @update:filters="updateFilters"
                 @reset="resetFilters"
@@ -412,10 +355,7 @@ const breadcrumbItems = [
                             :aria-pressed="filters.active"
                             @click="toggleActiveContests"
                         >
-                            <i
-                                class="icon icon-checkCircle"
-                                :class="{ 'text-success': filters.active }"
-                            ></i>
+                            <i class="icon icon-checkCircle" :class="{ 'text-success': filters.active }"></i>
                             <p class="text-caption-1 mb-0">Active Contests</p>
                         </button>
                     </div>
@@ -429,14 +369,7 @@ const breadcrumbItems = [
                             @click="setLayoutMode('list')"
                         >
                             <div class="item">
-                                <svg
-                                    class="icon"
-                                    width="20"
-                                    height="20"
-                                    viewBox="0 0 20 20"
-                                    fill="none"
-                                    xmlns="http://www.w3.org/2000/svg"
-                                >
+                                <svg class="icon" width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
                                     <circle cx="3" cy="6" r="2.5" stroke="#181818" />
                                     <rect x="7.5" y="3.5" width="12" height="5" rx="2.5" stroke="#181818" />
                                     <circle cx="3" cy="14" r="2.5" stroke="#181818" />
@@ -453,14 +386,7 @@ const breadcrumbItems = [
                             @click="setLayoutMode('tf-col-2')"
                         >
                             <div class="item">
-                                <svg
-                                    class="icon"
-                                    width="20"
-                                    height="20"
-                                    viewBox="0 0 20 20"
-                                    fill="none"
-                                    xmlns="http://www.w3.org/2000/svg"
-                                >
+                                <svg class="icon" width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
                                     <circle cx="6" cy="6" r="2.5" stroke="#181818" />
                                     <circle cx="14" cy="6" r="2.5" stroke="#181818" />
                                     <circle cx="6" cy="14" r="2.5" stroke="#181818" />
@@ -477,14 +403,7 @@ const breadcrumbItems = [
                             @click="setLayoutMode('tf-col-3')"
                         >
                             <div class="item">
-                                <svg
-                                    class="icon"
-                                    width="22"
-                                    height="20"
-                                    viewBox="0 0 22 20"
-                                    fill="none"
-                                    xmlns="http://www.w3.org/2000/svg"
-                                >
+                                <svg class="icon" width="22" height="20" viewBox="0 0 22 20" fill="none" xmlns="http://www.w3.org/2000/svg">
                                     <circle cx="3" cy="6" r="2.5" stroke="#181818" />
                                     <circle cx="11" cy="6" r="2.5" stroke="#181818" />
                                     <circle cx="19" cy="6" r="2.5" stroke="#181818" />
@@ -503,14 +422,7 @@ const breadcrumbItems = [
                             @click="setLayoutMode('tf-col-4')"
                         >
                             <div class="item">
-                                <svg
-                                    class="icon"
-                                    width="30"
-                                    height="20"
-                                    viewBox="0 0 30 20"
-                                    fill="none"
-                                    xmlns="http://www.w3.org/2000/svg"
-                                >
+                                <svg class="icon" width="30" height="20" viewBox="0 0 30 20" fill="none" xmlns="http://www.w3.org/2000/svg">
                                     <circle cx="3" cy="6" r="2.5" stroke="#181818" />
                                     <circle cx="11" cy="6" r="2.5" stroke="#181818" />
                                     <circle cx="19" cy="6" r="2.5" stroke="#181818" />
@@ -531,14 +443,7 @@ const breadcrumbItems = [
                             @click="setLayoutMode('tf-col-5')"
                         >
                             <div class="item">
-                                <svg
-                                    class="icon"
-                                    width="38"
-                                    height="20"
-                                    viewBox="0 0 38 20"
-                                    fill="none"
-                                    xmlns="http://www.w3.org/2000/svg"
-                                >
+                                <svg class="icon" width="38" height="20" viewBox="0 0 38 20" fill="none" xmlns="http://www.w3.org/2000/svg">
                                     <circle cx="3" cy="6" r="2.5" stroke="#181818" />
                                     <circle cx="11" cy="6" r="2.5" stroke="#181818" />
                                     <circle cx="19" cy="6" r="2.5" stroke="#181818" />
@@ -565,7 +470,7 @@ const breadcrumbItems = [
                                     v-for="option in sortOptions"
                                     :key="option.value"
                                     class="select-item"
-                                    :class="{ active: sortOption === option.value }"
+                                    :class="{ active: filters.sort === option.value }"
                                     @click="setSortOption(option.value)"
                                 >
                                     <span class="text-value-item">{{ option.label }}</span>
@@ -575,6 +480,13 @@ const breadcrumbItems = [
                     </div>
                 </div>
                 <div :class="wrapperControlShopClass">
+                    <div
+                        v-if="cartNotice"
+                        class="tf-notice text-center mb_24"
+                        style="padding: 14px 18px; border: 1px solid #fed7aa; background: #fff7ed; color: #9a3412;"
+                    >
+                        {{ cartNotice }}
+                    </div>
                     <div v-if="hasActiveFilters" class="meta-filter-shop">
                         <div class="count-text">
                             <span class="count">{{ meta.total }}</span> Contestants Found
@@ -582,19 +494,10 @@ const breadcrumbItems = [
                         <div id="applied-filters" class="text-caption-1">
                             <span v-for="chip in filterChips" :key="chip.key" class="filter-tag">
                                 {{ chip.label }}
-                                <span
-                                    class="remove-tag icon-close"
-                                    role="button"
-                                    @click="removeFilter(chip.key)"
-                                ></span>
+                                <span class="remove-tag icon-close" role="button" @click="removeFilter(chip.key)"></span>
                             </span>
                         </div>
-                        <button
-                            id="remove-all"
-                            class="remove-all-filters text-btn-uppercase"
-                            type="button"
-                            @click="resetFilters"
-                        >
+                        <button id="remove-all" class="remove-all-filters text-btn-uppercase" type="button" @click="resetFilters">
                             REMOVE ALL <i class="icon icon-close"></i>
                         </button>
                     </div>

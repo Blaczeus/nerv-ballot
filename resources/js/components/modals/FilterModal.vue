@@ -2,55 +2,36 @@
 import { computed, reactive, ref, watch } from 'vue';
 import { useGlobalModals } from '@/composables/useGlobalModals';
 
+type SortOption = 'votes_desc' | 'votes_asc';
+
 type FilterState = {
-    contest: string | null;
     category: string | null;
     location: string | null;
     gender: string | null;
-    min_votes: number;
-    max_votes: number;
     active: boolean;
-};
-
-type ContestOption = {
-    label: string;
-    value: string;
+    sort: SortOption;
 };
 
 type FilterOptions = {
-    contests: ContestOption[];
     categories: string[];
     locations: string[];
     genders: string[];
 };
 
-type VoteBounds = {
-    min_votes: number;
-    max_votes: number;
-};
-
 const props = withDefaults(
     defineProps<{
         filters?: FilterState;
-        bounds?: VoteBounds;
         options?: FilterOptions;
     }>(),
     {
         filters: () => ({
-            contest: null,
             category: null,
             location: null,
             gender: null,
-            min_votes: 0,
-            max_votes: 10000,
             active: false,
-        }),
-        bounds: () => ({
-            min_votes: 0,
-            max_votes: 10000,
+            sort: 'votes_desc',
         }),
         options: () => ({
-            contests: [],
             categories: [],
             locations: [],
             genders: [],
@@ -64,45 +45,23 @@ const emit = defineEmits<{
 }>();
 
 const { state, closeModal } = useGlobalModals();
-const localFilters = reactive<FilterState>({ ...props.filters });
-const isSyncing = ref(false);
 const isOpen = computed(() => state.activeModal === 'filter');
-
-const voteFormatter = new Intl.NumberFormat('en-US');
-const formatVotes = (value: number) => voteFormatter.format(value);
-
-const normalizeVotes = () => {
-    if (localFilters.min_votes < props.bounds.min_votes) {
-        localFilters.min_votes = props.bounds.min_votes;
-    }
-    if (localFilters.max_votes > props.bounds.max_votes) {
-        localFilters.max_votes = props.bounds.max_votes;
-    }
-    if (localFilters.min_votes > localFilters.max_votes) {
-        localFilters.max_votes = localFilters.min_votes;
-    }
-};
+const isSyncing = ref(false);
+const localFilters = reactive<FilterState>({ ...props.filters });
 
 watch(
     () => props.filters,
     (value) => {
         if (!value) return;
+
         isSyncing.value = true;
         Object.assign(localFilters, value);
-        normalizeVotes();
+
         Promise.resolve().then(() => {
             isSyncing.value = false;
         });
     },
     { deep: true, immediate: true },
-);
-
-watch(
-    () => props.bounds,
-    () => {
-        normalizeVotes();
-    },
-    { deep: true },
 );
 
 watch(
@@ -114,13 +73,7 @@ watch(
     { deep: true },
 );
 
-const toggleSelection = (current: string | null, next: string) => {
-    return current === next ? null : next;
-};
-
-const selectContest = (contest: string) => {
-    localFilters.contest = toggleSelection(localFilters.contest, contest);
-};
+const toggleSelection = (current: string | null, next: string) => (current === next ? null : next);
 
 const selectCategory = (category: string) => {
     localFilters.category = toggleSelection(localFilters.category, category);
@@ -130,24 +83,13 @@ const selectLocation = (location: string) => {
     localFilters.location = toggleSelection(localFilters.location, location);
 };
 
-const updateMinVotes = (event: Event) => {
-    const value = Number((event.target as HTMLInputElement).value);
-    localFilters.min_votes = Math.min(
-        Math.max(value, props.bounds.min_votes),
-        localFilters.max_votes,
-    );
+const selectGender = (gender: string) => {
+    localFilters.gender = toggleSelection(localFilters.gender, gender);
 };
 
-const updateMaxVotes = (event: Event) => {
-    const value = Number((event.target as HTMLInputElement).value);
-    localFilters.max_votes = Math.max(
-        Math.min(value, props.bounds.max_votes),
-        localFilters.min_votes,
-    );
+const toggleActiveOnly = () => {
+    localFilters.active = !localFilters.active;
 };
-
-const minVotesLabel = computed(() => formatVotes(localFilters.min_votes));
-const maxVotesLabel = computed(() => formatVotes(localFilters.max_votes));
 
 const locationColorMap: Record<string, string> = {
     Lagos: 'bg-light-pink-2',
@@ -157,9 +99,7 @@ const locationColorMap: Record<string, string> = {
     Nairobi: 'bg-light-green',
 };
 
-const resolveLocationColor = (location: string) => {
-    return locationColorMap[location] ?? 'bg-grey-2';
-};
+const resolveLocationColor = (location: string) => locationColorMap[location] ?? 'bg-grey-2';
 </script>
 
 <template>
@@ -173,69 +113,9 @@ const resolveLocationColor = (location: string) => {
         <div class="canvas-wrapper">
             <div class="canvas-header">
                 <h5>Filter Contestants</h5>
-                <span
-                    class="icon-close icon-close-popup"
-                    aria-label="Close"
-                    @click="closeModal('filter')"
-                ></span>
+                <span class="icon-close icon-close-popup" aria-label="Close" @click="closeModal('filter')"></span>
             </div>
             <div class="canvas-body">
-                <div class="widget-facet facet-categories">
-                    <h6 class="facet-title">Contests</h6>
-                    <ul class="facet-content">
-                        <li v-if="props.options.contests.length === 0" class="text-secondary text-caption-1">
-                            No contests available yet.
-                        </li>
-                        <li v-for="contest in props.options.contests" :key="contest.value">
-                            <button
-                                type="button"
-                                class="categories-item"
-                                :class="{ active: localFilters.contest === contest.value }"
-                                @click="selectContest(contest.value)"
-                            >
-                                {{ contest.label }}
-                            </button>
-                        </li>
-                    </ul>
-                </div>
-                <div class="widget-facet facet-price">
-                    <h6 class="facet-title">Votes Range</h6>
-                    <div
-                        class="price-val-range"
-                        id="votes-value-range"
-                        :data-min="props.bounds.min_votes"
-                        :data-max="props.bounds.max_votes"
-                    >
-                        <div class="range-inputs d-flex flex-column gap-12">
-                            <input
-                                type="range"
-                                class="tf-range-input"
-                                :min="props.bounds.min_votes"
-                                :max="props.bounds.max_votes"
-                                :value="localFilters.min_votes"
-                                @input="updateMinVotes"
-                            />
-                            <input
-                                type="range"
-                                class="tf-range-input"
-                                :min="props.bounds.min_votes"
-                                :max="props.bounds.max_votes"
-                                :value="localFilters.max_votes"
-                                @input="updateMaxVotes"
-                            />
-                        </div>
-                    </div>
-                    <div class="box-price-product">
-                        <div class="box-price-item">
-                            <span class="title-price">Min votes</span>
-                            <div class="price-val" data-currency="votes">{{ minVotesLabel }}</div>
-                        </div>
-                        <div class="box-price-item">
-                            <span class="title-price">Max votes</span>
-                            <div class="price-val" data-currency="votes">{{ maxVotesLabel }}</div>
-                        </div>
-                    </div>
-                </div>
                 <div class="widget-facet facet-size">
                     <h6 class="facet-title">Category</h6>
                     <div class="facet-size-box size-box category-filter-box">
@@ -257,6 +137,7 @@ const resolveLocationColor = (location: string) => {
                         </span>
                     </div>
                 </div>
+
                 <div class="widget-facet facet-color">
                     <h6 class="facet-title">Location</h6>
                     <div class="facet-color-box d-flex flex-wrap gap-12">
@@ -276,28 +157,39 @@ const resolveLocationColor = (location: string) => {
                         </button>
                     </div>
                 </div>
+
                 <div class="widget-facet facet-fieldset">
                     <h6 class="facet-title">Gender</h6>
-                    <div class="box-fieldset-item">
+                    <div class="facet-size-box size-box category-filter-box">
                         <p v-if="props.options.genders.length === 0" class="text-secondary text-caption-1 mb-0">
                             No gender options available yet.
                         </p>
-                        <fieldset
+                        <span
                             v-for="gender in props.options.genders"
                             :key="gender"
-                            class="fieldset-item"
+                            class="size-item size-check category-pill"
+                            :class="{ active: localFilters.gender === gender }"
+                            role="button"
+                            tabindex="0"
+                            @click="selectGender(gender)"
+                            @keydown.enter.prevent="selectGender(gender)"
+                            @keydown.space.prevent="selectGender(gender)"
                         >
-                            <input
-                                :id="`gender-${gender}`"
-                                v-model="localFilters.gender"
-                                type="radio"
-                                name="gender"
-                                class="tf-check"
-                                :value="gender"
-                            />
-                            <label :for="`gender-${gender}`">{{ gender }}</label>
-                        </fieldset>
+                            {{ gender }}
+                        </span>
                     </div>
+                </div>
+
+                <div class="widget-facet facet-fieldset">
+                    <h6 class="facet-title">Contest Status</h6>
+                    <button
+                        type="button"
+                        class="categories-item active-toggle-btn"
+                        :class="{ active: localFilters.active }"
+                        @click="toggleActiveOnly"
+                    >
+                        Active contests only
+                    </button>
                 </div>
             </div>
             <div class="canvas-bottom">
@@ -344,5 +236,19 @@ const resolveLocationColor = (location: string) => {
     background-color: var(--main);
     color: var(--white);
     border-color: var(--main);
+}
+
+.active-toggle-btn {
+    border: 1px solid rgba(24, 24, 24, 0.1);
+    border-radius: 999px;
+    padding: 12px 18px;
+    background: #fff;
+    transition: all 0.2s ease;
+}
+
+.active-toggle-btn.active {
+    background: var(--main);
+    border-color: var(--main);
+    color: var(--white);
 }
 </style>

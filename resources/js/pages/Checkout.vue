@@ -1,11 +1,16 @@
 <script setup lang="ts">
 import { Head, Link, router, usePage } from '@inertiajs/vue3';
-import { computed, onMounted, reactive, ref } from 'vue';
+import { computed, onMounted, reactive, ref, watch } from 'vue';
 import Breadcrumb from '@/components/ui/Breadcrumb.vue';
 import { useVoteCart } from '@/composables/useVoteCart';
 import Layout from '@/layouts/Layout.vue';
 
 type PageProps = {
+    auth?: {
+        user?: {
+            email?: string | null;
+        } | null;
+    };
     errors?: {
         checkout?: string;
         system?: string;
@@ -17,13 +22,25 @@ type PageProps = {
 };
 
 const page = usePage<PageProps>();
+const authenticatedUser = computed(() => page.props.auth?.user ?? null);
+const isAuthenticated = computed(() => Boolean(authenticatedUser.value));
 const serverErrors = computed(() => page.props.errors ?? {});
 const successMessage = computed(() => page.props.flash?.success ?? '');
 const checkoutNotice = computed(() => {
     return serverErrors.value.checkout ?? serverErrors.value.system ?? '';
 });
 const itemsError = computed(() => formErrors.value.items ?? serverErrors.value.items ?? '');
-const { cartItems, totalVotes, finalTotal, costPerVote, formatCurrency, clearCart } = useVoteCart();
+const {
+    cartItems,
+    cartNotice,
+    totalVotes,
+    finalTotal,
+    costPerVote,
+    formatCurrency,
+    clearCart,
+    isCartReady,
+    refreshCart,
+} = useVoteCart();
 
 const voterToken = ref('');
 const form = reactive({
@@ -67,7 +84,9 @@ const checkoutItems = computed(() => {
 const validateForm = () => {
     formErrors.value = {};
 
-    if (!form.email.trim()) {
+    if (!isAuthenticated.value && !form.email.trim()) {
+        formErrors.value.email = 'Email is required';
+    } else if (!form.email.trim()) {
         formErrors.value.email = 'Email is required';
     } else if (!/^\S+@\S+\.\S+$/.test(form.email)) {
         formErrors.value.email = 'Enter a valid email';
@@ -99,6 +118,10 @@ const handleCheckout = () => {
 };
 
 onMounted(() => {
+    if (authenticatedUser.value?.email) {
+        form.email = authenticatedUser.value.email;
+    }
+
     const storedToken = window.localStorage.getItem('voter_token');
 
     if (storedToken) {
@@ -109,6 +132,21 @@ onMounted(() => {
     voterToken.value = generateUuid();
     window.localStorage.setItem('voter_token', voterToken.value);
 });
+
+watch(itemsError, (message) => {
+    if (
+        message.includes('no longer available')
+        || message.includes('not available for voting right now')
+    ) {
+        void refreshCart();
+    }
+});
+
+watch(authenticatedUser, (user) => {
+    if (user?.email) {
+        form.email = user.email;
+    }
+}, { immediate: true });
 </script>
 
 <template>
@@ -128,7 +166,7 @@ onMounted(() => {
 
         <section>
             <div class="container">
-                <div v-if="successMessage || checkoutNotice || itemsError" class="mb_24">
+                <div v-if="successMessage || checkoutNotice || cartNotice || itemsError" class="mb_24">
                     <div
                         v-if="successMessage"
                         class="tf-notice text-center"
@@ -143,6 +181,13 @@ onMounted(() => {
                     >
                         <strong class="d-block mb_4">Checkout notice</strong>
                         {{ checkoutNotice }}
+                    </div>
+                    <div
+                        v-if="cartNotice"
+                        class="tf-notice text-center"
+                        style="padding: 14px 18px; border: 1px solid #fed7aa; background: #fff7ed; color: #9a3412;"
+                    >
+                        {{ cartNotice }}
                     </div>
                     <div
                         v-if="itemsError"
@@ -163,7 +208,15 @@ onMounted(() => {
                                 </p>
                                 <form class="info-box">
                                     <div>
-                                        <input v-model="form.email" type="email" placeholder="Email Address*" required>
+                                        <input
+                                            v-model="form.email"
+                                            type="email"
+                                            placeholder="Email Address*"
+                                            :readonly="isAuthenticated"
+                                            :disabled="isAuthenticated"
+                                            :required="!isAuthenticated"
+                                            :style="isAuthenticated ? 'opacity: 0.7; cursor: not-allowed;' : ''"
+                                        >
                                         <p v-if="formErrors.email" class="text-danger mt_8 mb-0">{{ formErrors.email }}</p>
                                     </div>
                                 </form>
@@ -225,7 +278,7 @@ onMounted(() => {
                                         class="item-product"
                                     >
                                         <Link :href="`/contestants/${item.contestant.slug}`" class="img-product">
-                                            <img :src="item.contestant.image" :alt="item.contestant.name">
+                                            <img v-if="item.contestant.image" :src="item.contestant.image" :alt="item.contestant.name">
                                         </Link>
                                         <div class="content-box">
                                             <div class="info">
@@ -245,7 +298,7 @@ onMounted(() => {
                                             <div class="total-price text-button">{{ formatCurrency(item.totalCost) }}</div>
                                         </div>
                                     </div>
-                                    <div v-if="!cartItems.length" class="item-product">
+                                    <div v-if="isCartReady && !cartItems.length" class="item-product">
                                         <div class="content-box">
                                             <div class="info">
                                                 <div class="name-product text-title">No vote selections found.</div>

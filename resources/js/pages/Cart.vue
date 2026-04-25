@@ -3,10 +3,19 @@ import { Head, Link } from '@inertiajs/vue3';
 import Breadcrumb from '@/components/ui/Breadcrumb.vue';
 import { useVoteCart } from '@/composables/useVoteCart';
 import Layout from '@/layouts/Layout.vue';
-import { formatVotes } from '@/utils/formatVotes';
 
-const { cartItems, totalVotes, finalTotal, costPerVote, formatCurrency, updateVotes, removeVotes } =
-    useVoteCart();
+const {
+    cartItems,
+    cartNotice,
+    totalVotes,
+    finalTotal,
+    costPerVote,
+    formatCurrency,
+    isCartReady,
+    getMaxVotesAllowed,
+    updateVotes,
+    removeVotes,
+} = useVoteCart();
 
 const decreaseVotes = (contestantId: number, currentVotes: number) => {
     updateVotes(contestantId, currentVotes - 1);
@@ -14,6 +23,17 @@ const decreaseVotes = (contestantId: number, currentVotes: number) => {
 
 const increaseVotes = (contestantId: number, currentVotes: number) => {
     updateVotes(contestantId, currentVotes + 1);
+};
+
+const setVotesFromInput = (contestantId: number, event: Event) => {
+    const target = event.target as HTMLInputElement | null;
+    const value = target?.value ?? '1';
+    const parsedValue = Number(value);
+    updateVotes(contestantId, Number.isFinite(parsedValue) ? parsedValue : 1);
+};
+
+const addVoteBatch = (contestantId: number, currentVotes: number, amount: number) => {
+    updateVotes(contestantId, currentVotes + amount);
 };
 </script>
 
@@ -33,15 +53,24 @@ const increaseVotes = (contestantId: number, currentVotes: number) => {
 
         <section class="flat-spacing">
             <div class="container">
-                <div class="row">
+                <div
+                    v-if="cartNotice"
+                    class="tf-notice text-center mb_24"
+                    style="padding: 14px 18px; border: 1px solid #fed7aa; background: #fff7ed; color: #9a3412;"
+                >
+                    {{ cartNotice }}
+                </div>
+                <div v-if="isCartReady && !cartItems.length" class="cart-empty-state">
+                    <div class="cart-empty-content">
+                        <p class="mb_16">No contestants selected yet</p>
+                        <Link href="/contestants" class="tf-btn btn-fill">
+                            <span class="text">Explore Contestants</span>
+                        </Link>
+                    </div>
+                </div>
+                <div v-else class="row">
                     <div class="col-xl-8">
-                        <div v-if="!cartItems.length" class="py-5 text-center">
-                            <p class="mb_16">No votes selected yet.</p>
-                            <Link href="/contestants" class="tf-btn btn-fill">
-                                <span class="text">Explore Contestants</span>
-                            </Link>
-                        </div>
-                        <form v-else>
+                        <form v-if="cartItems.length">
                             <table class="tf-table-page-cart">
                                 <thead>
                                     <tr>
@@ -64,6 +93,7 @@ const increaseVotes = (contestantId: number, currentVotes: number) => {
                                                 class="img-box"
                                             >
                                                 <img
+                                                    v-if="item.contestant.image"
                                                     :src="item.contestant.image"
                                                     :alt="item.contestant.name"
                                                 >
@@ -77,9 +107,6 @@ const increaseVotes = (contestantId: number, currentVotes: number) => {
                                                 </Link>
                                                 <p class="text-caption-1 text-secondary mb-0">
                                                     Contest: {{ item.contestant.contestName }}
-                                                </p>
-                                                <p class="text-caption-1 text-secondary mb-0">
-                                                    Current Votes: {{ formatVotes(item.contestant.votes) }}
                                                 </p>
                                             </div>
                                         </td>
@@ -95,26 +122,53 @@ const increaseVotes = (contestantId: number, currentVotes: number) => {
                                             data-cart-title="Votes"
                                             class="tf-cart-item_quantity"
                                         >
-                                            <div class="wg-quantity mx-md-auto">
-                                                <span
-                                                    class="btn-quantity vote-stepper-btn"
-                                                    @click="decreaseVotes(item.contestant_id, item.votes)"
-                                                >
-                                                    -
-                                                </span>
-                                                <input
-                                                    type="text"
-                                                    class="quantity-product"
-                                                    name="votes"
-                                                    :value="item.votes"
-                                                    readonly
-                                                >
-                                                <span
-                                                    class="btn-quantity vote-stepper-btn"
-                                                    @click="increaseVotes(item.contestant_id, item.votes)"
-                                                >
-                                                    +
-                                                </span>
+                                            <div class="vote-quantity-cell mx-md-auto">
+                                                <div class="wg-quantity">
+                                                    <span
+                                                        class="btn-quantity vote-stepper-btn"
+                                                        @click="decreaseVotes(item.contestant_id, item.votes)"
+                                                    >
+                                                        -
+                                                    </span>
+                                                    <input
+                                                        type="number"
+                                                        class="quantity-product"
+                                                        name="votes"
+                                                        min="1"
+                                                        :max="getMaxVotesAllowed(item.contestant_id)"
+                                                        :value="item.votes"
+                                                        @input="setVotesFromInput(item.contestant_id, $event)"
+                                                    >
+                                                    <span
+                                                        class="btn-quantity vote-stepper-btn"
+                                                        @click="increaseVotes(item.contestant_id, item.votes)"
+                                                    >
+                                                        +
+                                                    </span>
+                                                </div>
+                                                <div class="vote-quick-actions">
+                                                    <button
+                                                        type="button"
+                                                        class="vote-batch-btn"
+                                                        @click="addVoteBatch(item.contestant_id, item.votes, 5)"
+                                                    >
+                                                        +5
+                                                    </button>
+                                                    <button
+                                                        type="button"
+                                                        class="vote-batch-btn"
+                                                        @click="addVoteBatch(item.contestant_id, item.votes, 10)"
+                                                    >
+                                                        +10
+                                                    </button>
+                                                    <button
+                                                        type="button"
+                                                        class="vote-batch-btn"
+                                                        @click="addVoteBatch(item.contestant_id, item.votes, 20)"
+                                                    >
+                                                        +20
+                                                    </button>
+                                                </div>
                                             </div>
                                         </td>
                                         <td
@@ -139,7 +193,7 @@ const increaseVotes = (contestantId: number, currentVotes: number) => {
                             </table>
                         </form>
                     </div>
-                    <div class="col-xl-4">
+                    <div v-if="cartItems.length" class="col-xl-4">
                         <div class="fl-sidebar-cart">
                             <div class="box-order bg-surface">
                                 <h5 class="title">Vote Summary</h5>
@@ -180,3 +234,59 @@ const increaseVotes = (contestantId: number, currentVotes: number) => {
         </section>
     </Layout>
 </template>
+
+<style scoped>
+.cart-empty-state {
+    min-height: 55vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+}
+
+.cart-empty-content {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+
+.vote-quantity-cell {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 12px;
+}
+
+.vote-quantity-cell .quantity-product {
+    width: 88px;
+    text-align: center;
+}
+
+.vote-quick-actions {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 8px;
+}
+
+.vote-batch-btn {
+    border: 1px solid rgba(24, 24, 24, 0.14);
+    border-radius: 999px;
+    background: #fff;
+    color: #181818;
+    font-size: 12px;
+    font-weight: 600;
+    line-height: 1;
+    padding: 8px 12px;
+    transition: all 0.2s ease;
+}
+
+.vote-batch-btn:hover,
+.vote-batch-btn:focus-visible {
+    border-color: #181818;
+    background: #181818;
+    color: #fff;
+    outline: none;
+}
+</style>

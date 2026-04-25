@@ -9,6 +9,7 @@ use Illuminate\Support\Facades\Route;
 Route::inertia('/', 'Home')->name('home');
 Route::get('/contestants', [ContestantController::class, 'index'])->name('contestants.index');
 Route::get('/contestants/cart-items', [ContestantController::class, 'cartItems'])->name('contestants.cart-items');
+Route::get('/contestants/search', [ContestantController::class, 'search'])->name('contestants.search');
 Route::inertia('/about', 'About')->name('about');
 Route::inertia('/cart', 'Cart')->name('cart');
 Route::inertia('/checkout', 'Checkout')->name('checkout');

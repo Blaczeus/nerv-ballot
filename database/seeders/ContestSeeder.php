@@ -4,7 +4,6 @@ namespace Database\Seeders;
 
 use App\Models\Contest;
 use Illuminate\Database\Seeder;
-use Illuminate\Support\Carbon;
 
 class ContestSeeder extends Seeder
 {
@@ -13,31 +12,100 @@ class ContestSeeder extends Seeder
      */
     public function run(): void
     {
-        Contest::query()->create([
-            'name' => 'Campus Star Showcase 2026',
-            'slug' => 'campus-star-showcase-2026',
-            'description' => 'A large-scale inter-university competition highlighting students in leadership, fashion, and performing arts. Participants represent their institutions and compete for recognition and prizes.',
-            'category' => 'Campus Competitions',
-            'start_date' => Carbon::now()->subDays(5),
-            'end_date' => Carbon::now()->addDays(10),
-        ]);
+        $endedStart = now()->subDays(20);
+        $endedEnd = now()->subDays(5);
+        $activeStart = now()->subDays(2);
+        $activeEnd = now()->addDays(5);
+        $upcomingStart = now()->addDays(2);
+        $upcomingEnd = now()->addDays(10);
 
-        Contest::query()->create([
-            'name' => 'Future Voices Talent Challenge',
-            'slug' => 'future-voices-talent-challenge',
-            'description' => 'A public voting contest focused on discovering emerging talents in music, dance, and digital content creation. Open to a wide audience with strong community participation.',
-            'category' => 'Talent Shows',
-            'start_date' => Carbon::now()->subDays(2),
-            'end_date' => Carbon::now()->addDays(5),
-        ]);
+        $this->createContest(
+            'Campus Star Showcase 2026',
+            'campus-star-showcase-2026',
+            'Campus Competitions',
+            $endedStart,
+            $endedEnd,
+        );
 
-        Contest::query()->create([
-            'name' => 'Creative Sprint Finals',
-            'slug' => 'creative-sprint-finals',
-            'description' => 'A fast-paced creative competition where participants submitted projects across design, tech, and storytelling. This contest is now completed and used for historical data and testing.',
-            'category' => 'Online Challenges',
-            'start_date' => Carbon::now()->subDays(20),
-            'end_date' => Carbon::now()->subDays(5),
+        $this->createContest(
+            'Future Voices Talent Challenge',
+            'future-voices-talent-challenge',
+            'Talent Shows',
+            $endedStart,
+            $endedEnd,
+        );
+
+        $this->createContest(
+            'Creative Sprint Finals',
+            'creative-sprint-finals',
+            'Online Challenges',
+            $endedStart,
+            $endedEnd,
+        );
+
+        $this->createContest(
+            'Next Gen Campus Awards',
+            'next-gen-campus-awards',
+            'Campus Competitions',
+            $activeStart,
+            $activeEnd,
+        );
+
+        $this->createContest(
+            'Street Rhythm Talent League',
+            'street-rhythm-talent-league',
+            'Talent Shows',
+            $activeStart,
+            $activeEnd,
+        );
+
+        $this->createContest(
+            'Digital Creator Faceoff',
+            'digital-creator-faceoff',
+            'Online Challenges',
+            $activeStart,
+            $activeEnd,
+        );
+
+        $this->createContest(
+            'Campus Icon Search 2026',
+            'campus-icon-search-2026',
+            'Campus Competitions',
+            $upcomingStart,
+            $upcomingEnd,
+        );
+
+        $this->createContest(
+            'Rising Stage Talent Quest',
+            'rising-stage-talent-quest',
+            'Talent Shows',
+            $upcomingStart,
+            $upcomingEnd,
+        );
+
+        $this->createContest(
+            'Innovation Spotlight Challenge',
+            'innovation-spotlight-challenge',
+            'Online Challenges',
+            $upcomingStart,
+            $upcomingEnd,
+        );
+    }
+
+    protected function createContest(
+        string $name,
+        string $slug,
+        string $category,
+        $start,
+        $end,
+    ): Contest {
+        return Contest::query()->create([
+            'name' => $name,
+            'slug' => $slug,
+            'description' => fake()->sentence(30),
+            'category' => $category,
+            'start_date' => $start,
+            'end_date' => $end,
         ]);
     }
 }

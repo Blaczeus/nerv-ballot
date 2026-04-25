@@ -20,18 +20,25 @@ class VoteSeeder extends Seeder
     public function run(): void
     {
         DB::transaction(function (): void {
-            $users = User::query()->pluck('id');
+            $users = User::query()->select(['id', 'email'])->get();
             $contestants = Contestant::query()->with('contest')->orderBy('id')->get();
             $anonymousTokensByContest = [];
             $userVotesByContest = [];
 
             $targetVotes = [
-                0, 0, 1, 3, 7, 9, 12, 18, 56, 74, 98, 132, 176, 540, 1180,
-                0, 4, 8, 67, 123, 188, 620, 1490,
-                0, 2, 11, 95, 580,
+                0, 0, 1, 3, 7, 9,
+                0, 4, 8, 67, 123, 188,
+                0, 2, 11, 95, 580, 1490,
+                0, 0, 1, 5, 10, 18, 42, 76, 128, 205, 610, 1280,
+                0, 3, 6, 15, 27, 64, 92, 154, 244, 398, 720, 1460,
+                0, 1, 7, 22, 49, 88, 117, 171, 268, 430, 840, 1325,
             ];
 
             foreach ($contestants as $index => $contestant) {
+                if ($contestant->contest?->status() === 'upcoming') {
+                    continue;
+                }
+
                 $targetTotal = $targetVotes[$index] ?? 0;
 
                 if ($targetTotal <= 0) {
@@ -48,17 +55,20 @@ class VoteSeeder extends Seeder
                     );
                     $contestId = $contestant->contest_id;
                     $isAnonymous = random_int(0, 1) === 1;
+                    $user = null;
                     $voterToken = null;
                     $userId = null;
+                    $email = null;
 
                     if (! $isAnonymous) {
                         $contestUserVotes = $userVotesByContest[$contestId] ?? [];
                         $eligibleUsers = $users
-                            ->filter(fn ($id) => (($contestUserVotes[$id] ?? 0) + $voteBatch) <= 50)
+                            ->filter(fn (User $candidate) => (($contestUserVotes[$candidate->id] ?? 0) + $voteBatch) <= 50)
                             ->values();
 
                         if ($eligibleUsers->isNotEmpty()) {
-                            $userId = $eligibleUsers->random();
+                            $user = $eligibleUsers->random();
+                            $userId = $user->id;
                             $contestUserVotes[$userId] = ($contestUserVotes[$userId] ?? 0) + $voteBatch;
                             $userVotesByContest[$contestId] = $contestUserVotes;
                         } else {
@@ -83,9 +93,14 @@ class VoteSeeder extends Seeder
                         $anonymousTokensByContest[$contestId] = $contestAnonymousVotes;
                     }
 
+                    $email = $user
+                        ? $user->email
+                        : fake()->safeEmail();
+
                     $transaction = Transaction::query()->create([
                         'user_id' => $userId,
                         'voter_token' => $voterToken,
+                        'email' => $email,
                         'checkout_token' => (string) Str::uuid(),
                         'total_votes' => $voteBatch,
                         'price_per_vote' => 100,

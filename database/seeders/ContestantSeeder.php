@@ -5,7 +5,6 @@ namespace Database\Seeders;
 use App\Models\Contest;
 use App\Models\Contestant;
 use Illuminate\Database\Seeder;
-use Illuminate\Support\Str;
 
 class ContestantSeeder extends Seeder
 {
@@ -14,45 +13,21 @@ class ContestantSeeder extends Seeder
      */
     public function run(): void
     {
-        $faker = fake();
-        $categories = ['Music', 'Dance', 'Tech', 'Fashion', 'Comedy', 'Leadership'];
-        $locations = [
-            'Lagos',
-            'Abuja',
-            'Oyo',
-            'Rivers',
-            'Enugu',
-            'Kano',
-            'Kaduna',
-            'Ogun',
-            'Delta',
-            'Anambra',
-        ];
+        $contests = Contest::query()->orderBy('id')->get();
 
-        $distribution = [
-            'campus-star-showcase-2026' => 15,
-            'future-voices-talent-challenge' => 8,
-            'creative-sprint-finals' => 5,
-        ];
+        foreach ($contests as $contest) {
+            $count = match ($contest->status()) {
+                'active' => 12,
+                'upcoming' => 11,
+                'ended' => 10,
+                default => 0,
+            };
 
-        foreach ($distribution as $contestSlug => $count) {
-            $contest = Contest::query()->where('slug', $contestSlug)->firstOrFail();
-
-            for ($index = 0; $index < $count; $index++) {
-                $name = $faker->unique()->name();
-
-                Contestant::query()->create([
+            Contestant::factory()
+                ->count($count)
+                ->create([
                     'contest_id' => $contest->id,
-                    'name' => $name,
-                    'slug' => Str::slug($name.'-'.$contest->id.'-'.$index),
-                    'image' => null,
-                    'category' => $faker->randomElement($categories),
-                    'gender' => $faker->randomElement(['male', 'female']),
-                    'location' => $faker->randomElement($locations),
-                    'description' => $faker->sentence(18),
-                    'total_votes' => 0,
                 ]);
-            }
         }
     }
 }

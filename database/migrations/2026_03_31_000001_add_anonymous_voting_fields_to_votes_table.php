@@ -12,7 +12,7 @@ return new class extends Migration
     public function up(): void
     {
         Schema::table('votes', function (Blueprint $table) {
-            $table->foreignId('contest_id')->nullable()->after('contestant_id')->constrained()->restrictOnDelete();
+            $table->foreignId(column: 'contest_id')->after('contestant_id')->constrained()->restrictOnDelete();
             $table->string('voter_token')->nullable()->after('user_id')->index();
             $table->foreignId('user_id')->nullable()->change();
         });

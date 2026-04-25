@@ -66,4 +66,12 @@ class Vote extends Model
     {
         return $this->belongsTo(Contestant::class);
     }
+
+    /**
+     * Get the contest that the vote belongs to.
+     */
+    public function contest(): BelongsTo
+    {
+        return $this->belongsTo(Contest::class);
+    }
 }

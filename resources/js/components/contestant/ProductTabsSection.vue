@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { computed } from 'vue';
+import { computed, ref } from 'vue';
 import type { ModalContestant } from '@/composables/useGlobalModals';
 import { formatVotes } from '@/utils/formatVotes';
 
@@ -12,15 +12,18 @@ const props = defineProps<{
 const formattedVotes = computed(() => formatVotes(props.contestant.votes));
 
 const dateFormatter = new Intl.DateTimeFormat('en-US', {
-    weekday: 'long',
+    weekday: 'short',
     month: 'short',
     day: 'numeric',
+    year: 'numeric',
+    hour: '2-digit',
+    minute: '2-digit',
 });
 
 const formatDisplayDate = (value: string) => {
     if (!value) return 'TBD';
 
-    const date = new Date(`${value}T00:00:00`);
+    const date = new Date(value); 
     if (Number.isNaN(date.getTime())) {
         return value;
     }
@@ -33,6 +36,17 @@ const contestDateRange = computed(() => {
 });
 
 const joinedDate = computed(() => formatDisplayDate(props.contestant.createdAt));
+const activeTab = ref(0);
+
+const tabs = [
+    { label: 'About Contestant' },
+    { label: 'Contest Info' },
+    { label: 'Voting Rules' },
+];
+
+const setTab = (index: number) => {
+    activeTab.value = index;
+};
 </script>
 
 <template>
@@ -42,18 +56,14 @@ const joinedDate = computed(() => formatDisplayDate(props.contestant.createdAt))
                 <div class="col-12">
                     <div class="widget-tabs style-menu-tabs">
                         <ul class="widget-menu-tab">
-                            <li class="item-title active">
-                                <span class="inner">About Contestant</span>
-                            </li>
-                            <li class="item-title">
-                                <span class="inner">Contest Info</span>
-                            </li>
-                            <li class="item-title">
-                                <span class="inner">Voting Rules</span>
+                            <li v-for="(tab, index) in tabs" :key="tab.label" class="item-title"
+                                :class="{ active: activeTab === index }" @click="setTab(index)">
+                                <span class="inner">{{ tab.label }}</span>
                             </li>
                         </ul>
                         <div class="widget-content-tab">
-                            <div class="widget-content-inner active">
+                            <div v-show="activeTab === 0" class="widget-content-inner"
+                                :class="{ active: activeTab === 0 }">
                                 <div class="tab-description">
                                     <div class="right">
                                         <div class="letter-1 text-btn-uppercase mb_12">{{ contestant.name }}</div>
@@ -75,7 +85,8 @@ const joinedDate = computed(() => formatDisplayDate(props.contestant.createdAt))
                                 </div>
                             </div>
 
-                            <div class="widget-content-inner">
+                            <div v-show="activeTab === 1" class="widget-content-inner"
+                                :class="{ active: activeTab === 1 }">
                                 <div class="tab-description">
                                     <div class="right">
                                         <div class="letter-1 text-btn-uppercase mb_12">CONTEST DETAILS</div>
@@ -84,7 +95,7 @@ const joinedDate = computed(() => formatDisplayDate(props.contestant.createdAt))
                                             {{ contestant.category.toLowerCase() }} category.
                                         </p>
                                         <p class="text-secondary">
-                                            Voting for this contest runs {{ contestDateRange }}.
+                                            Voting for this contest runs from {{ contestDateRange }}.
                                         </p>
                                     </div>
                                     <div class="left">
@@ -99,7 +110,8 @@ const joinedDate = computed(() => formatDisplayDate(props.contestant.createdAt))
                                 </div>
                             </div>
 
-                            <div class="widget-content-inner">
+                            <div v-show="activeTab === 2" class="widget-content-inner"
+                                :class="{ active: activeTab === 2 }">
                                 <div class="tab-policies">
                                     <div class="text-btn-uppercase mb_12">Voting rules</div>
                                     <p class="mb_12 text-secondary">

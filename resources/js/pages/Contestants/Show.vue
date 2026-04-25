@@ -5,39 +5,59 @@ import GallerySection from '@/components/contestant/GallerySection.vue';
 import ProductInfoSection from '@/components/contestant/ProductInfoSection.vue';
 import ProductTabsSection from '@/components/contestant/ProductTabsSection.vue';
 import Breadcrumb from '@/components/ui/Breadcrumb.vue';
-import { contestants } from '@/data/contestants';
+import type { ModalContestant } from '@/composables/useGlobalModals';
 import Layout from '@/layouts/Layout.vue';
+import type { ContestStatus } from '@/utils/contestStatus';
 
-type Contestant = (typeof contestants)[number];
-
-const props = defineProps<{
+type BackendContestant = {
+    id: number;
     slug: string;
-}>();
-
-const fallbackContestant: Contestant = contestants[0] ?? {
-    id: 0,
-    slug: props.slug,
-    name: 'Contestant',
-    contestName: '',
-    category: '',
-    location: '',
-    gender: '',
-    votes: 0,
-    contestStart: '',
-    contestEnd: '',
-    createdAt: '',
-    image: '/tmp/images/products/womens/women-19.jpg',
-    hoverImage: '/tmp/images/products/womens/women-20.jpg',
-    images: [
-        '/tmp/images/products/womens/women-19.jpg',
-        '/tmp/images/products/womens/women-20.jpg',
-    ],
-    description: '',
+    name: string;
+    contestName: string;
+    contest_status: ContestStatus | null;
+    category: string;
+    gender: string;
+    location: string;
+    votes: number;
+    contestStart: string;
+    contestEnd: string;
+    createdAt: string;
+    image: string | null;
+    hoverImage: string | null;
+    images?: string[];
+    description: string;
 };
 
-const contestant = computed<Contestant>(() => {
-    return contestants.find((item) => item.slug === props.slug) ?? fallbackContestant;
-});
+type ContestantPageContestant = ModalContestant & {
+    images?: string[];
+};
+
+const props = defineProps<{
+    contestant: BackendContestant;
+}>();
+
+const FALLBACK_IMAGE = '/tmp/images/products/womens/women-19.jpg';
+
+const contestant = computed<ContestantPageContestant>(() => ({
+    id: props.contestant.id,
+    slug: props.contestant.slug,
+    name: props.contestant.name,
+    contestName: props.contestant.contestName,
+    contestStatus: props.contestant.contest_status,
+    category: props.contestant.category,
+    gender: props.contestant.gender,
+    location: props.contestant.location,
+    votes: props.contestant.votes,
+    contestStart: props.contestant.contestStart,
+    contestEnd: props.contestant.contestEnd,
+    createdAt: props.contestant.createdAt,
+    description: props.contestant.description,
+    image: props.contestant.image || FALLBACK_IMAGE,
+    hoverImage: props.contestant.hoverImage || props.contestant.image || FALLBACK_IMAGE,
+    images: props.contestant.images?.length
+        ? props.contestant.images
+        : [props.contestant.image || FALLBACK_IMAGE],
+}));
 
 const breadcrumbItems = computed(() => [
     { label: 'Home', link: '/' },
@@ -62,7 +82,7 @@ const breadcrumbNav = {
             <div class="tf-main-product section-image-zoom">
                 <div class="container">
                     <div class="row">
-                        <GallerySection :contestant-slug="contestant.slug" :gallery-images="contestant.images" />
+                        <GallerySection :contestant-slug="contestant.slug" :gallery-images="contestant.images ?? []" />
                         <ProductInfoSection :contestant="contestant" />
                     </div>
                 </div>

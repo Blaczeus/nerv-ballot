@@ -1,6 +1,14 @@
 <script setup lang="ts">
-import { usePage } from '@inertiajs/vue3';
-import { computed, onMounted, useSlots, watch } from 'vue';
+import { Link, usePage } from '@inertiajs/vue3';
+import {
+    LayoutDashboard,
+    LogIn,
+    Mail,
+    Phone,
+    ShoppingCart,
+    UserPlus,
+} from 'lucide-vue-next';
+import { computed, onMounted, reactive, ref, useSlots, watch } from 'vue';
 import ProductModalsSection from '@/components/contestant/ProductModalsSection.vue';
 import Footer from '@/components/Footer.vue';
 import Header from '@/components/Header.vue';
@@ -24,8 +32,15 @@ const page = usePage<{
 }>();
 const slots = useSlots();
 const hasFilterModalSlot = computed(() => Boolean(slots.filterModal));
-const { state: modalState, closeAllModals, closeModal } = useGlobalModals();
+const { state: modalState, closeAllModals, closeModal, openAskQuestion, openSearch } = useGlobalModals();
 const hasFrontendModalOpen = computed(() => Boolean(modalState.activeModal));
+const askQuestionForm = reactive({
+    name: '',
+    email: '',
+    phone: '',
+    message: '',
+});
+const askQuestionSuccessMessage = ref('');
 
 const user = computed<AuthUser>(() => {
     const authProp = page.props.auth as AuthUser | { user?: AuthUser } | undefined;
@@ -159,6 +174,65 @@ const resolveNavItems = (items: NavItem[], depth = 0): ResolvedNavItem[] => {
 
 const navItems = computed<ResolvedNavItem[]>(() => resolveNavItems(navigation));
 
+const closeMobileMenu = () => {
+    if (typeof document === 'undefined' || typeof window === 'undefined') return;
+
+    const mobileMenu = document.getElementById('mobileMenu');
+    if (!mobileMenu) return;
+
+    const bootstrapWindow = window as Window & {
+        bootstrap?: {
+            Offcanvas?: {
+                getInstance?: (element: Element) => { hide: () => void } | null;
+                getOrCreateInstance?: (element: Element) => { hide: () => void };
+            };
+        };
+    };
+
+    const offcanvasApi = bootstrapWindow.bootstrap?.Offcanvas;
+    const instance =
+        offcanvasApi?.getInstance?.(mobileMenu) ??
+        offcanvasApi?.getOrCreateInstance?.(mobileMenu);
+
+    instance?.hide();
+};
+
+const handleMobileSupport = () => {
+    closeMobileMenu();
+    window.setTimeout(() => {
+        openAskQuestion();
+    }, 150);
+};
+
+const handleMobileSearch = () => {
+    closeMobileMenu();
+    window.setTimeout(() => {
+        openSearch();
+    }, 150);
+};
+
+const resetAskQuestionForm = () => {
+    askQuestionForm.name = '';
+    askQuestionForm.email = '';
+    askQuestionForm.phone = '';
+    askQuestionForm.message = '';
+    askQuestionSuccessMessage.value = '';
+};
+
+const submitAskQuestion = (event: Event) => {
+    const form = event.currentTarget as HTMLFormElement | null;
+
+    if (!form?.reportValidity()) {
+        return;
+    }
+
+    askQuestionSuccessMessage.value = "Your message has been received. We'll get back to you shortly.";
+    askQuestionForm.name = '';
+    askQuestionForm.email = '';
+    askQuestionForm.phone = '';
+    askQuestionForm.message = '';
+};
+
 const scheduleTemplateInit = () => {
     window.setTimeout(() => {
         initTemplatePlugins();
@@ -172,6 +246,7 @@ onMounted(() => {
 watch(
     () => page.url,
     () => {
+        closeMobileMenu();
         closeAllModals();
         scheduleTemplateInit();
     },
@@ -186,6 +261,10 @@ watch(
 
         if (!activeModal) {
             document.body.style.removeProperty('padding-right');
+        }
+
+        if (activeModal !== 'askQuestion') {
+            resetAskQuestionForm();
         }
     },
     { immediate: true },
@@ -214,6 +293,127 @@ watch(
         <slot v-if="hasFilterModalSlot" name="filterModal" />
         <FilterModal v-else />
         <slot name="overlays" />
+        <!-- mobile menu -->
+        <div class="offcanvas offcanvas-start canvas-mb" id="mobileMenu">
+            <span class="icon-close icon-close-popup" data-bs-dismiss="offcanvas" aria-label="Close"></span>
+            <div class="mb-canvas-content">
+                <div class="mb-body">
+                    <div class="mb-content-top">
+                        <form class="form-search" @submit.prevent="handleMobileSearch">
+                            <fieldset class="text">
+                                <input
+                                    type="text"
+                                    placeholder="Search contestants"
+                                    class=""
+                                    name="text"
+                                    tabindex="0"
+                                    value=""
+                                    aria-required="true"
+                                    required
+                                    @focus="handleMobileSearch"
+                                    @click="handleMobileSearch"
+                                />
+                            </fieldset>
+                            <button class="" type="submit" @click.prevent="handleMobileSearch">
+                                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                    <path d="M11 19C15.4183 19 19 15.4183 19 11C19 6.58172 15.4183 3 11 3C6.58172 3 3 6.58172 3 11C3 15.4183 6.58172 19 11 19Z" stroke="#181818" stroke-linecap="round" stroke-linejoin="round"/>
+                                    <path d="M20.9984 20.9999L16.6484 16.6499" stroke="#181818" stroke-linecap="round" stroke-linejoin="round"/>
+                                </svg>
+                            </button>
+                        </form>
+                        <ul class="nav-ul-mb" id="wrapper-menu-navigation">
+                            <li v-for="item in navItems" :key="`mobile-${item.label}`" class="nav-mb-item">
+                                <component
+                                    :is="item.external || item.href.startsWith('#') ? 'a' : Link"
+                                    :href="item.href"
+                                    :target="item.external ? '_blank' : undefined"
+                                    :rel="item.external ? 'noopener noreferrer' : undefined"
+                                    class="mb-menu-link"
+                                    @click="closeMobileMenu"
+                                >
+                                    <span>{{ item.label }}</span>
+                                </component>
+                            </li>
+                            <template v-if="!isAuthenticated">
+                                <li class="nav-mb-item">
+                                    <Link href="/login" class="mb-menu-link" @click="closeMobileMenu">
+                                        <span>Login</span>
+                                    </Link>
+                                </li>
+                                <li class="nav-mb-item">
+                                    <Link href="/register" class="mb-menu-link" @click="closeMobileMenu">
+                                        <span>Register</span>
+                                    </Link>
+                                </li>
+                            </template>
+                            <template v-else>
+                                <li class="nav-mb-item">
+                                    <Link href="/dashboard" class="mb-menu-link" @click="closeMobileMenu">
+                                        <span>Dashboard</span>
+                                    </Link>
+                                </li>
+                                <li class="nav-mb-item">
+                                    <Link href="/settings/profile" class="mb-menu-link" @click="closeMobileMenu">
+                                        <span>Profile</span>
+                                    </Link>
+                                </li>
+                                <li class="nav-mb-item">
+                                    <Link href="/logout" method="post" as="button" type="button" class="mb-menu-link" @click="closeMobileMenu">
+                                        <span>Logout</span>
+                                    </Link>
+                                </li>
+                            </template>
+                        </ul>
+                        <div class="mb-other-content">
+                            <div class="group-icon">
+                                <template v-if="!isAuthenticated">
+                                    <Link href="/login" class="site-nav-icon" @click="closeMobileMenu">
+                                        <LogIn class="icon" :size="18" :stroke-width="2" />
+                                        Login
+                                    </Link>
+                                    <Link href="/register" class="site-nav-icon" @click="closeMobileMenu">
+                                        <UserPlus class="icon" :size="18" :stroke-width="2" />
+                                        Register
+                                    </Link>
+                                </template>
+                                <template v-else>
+                                    <Link href="/dashboard" class="site-nav-icon" @click="closeMobileMenu">
+                                        <LayoutDashboard class="icon" :size="18" :stroke-width="2" />
+                                        Dashboard
+                                    </Link>
+                                    <Link href="/cart" class="site-nav-icon" @click="closeMobileMenu">
+                                        <ShoppingCart class="icon" :size="18" :stroke-width="2" />
+                                        Vote Cart
+                                    </Link>
+                                </template>
+                            </div>
+                            <div class="mb-notice">
+                                <a href="#" class="text-need" @click.prevent="handleMobileSupport">
+                                    Need Help With Voting?
+                                </a>
+                            </div>
+                            <div class="mb-contact">
+                                <p class="text-caption-1">Questions about contestants, vote confirmation, or your vote cart? Our support team is here to help.</p>
+                                <Link href="/about" class="tf-btn-default text-btn-uppercase" @click="closeMobileMenu">
+                                    HOW VOTING WORKS<i class="icon-arrowUpRight"></i>
+                                </Link>
+                            </div>
+                            <ul class="mb-info">
+                                <li>
+                                    <Mail class="icon" :size="18" :stroke-width="2" />
+                                    <p>support@nervego.com</p>
+                                </li>
+                                <li>
+                                    <Phone class="icon" :size="18" :stroke-width="2" />
+                                    <p>+234 800 000 0000</p>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- /mobile menu -->
         <!-- modal ask_question -->
         <div
             v-if="modalState.activeModal === 'askQuestion'"
@@ -229,23 +429,26 @@ watch(
                         <span class="icon-close icon-close-popup" @click="closeModal('askQuestion')"></span>
                     </div>
                     <div class="overflow-y-auto">
-                        <form @submit.prevent="closeModal('askQuestion')">
+                        <form @submit.prevent="submitAskQuestion">
                             <fieldset>
                                 <label>Name *</label>
-                                <input type="text" required />
+                                <input v-model="askQuestionForm.name" type="text" required />
                             </fieldset>
                             <fieldset>
                                 <label>Email *</label>
-                                <input type="email" required />
+                                <input v-model="askQuestionForm.email" type="email" required />
                             </fieldset>
                             <fieldset>
                                 <label>Phone number</label>
-                                <input type="number" />
+                                <input v-model="askQuestionForm.phone" type="number" />
                             </fieldset>
                             <fieldset>
                                 <label>Message</label>
-                                <textarea name="message" rows="4" required></textarea>
+                                <textarea v-model="askQuestionForm.message" name="message" rows="4" required></textarea>
                             </fieldset>
+                            <p v-if="askQuestionSuccessMessage" class="text-caption-1 text-secondary">
+                                {{ askQuestionSuccessMessage }}
+                            </p>
                             <button type="submit" class="btn-style-2 w-100">
                                 <span class="text">Send</span>
                             </button>

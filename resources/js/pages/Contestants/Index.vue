@@ -12,15 +12,28 @@ import Layout from '@/layouts/Layout.vue';
 
 type SortOption = 'votes_desc' | 'votes_asc';
 
+type ContestOption = {
+    label: string;
+    value: number;
+};
+
+type VoteBounds = {
+    min_votes: number;
+    max_votes: number;
+};
+
 type FiltersState = {
+    contest_id: number | null;
     category: string | null;
     location: string | null;
     gender: string | null;
+    min_votes: number;
+    max_votes: number;
     active: boolean;
     sort: SortOption;
 };
 
-type FilterChipKey = 'active' | 'category' | 'location' | 'gender';
+type FilterChipKey = 'active' | 'contest_id' | 'category' | 'location' | 'gender' | 'votes_range';
 
 type FilterChip = {
     key: FilterChipKey;
@@ -67,14 +80,19 @@ type PageProps = {
         };
     };
     filterOptions: {
+        contests: ContestOption[];
         categories: string[];
         locations: string[];
         genders: string[];
     };
+    voteBounds?: VoteBounds;
     filters?: {
+        contest_id?: number | string | null;
         category?: string | null;
         location?: string | null;
         gender?: string | null;
+        min_votes?: number | string | null;
+        max_votes?: number | string | null;
         active?: boolean | number | string | null;
         sort?: SortOption | null;
     };
@@ -83,6 +101,10 @@ type PageProps = {
 const FALLBACK_IMAGE = '/tmp/images/products/womens/women-19.jpg';
 const LAYOUT_STORAGE_KEY = 'contestants.layout';
 const layoutOptions: LayoutMode[] = ['list', 'tf-col-2', 'tf-col-3', 'tf-col-4', 'tf-col-5'];
+const DEFAULT_VOTE_BOUNDS: VoteBounds = {
+    min_votes: 0,
+    max_votes: 10000,
+};
 
 const sanitizeFilterValue = (value: string | null | undefined) => {
     const trimmed = value?.trim() ?? '';
@@ -91,11 +113,52 @@ const sanitizeFilterValue = (value: string | null | undefined) => {
 
 const normalizeBooleanFilter = (value: unknown) => value === true || value === 1 || value === '1';
 const sanitizeSortValue = (value: unknown): SortOption => (value === 'votes_asc' ? 'votes_asc' : 'votes_desc');
+const normalizeContestId = (value: unknown): number | null => {
+    const parsedValue = Number(value);
 
-const createDefaultFilters = (): FiltersState => ({
+    if (!Number.isInteger(parsedValue) || parsedValue <= 0) {
+        return null;
+    }
+
+    return parsedValue;
+};
+const clampVotes = (value: unknown, minimum: number, maximum: number) => {
+    const parsedValue = Number(value);
+
+    if (!Number.isFinite(parsedValue)) {
+        return minimum;
+    }
+
+    return Math.min(maximum, Math.max(minimum, Math.floor(parsedValue)));
+};
+
+const resolveVoteBounds = (): VoteBounds => {
+    const incomingBounds = page.props.voteBounds;
+
+    if (!incomingBounds) {
+        return { ...DEFAULT_VOTE_BOUNDS };
+    }
+
+    const minVotes = Number(incomingBounds.min_votes);
+    const maxVotes = Number(incomingBounds.max_votes);
+    const safeMinVotes = Number.isFinite(minVotes) ? Math.max(0, Math.floor(minVotes)) : 0;
+    const safeMaxVotes = Number.isFinite(maxVotes)
+        ? Math.max(safeMinVotes, Math.floor(maxVotes))
+        : Math.max(safeMinVotes, DEFAULT_VOTE_BOUNDS.max_votes);
+
+    return {
+        min_votes: safeMinVotes,
+        max_votes: safeMaxVotes,
+    };
+};
+
+const createDefaultFilters = (bounds: VoteBounds): FiltersState => ({
+    contest_id: null,
     category: null,
     location: null,
     gender: null,
+    min_votes: bounds.min_votes,
+    max_votes: bounds.max_votes,
     active: false,
     sort: 'votes_desc',
 });
@@ -109,14 +172,31 @@ const sortOptions: Array<{ value: SortOption; label: string }> = [
     { value: 'votes_asc', label: 'Lowest Votes' },
 ];
 
+const voteBounds = computed(() => resolveVoteBounds());
+
 const resolveInitialFilters = (): FiltersState => {
-    const defaults = createDefaultFilters();
+    const bounds = voteBounds.value;
+    const defaults = createDefaultFilters(bounds);
     const incomingFilters = page.props.filters ?? {};
+    const normalizedContestId = normalizeContestId(incomingFilters.contest_id);
+    const normalizedMinimumVotes = clampVotes(
+        incomingFilters.min_votes ?? defaults.min_votes,
+        bounds.min_votes,
+        bounds.max_votes,
+    );
+    const normalizedMaximumVotes = clampVotes(
+        incomingFilters.max_votes ?? defaults.max_votes,
+        bounds.min_votes,
+        bounds.max_votes,
+    );
 
     return {
+        contest_id: normalizedContestId,
         category: sanitizeFilterValue(incomingFilters.category),
         location: sanitizeFilterValue(incomingFilters.location),
         gender: sanitizeFilterValue(incomingFilters.gender),
+        min_votes: Math.min(normalizedMinimumVotes, normalizedMaximumVotes),
+        max_votes: Math.max(normalizedMinimumVotes, normalizedMaximumVotes),
         active: normalizeBooleanFilter(incomingFilters.active),
         sort: sanitizeSortValue(incomingFilters.sort ?? defaults.sort),
     };
@@ -125,7 +205,7 @@ const resolveInitialFilters = (): FiltersState => {
 const filters = ref<FiltersState>(resolveInitialFilters());
 
 watch(
-    () => page.props.filters,
+    () => [page.props.filters, page.props.voteBounds],
     () => {
         filters.value = resolveInitialFilters();
     },
@@ -138,6 +218,7 @@ const meta = computed(() => page.props.contestants?.meta ?? { total: 0, links: [
 const filterOptions = computed(() => {
     return (
         page.props.filterOptions ?? {
+            contests: [],
             categories: [],
             locations: [],
             genders: [],
@@ -167,9 +248,12 @@ const contestants = computed<ModalContestant[]>(() => {
 });
 
 const cleanFiltersForRequest = () => ({
+    contest_id: filters.value.contest_id ?? undefined,
     category: sanitizeFilterValue(filters.value.category) ?? undefined,
     location: sanitizeFilterValue(filters.value.location) ?? undefined,
     gender: sanitizeFilterValue(filters.value.gender) ?? undefined,
+    min_votes: filters.value.min_votes !== voteBounds.value.min_votes ? filters.value.min_votes : undefined,
+    max_votes: filters.value.max_votes !== voteBounds.value.max_votes ? filters.value.max_votes : undefined,
     active: filters.value.active ? 1 : undefined,
     sort: filters.value.sort !== 'votes_desc' ? filters.value.sort : undefined,
 });
@@ -183,12 +267,27 @@ const applyFilters = () => {
 };
 
 const updateFilters = (nextFilters: FiltersState) => {
+    const normalizedContestId = normalizeContestId(nextFilters.contest_id ?? filters.value.contest_id);
+    const nextMinimumVotes = clampVotes(
+        nextFilters.min_votes ?? filters.value.min_votes,
+        voteBounds.value.min_votes,
+        voteBounds.value.max_votes,
+    );
+    const nextMaximumVotes = clampVotes(
+        nextFilters.max_votes ?? filters.value.max_votes,
+        voteBounds.value.min_votes,
+        voteBounds.value.max_votes,
+    );
+
     filters.value = {
         ...filters.value,
         ...nextFilters,
+        contest_id: normalizedContestId,
         category: sanitizeFilterValue(nextFilters.category ?? filters.value.category),
         location: sanitizeFilterValue(nextFilters.location ?? filters.value.location),
         gender: sanitizeFilterValue(nextFilters.gender ?? filters.value.gender),
+        min_votes: Math.min(nextMinimumVotes, nextMaximumVotes),
+        max_votes: Math.max(nextMinimumVotes, nextMaximumVotes),
         active: nextFilters.active ?? filters.value.active,
         sort: sanitizeSortValue(nextFilters.sort ?? filters.value.sort),
     };
@@ -211,6 +310,9 @@ const removeFilter = (key: FilterChipKey) => {
         case 'active':
             filters.value = { ...filters.value, active: false };
             break;
+        case 'contest_id':
+            filters.value = { ...filters.value, contest_id: null };
+            break;
         case 'category':
             filters.value = { ...filters.value, category: null };
             break;
@@ -220,30 +322,47 @@ const removeFilter = (key: FilterChipKey) => {
         case 'gender':
             filters.value = { ...filters.value, gender: null };
             break;
+        case 'votes_range':
+            filters.value = {
+                ...filters.value,
+                min_votes: voteBounds.value.min_votes,
+                max_votes: voteBounds.value.max_votes,
+            };
+            break;
     }
 
     applyFilters();
 };
 
 const resetFilters = () => {
-    filters.value = createDefaultFilters();
+    filters.value = createDefaultFilters(voteBounds.value);
     applyFilters();
 };
 
 const hasActiveFilters = computed(() => {
     return Boolean(
+        filters.value.contest_id ||
         filters.value.active ||
             filters.value.category ||
             filters.value.location ||
-            filters.value.gender,
+            filters.value.gender ||
+            filters.value.min_votes !== voteBounds.value.min_votes ||
+            filters.value.max_votes !== voteBounds.value.max_votes,
     );
 });
 
 const filterChips = computed<FilterChip[]>(() => {
     const chips: FilterChip[] = [];
+    const selectedContest = filterOptions.value.contests.find(
+        (contest) => contest.value === filters.value.contest_id,
+    );
 
     if (filters.value.active) {
         chips.push({ key: 'active', label: 'Active Contests' });
+    }
+
+    if (selectedContest) {
+        chips.push({ key: 'contest_id', label: `Contest: ${selectedContest.label}` });
     }
 
     if (filters.value.category) {
@@ -256,6 +375,16 @@ const filterChips = computed<FilterChip[]>(() => {
 
     if (filters.value.gender) {
         chips.push({ key: 'gender', label: `Gender: ${filters.value.gender}` });
+    }
+
+    if (
+        filters.value.min_votes !== voteBounds.value.min_votes ||
+        filters.value.max_votes !== voteBounds.value.max_votes
+    ) {
+        chips.push({
+            key: 'votes_range',
+            label: `Votes: ${filters.value.min_votes.toLocaleString()} - ${filters.value.max_votes.toLocaleString()}`,
+        });
     }
 
     return chips;
@@ -323,6 +452,7 @@ const breadcrumbItems = [
         <template #filterModal>
             <FilterModal
                 :filters="filters"
+                :bounds="voteBounds"
                 :options="filterOptions"
                 @update:filters="updateFilters"
                 @reset="resetFilters"

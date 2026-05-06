@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Contest;
 use App\Models\Contestant;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Http\JsonResponse;
@@ -17,18 +18,53 @@ class ContestantController extends Controller
     public function index(Request $request): Response
     {
         $page = max(1, min(100, (int) $request->input('page', 1)));
+        $contestId = $request->filled('contest_id') ? max(1, (int) $request->input('contest_id')) : null;
+        $contestSlug = trim((string) $request->input('contest', ''));
         $category = trim((string) $request->input('category', ''));
         $location = trim((string) $request->input('location', ''));
         $gender = trim((string) $request->input('gender', ''));
         $sort = trim((string) $request->input('sort', 'votes_desc'));
+        $voteBounds = Contestant::query()
+            ->whereNull('deleted_at')
+            ->selectRaw('COALESCE(MIN(total_votes), 0) as min_votes, COALESCE(MAX(total_votes), 0) as max_votes')
+            ->first();
+
+        $minimumVotesBound = (int) ($voteBounds?->min_votes ?? 0);
+        $maximumVotesBound = max($minimumVotesBound, (int) ($voteBounds?->max_votes ?? 0));
+        $hasMinimumVotesFilter = $request->filled('min_votes');
+        $hasMaximumVotesFilter = $request->filled('max_votes');
+        $minimumVotes = $hasMinimumVotesFilter
+            ? min(
+                $maximumVotesBound,
+                max($minimumVotesBound, (int) $request->input('min_votes')),
+            )
+            : $minimumVotesBound;
+        $maximumVotes = $hasMaximumVotesFilter
+            ? max(
+                $minimumVotesBound,
+                min($maximumVotesBound, (int) $request->input('max_votes')),
+            )
+            : $maximumVotesBound;
+
+        if ($minimumVotes > $maximumVotes) {
+            $maximumVotes = $minimumVotes;
+        }
 
         $query = Contestant::query()
             ->with('contest:id,name,slug,start_date,end_date')
             ->whereNull('deleted_at');
 
-        $query->when($request->filled('category'), fn (Builder $contestantQuery) => $contestantQuery->where('category', trim($category)));
+        $query->when($contestId !== null, fn (Builder $contestantQuery) => $contestantQuery->where('contest_id', $contestId));
+        $query->when($contestSlug !== '', fn (Builder $contestantQuery) => $contestantQuery->whereHas('contest', function (Builder $contestQuery) use ($contestSlug): void {
+            $contestQuery->where('slug', $contestSlug);
+        }));
+        $query->when($request->filled('category'), fn (Builder $contestantQuery) => $contestantQuery->whereHas('contest', function (Builder $contestQuery) use ($category): void {
+            $contestQuery->where('category', trim($category));
+        }));
         $query->when($request->filled('gender'), fn (Builder $contestantQuery) => $contestantQuery->where('gender', trim($gender)));
         $query->when($request->filled('location'), fn (Builder $contestantQuery) => $contestantQuery->where('location', trim($location)));
+        $query->when($hasMinimumVotesFilter, fn (Builder $contestantQuery) => $contestantQuery->where('total_votes', '>=', $minimumVotes));
+        $query->when($hasMaximumVotesFilter, fn (Builder $contestantQuery) => $contestantQuery->where('total_votes', '<=', $maximumVotes));
         $query->when($request->boolean('active'), fn (Builder $contestantQuery) => $contestantQuery->whereHas('contest', function (Builder $contestQuery): void {
             $contestQuery
                 ->where('start_date', '<=', now())
@@ -48,9 +84,10 @@ class ContestantController extends Controller
             $contestants = $query->paginate(12, ['*'], 'page', $page)->withQueryString();
         }
 
-        $categoryOptions = Contestant::query()
-            ->whereNull('deleted_at')
+        $categoryOptions = Contest::query()
+            ->whereHas('contestants', fn (Builder $contestantQuery) => $contestantQuery->whereNull('deleted_at'))
             ->whereNotNull('category')
+            ->where('category', '!=', '')
             ->distinct()
             ->orderBy('category')
             ->pluck('category')
@@ -70,6 +107,16 @@ class ContestantController extends Controller
             ->distinct()
             ->orderBy('gender')
             ->pluck('gender')
+            ->values();
+
+        $contestOptions = Contest::query()
+            ->whereHas('contestants', fn (Builder $contestantQuery) => $contestantQuery->whereNull('deleted_at'))
+            ->orderBy('name')
+            ->get(['id', 'name'])
+            ->map(fn (Contest $contest): array => [
+                'label' => $contest->name,
+                'value' => $contest->id,
+            ])
             ->values();
 
         return Inertia::render('Contestants/Index', [
@@ -107,14 +154,23 @@ class ContestantController extends Controller
                 ],
             ],
             'filterOptions' => [
+                'contests' => $contestOptions,
                 'categories' => $categoryOptions,
                 'locations' => $locationOptions,
                 'genders' => $genderOptions,
             ],
+            'voteBounds' => [
+                'min_votes' => $minimumVotesBound,
+                'max_votes' => $maximumVotesBound,
+            ],
             'filters' => [
+                'contest_id' => $contestId,
+                'contest' => $contestSlug !== '' ? $contestSlug : null,
                 'category' => $category !== '' ? $category : null,
                 'gender' => $gender !== '' ? $gender : null,
                 'location' => $location !== '' ? $location : null,
+                'min_votes' => $minimumVotes,
+                'max_votes' => $maximumVotes,
                 'active' => $request->boolean('active'),
                 'sort' => in_array($sort, ['votes_desc', 'votes_asc'], true) ? $sort : 'votes_desc',
             ],

@@ -4,15 +4,29 @@ import { useGlobalModals } from '@/composables/useGlobalModals';
 
 type SortOption = 'votes_desc' | 'votes_asc';
 
+type ContestOption = {
+    label: string;
+    value: number;
+};
+
+type VoteBounds = {
+    min_votes: number;
+    max_votes: number;
+};
+
 type FilterState = {
+    contest_id: number | null;
     category: string | null;
     location: string | null;
     gender: string | null;
+    min_votes: number;
+    max_votes: number;
     active: boolean;
     sort: SortOption;
 };
 
 type FilterOptions = {
+    contests: ContestOption[];
     categories: string[];
     locations: string[];
     genders: string[];
@@ -21,17 +35,26 @@ type FilterOptions = {
 const props = withDefaults(
     defineProps<{
         filters?: FilterState;
+        bounds?: VoteBounds;
         options?: FilterOptions;
     }>(),
     {
         filters: () => ({
+            contest_id: null,
             category: null,
             location: null,
             gender: null,
+            min_votes: 0,
+            max_votes: 10000,
             active: false,
             sort: 'votes_desc',
         }),
+        bounds: () => ({
+            min_votes: 0,
+            max_votes: 10000,
+        }),
         options: () => ({
+            contests: [],
             categories: [],
             locations: [],
             genders: [],
@@ -48,6 +71,50 @@ const { state, closeModal } = useGlobalModals();
 const isOpen = computed(() => state.activeModal === 'filter');
 const isSyncing = ref(false);
 const localFilters = reactive<FilterState>({ ...props.filters });
+const voteFormatter = new Intl.NumberFormat('en-US');
+
+const formatVotes = (value: number) => voteFormatter.format(value);
+const normalizeVoteNumber = (value: unknown, fallback: number) => {
+    const parsedValue = Number(value);
+
+    if (!Number.isFinite(parsedValue)) {
+        return fallback;
+    }
+
+    return Math.floor(parsedValue);
+};
+
+const safeBounds = computed<VoteBounds>(() => {
+    const minimumVotes = normalizeVoteNumber(props.bounds?.min_votes, 0);
+    const maximumVotes = normalizeVoteNumber(props.bounds?.max_votes, 10000);
+
+    return {
+        min_votes: Math.max(0, minimumVotes),
+        max_votes: Math.max(Math.max(0, minimumVotes), maximumVotes),
+    };
+});
+
+const safeMinVotes = computed(() => normalizeVoteNumber(localFilters.min_votes, safeBounds.value.min_votes));
+const safeMaxVotes = computed(() => normalizeVoteNumber(localFilters.max_votes, safeBounds.value.max_votes));
+
+const normalizeVotes = () => {
+    const minBound = safeBounds.value.min_votes;
+    const maxBound = safeBounds.value.max_votes;
+    const nextMinimumVotes = Math.min(
+        Math.max(normalizeVoteNumber(localFilters.min_votes, minBound), minBound),
+        maxBound,
+    );
+    const nextMaximumVotes = Math.max(
+        nextMinimumVotes,
+        Math.min(
+            Math.max(normalizeVoteNumber(localFilters.max_votes, maxBound), minBound),
+            maxBound,
+        ),
+    );
+
+    localFilters.min_votes = nextMinimumVotes;
+    localFilters.max_votes = nextMaximumVotes;
+};
 
 watch(
     () => props.filters,
@@ -56,12 +123,21 @@ watch(
 
         isSyncing.value = true;
         Object.assign(localFilters, value);
+        normalizeVotes();
 
         Promise.resolve().then(() => {
             isSyncing.value = false;
         });
     },
     { deep: true, immediate: true },
+);
+
+watch(
+    () => props.bounds,
+    () => {
+        normalizeVotes();
+    },
+    { deep: true },
 );
 
 watch(
@@ -74,6 +150,10 @@ watch(
 );
 
 const toggleSelection = (current: string | null, next: string) => (current === next ? null : next);
+
+const selectContest = (contestId: number) => {
+    localFilters.contest_id = localFilters.contest_id === contestId ? null : contestId;
+};
 
 const selectCategory = (category: string) => {
     localFilters.category = toggleSelection(localFilters.category, category);
@@ -90,6 +170,55 @@ const selectGender = (gender: string) => {
 const toggleActiveOnly = () => {
     localFilters.active = !localFilters.active;
 };
+
+const updateMinVotes = (event: Event) => {
+    const value = normalizeVoteNumber(
+        (event.target as HTMLInputElement).value,
+        safeBounds.value.min_votes,
+    );
+    localFilters.min_votes = Math.min(
+        Math.max(value, safeBounds.value.min_votes),
+        safeMaxVotes.value,
+    );
+};
+
+const updateMaxVotes = (event: Event) => {
+    const value = normalizeVoteNumber(
+        (event.target as HTMLInputElement).value,
+        safeBounds.value.max_votes,
+    );
+    localFilters.max_votes = Math.max(
+        Math.min(value, safeBounds.value.max_votes),
+        safeMinVotes.value,
+    );
+};
+
+const updateMinVotesInput = (event: Event) => {
+    const target = event.target as HTMLInputElement;
+    const rawValue = target.value.trim();
+
+    if (rawValue === '') {
+        localFilters.min_votes = safeBounds.value.min_votes;
+        return;
+    }
+
+    updateMinVotes(event);
+};
+
+const updateMaxVotesInput = (event: Event) => {
+    const target = event.target as HTMLInputElement;
+    const rawValue = target.value.trim();
+
+    if (rawValue === '') {
+        localFilters.max_votes = safeBounds.value.max_votes;
+        return;
+    }
+
+    updateMaxVotes(event);
+};
+
+const minVotesLabel = computed(() => formatVotes(safeMinVotes.value));
+const maxVotesLabel = computed(() => formatVotes(safeMaxVotes.value));
 
 const locationColorMap: Record<string, string> = {
     Lagos: 'bg-light-pink-2',
@@ -116,6 +245,88 @@ const resolveLocationColor = (location: string) => locationColorMap[location] ??
                 <span class="icon-close icon-close-popup" aria-label="Close" @click="closeModal('filter')"></span>
             </div>
             <div class="canvas-body">
+                <div class="widget-facet facet-categories">
+                    <h6 class="facet-title">Contests</h6>
+                    <ul class="facet-content">
+                        <li v-if="props.options.contests.length === 0" class="text-secondary text-caption-1">
+                            No contests available yet.
+                        </li>
+                        <li v-for="contest in props.options.contests" :key="contest.value">
+                            <button
+                                type="button"
+                                class="categories-item"
+                                :class="{ active: localFilters.contest_id === contest.value }"
+                                @click="selectContest(contest.value)"
+                            >
+                                {{ contest.label }}
+                            </button>
+                        </li>
+                    </ul>
+                </div>
+
+                <div class="widget-facet facet-price">
+                    <h6 class="facet-title">Votes Range</h6>
+                    <div
+                        class="price-val-range"
+                        id="votes-value-range"
+                        :data-min="safeBounds.min_votes"
+                        :data-max="safeBounds.max_votes"
+                    >
+                        <div class="range-inputs d-flex flex-column gap-12">
+                            <div class="vote-range-input-grid">
+                                <label class="vote-range-field">
+                                    <span class="title-price">Min votes</span>
+                                    <input
+                                        type="number"
+                                        class="vote-range-number-input"
+                                        :min="safeBounds.min_votes"
+                                        :max="safeMaxVotes"
+                                        :value="safeMinVotes"
+                                        @input="updateMinVotesInput"
+                                    />
+                                </label>
+                                <label class="vote-range-field">
+                                    <span class="title-price">Max votes</span>
+                                    <input
+                                        type="number"
+                                        class="vote-range-number-input"
+                                        :min="safeMinVotes"
+                                        :max="safeBounds.max_votes"
+                                        :value="safeMaxVotes"
+                                        @input="updateMaxVotesInput"
+                                    />
+                                </label>
+                            </div>
+                            <input
+                                type="range"
+                                class="tf-range-input"
+                                :min="safeBounds.min_votes"
+                                :max="safeBounds.max_votes"
+                                :value="safeMinVotes"
+                                @input="updateMinVotes"
+                            />
+                            <input
+                                type="range"
+                                class="tf-range-input"
+                                :min="safeBounds.min_votes"
+                                :max="safeBounds.max_votes"
+                                :value="safeMaxVotes"
+                                @input="updateMaxVotes"
+                            />
+                        </div>
+                    </div>
+                    <div class="box-price-product">
+                        <div class="box-price-item">
+                            <span class="title-price">Min votes</span>
+                            <div class="price-val" data-currency="votes">{{ minVotesLabel }}</div>
+                        </div>
+                        <div class="box-price-item">
+                            <span class="title-price">Max votes</span>
+                            <div class="price-val" data-currency="votes">{{ maxVotesLabel }}</div>
+                        </div>
+                    </div>
+                </div>
+
                 <div class="widget-facet facet-size">
                     <h6 class="facet-title">Category</h6>
                     <div class="facet-size-box size-box category-filter-box">
@@ -235,6 +446,37 @@ const resolveLocationColor = (location: string) => locationColorMap[location] ??
 .category-filter-box .category-pill.active {
     background-color: var(--main);
     color: var(--white);
+    border-color: var(--main);
+}
+
+.range-inputs .tf-range-input {
+    width: 100%;
+}
+
+.vote-range-input-grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 12px;
+}
+
+.vote-range-field {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.vote-range-number-input {
+    width: 100%;
+    min-height: 48px;
+    border: 1px solid rgba(24, 24, 24, 0.14);
+    border-radius: 12px;
+    padding: 12px 14px;
+    background: #fff;
+    color: #181818;
+}
+
+.vote-range-number-input:focus-visible {
+    outline: 1px solid var(--main);
     border-color: var(--main);
 }
 

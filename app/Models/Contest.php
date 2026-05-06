@@ -21,6 +21,8 @@ class Contest extends Model
         'slug',
         'description',
         'category',
+        'featured',
+        'featured_until',
         'start_date',
         'end_date',
     ];
@@ -69,6 +71,8 @@ class Contest extends Model
     protected function casts(): array
     {
         return [
+            'featured' => 'boolean',
+            'featured_until' => 'datetime',
             'start_date' => 'datetime',
             'end_date' => 'datetime',
         ];

@@ -96,8 +96,8 @@ class ContestSeeder extends Seeder
         string $name,
         string $slug,
         string $category,
-        $start,
-        $end,
+        mixed $start,
+        mixed $end,
     ): Contest {
         return Contest::query()->create([
             'name' => $name,

@@ -321,6 +321,41 @@ const initRecent = (SwiperCtor: new (el: Element, opts: Record<string, unknown>)
     });
 };
 
+const initTestimonial = (SwiperCtor: new (el: Element, opts: Record<string, unknown>) => any) => {
+    document.querySelectorAll<HTMLElement>('.tf-sw-testimonial').forEach((element) => {
+        const ds = element.dataset;
+
+        createOrReplaceSwiper(
+            element,
+            {
+                slidesPerView: toNumber(ds.mobile, 1),
+                spaceBetween: toNumber(ds.space, 0),
+                speed: 1000,
+                observer: true,
+                observeParents: true,
+                pagination: {
+                    el: '.sw-pagination-testimonial',
+                    clickable: true,
+                },
+                slidesPerGroup: toNumber(ds.pagination, 1),
+                breakpoints: {
+                    768: {
+                        slidesPerView: toNumber(ds.tablet, toNumber(ds.mobile, 1)),
+                        spaceBetween: toNumber(ds.spaceMd, toNumber(ds.space, 0)),
+                        slidesPerGroup: toNumber(ds.paginationMd, 1),
+                    },
+                    1200: {
+                        slidesPerView: toNumber(ds.preview, toNumber(ds.tablet, 1)),
+                        spaceBetween: toNumber(ds.spaceLg, toNumber(ds.spaceMd, toNumber(ds.space, 0))),
+                        slidesPerGroup: toNumber(ds.paginationLg, 1),
+                    },
+                },
+            },
+            SwiperCtor,
+        );
+    });
+};
+
 const initShopGallery = (SwiperCtor: new (el: Element, opts: Record<string, unknown>) => any) => {
     document.querySelectorAll<HTMLElement>('.tf-sw-shop-gallery').forEach((element) => {
         const ds = element.dataset;
@@ -373,6 +408,9 @@ const initShopGallery = (SwiperCtor: new (el: Element, opts: Record<string, unkn
 const initIconbox = (SwiperCtor: new (el: Element, opts: Record<string, unknown>) => any) => {
     document.querySelectorAll<HTMLElement>('.tf-sw-iconbox').forEach((element) => {
         const ds = element.dataset;
+        const paginationEl = element.parentElement?.querySelector<HTMLElement>('.sw-pagination-iconbox');
+        const nextEl = element.parentElement?.querySelector<HTMLElement>('.nav-next-iconbox');
+        const prevEl = element.parentElement?.querySelector<HTMLElement>('.nav-prev-iconbox');
 
         createOrReplaceSwiper(
             element,
@@ -383,14 +421,14 @@ const initIconbox = (SwiperCtor: new (el: Element, opts: Record<string, unknown>
                 observer: true,
                 observeParents: true,
                 pagination: {
-                    el: '.sw-pagination-iconbox',
+                    el: paginationEl ?? '.sw-pagination-iconbox',
                     clickable: true,
                 },
                 slidesPerGroup: toNumber(ds.pagination, 1),
                 navigation: {
                     clickable: true,
-                    nextEl: '.nav-next-iconbox',
-                    prevEl: '.nav-prev-iconbox',
+                    nextEl: nextEl ?? '.nav-next-iconbox',
+                    prevEl: prevEl ?? '.nav-prev-iconbox',
                 },
                 breakpoints: {
                     575: {
@@ -595,6 +633,7 @@ const runTemplateInit = () => {
             initCollection(window.Swiper);
             initCategories(window.Swiper);
             initRecent(window.Swiper);
+            initTestimonial(window.Swiper);
             initShopGallery(window.Swiper);
             initIconbox(window.Swiper);
             initProductGallery(window.Swiper);

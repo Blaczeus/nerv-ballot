@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import '/resources/css/public.css';
 import { Link, usePage } from '@inertiajs/vue3';
 import {
     LayoutDashboard,

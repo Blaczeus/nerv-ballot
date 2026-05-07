@@ -3,6 +3,7 @@ import { resolvePageComponent } from 'laravel-vite-plugin/inertia-helpers';
 import type { DefineComponent } from 'vue';
 import { createApp, h } from 'vue';
 import '../css/app.css';
+import VueApexCharts from 'vue3-apexcharts';
 import { initializeTheme } from '@/composables/useAppearance';
 import { initTemplatePlugins } from '@/vendor/init-template';
 
@@ -18,6 +19,7 @@ createInertiaApp({
     setup({ el, App, props, plugin }) {
         const vueApp = createApp({ render: () => h(App, props) })
             .use(plugin)
+            .use(VueApexCharts)
             .mount(el);
 
         initTemplatePlugins();

@@ -1,0 +1,13 @@
+﻿/* Vendor */
+@import './vendor/bootstrap.min.css';
+@import './vendor/swiper-bundle.min.css';
+@import './vendor/animate.css';
+@import './vendor/drift-basic.min.css';
+@import './vendor/photoswipe.css';
+
+/* Fonts */
+@import './vendor/fonts.css';
+@import './vendor/font-icons.css';
+
+/* Theme */
+@import './vendor/styles.css';

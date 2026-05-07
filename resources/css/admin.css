@@ -1,0 +1,778 @@
+@import url('https://fonts.googleapis.com/css2?family=Outfit:wght@100..900&display=swap')
+layer(base);
+
+@import 'tailwindcss';
+
+@source '../js/components/admin/**/*.vue';
+@source '../js/layouts/AdminLayout.vue';
+
+@custom-variant dark (&:is(.dark *));
+
+@theme {
+  --font-*: initial;
+  --font-outfit: Outfit, sans-serif;
+
+  --breakpoint-*: initial;
+  --breakpoint-2xsm: 375px;
+  --breakpoint-xsm: 425px;
+  --breakpoint-3xl: 2000px;
+  --breakpoint-sm: 640px;
+  --breakpoint-md: 768px;
+  --breakpoint-lg: 1024px;
+  --breakpoint-xl: 1280px;
+  --breakpoint-2xl: 1536px;
+
+  --text-title-2xl: 72px;
+  --text-title-2xl--line-height: 90px;
+  --text-title-xl: 60px;
+  --text-title-xl--line-height: 72px;
+  --text-title-lg: 48px;
+  --text-title-lg--line-height: 60px;
+  --text-title-md: 36px;
+  --text-title-md--line-height: 44px;
+  --text-title-sm: 30px;
+  --text-title-sm--line-height: 38px;
+  --text-theme-xl: 20px;
+  --text-theme-xl--line-height: 30px;
+  --text-theme-sm: 14px;
+  --text-theme-sm--line-height: 20px;
+  --text-theme-xs: 12px;
+  --text-theme-xs--line-height: 18px;
+
+  --color-current: currentColor;
+  --color-transparent: transparent;
+  --color-white: #ffffff;
+  --color-black: #101828;
+
+  --color-brand-25: #f2f7ff;
+  --color-brand-50: #ecf3ff;
+  --color-brand-100: #dde9ff;
+  --color-brand-200: #c2d6ff;
+  --color-brand-300: #9cb9ff;
+  --color-brand-400: #7592ff;
+  --color-brand-500: #465fff;
+  --color-brand-600: #3641f5;
+  --color-brand-700: #2a31d8;
+  --color-brand-800: #252dae;
+  --color-brand-900: #262e89;
+  --color-brand-950: #161950;
+
+  --color-blue-light-25: #f5fbff;
+  --color-blue-light-50: #f0f9ff;
+  --color-blue-light-100: #e0f2fe;
+  --color-blue-light-200: #b9e6fe;
+  --color-blue-light-300: #7cd4fd;
+  --color-blue-light-400: #36bffa;
+  --color-blue-light-500: #0ba5ec;
+  --color-blue-light-600: #0086c9;
+  --color-blue-light-700: #026aa2;
+  --color-blue-light-800: #065986;
+  --color-blue-light-900: #0b4a6f;
+  --color-blue-light-950: #062c41;
+
+  --color-gray-25: #fcfcfd;
+  --color-gray-50: #f9fafb;
+  --color-gray-100: #f2f4f7;
+  --color-gray-200: #e4e7ec;
+  --color-gray-300: #d0d5dd;
+  --color-gray-400: #98a2b3;
+  --color-gray-500: #667085;
+  --color-gray-600: #475467;
+  --color-gray-700: #344054;
+  --color-gray-800: #1d2939;
+  --color-gray-900: #101828;
+  --color-gray-950: #0c111d;
+  --color-gray-dark: #1a2231;
+
+  --color-orange-25: #fffaf5;
+  --color-orange-50: #fff6ed;
+  --color-orange-100: #ffead5;
+  --color-orange-200: #fddcab;
+  --color-orange-300: #feb273;
+  --color-orange-400: #fd853a;
+  --color-orange-500: #fb6514;
+  --color-orange-600: #ec4a0a;
+  --color-orange-700: #c4320a;
+  --color-orange-800: #9c2a10;
+  --color-orange-900: #7e2410;
+  --color-orange-950: #511c10;
+
+  --color-success-25: #f6fef9;
+  --color-success-50: #ecfdf3;
+  --color-success-100: #d1fadf;
+  --color-success-200: #a6f4c5;
+  --color-success-300: #6ce9a6;
+  --color-success-400: #32d583;
+  --color-success-500: #12b76a;
+  --color-success-600: #039855;
+  --color-success-700: #027a48;
+  --color-success-800: #05603a;
+  --color-success-900: #054f31;
+  --color-success-950: #053321;
+
+  --color-error-25: #fffbfa;
+  --color-error-50: #fef3f2;
+  --color-error-100: #fee4e2;
+  --color-error-200: #fecdca;
+  --color-error-300: #fda29b;
+  --color-error-400: #f97066;
+  --color-error-500: #f04438;
+  --color-error-600: #d92d20;
+  --color-error-700: #b42318;
+  --color-error-800: #912018;
+  --color-error-900: #7a271a;
+  --color-error-950: #55160c;
+
+  --color-warning-25: #fffcf5;
+  --color-warning-50: #fffaeb;
+  --color-warning-100: #fef0c7;
+  --color-warning-200: #fedf89;
+  --color-warning-300: #fec84b;
+  --color-warning-400: #fdb022;
+  --color-warning-500: #f79009;
+  --color-warning-600: #dc6803;
+  --color-warning-700: #b54708;
+  --color-warning-800: #93370d;
+  --color-warning-900: #7a2e0e;
+  --color-warning-950: #4e1d09;
+
+  --color-theme-pink-500: #ee46bc;
+
+  --color-theme-purple-500: #7a5af8;
+
+  --shadow-theme-md: 0px 4px 8px -2px rgba(16, 24, 40, 0.1), 0px 2px 4px -2px rgba(16, 24, 40, 0.06);
+  --shadow-theme-lg: 0px 12px 16px -4px rgba(16, 24, 40, 0.08),
+    0px 4px 6px -2px rgba(16, 24, 40, 0.03);
+  --shadow-theme-sm: 0px 1px 3px 0px rgba(16, 24, 40, 0.1), 0px 1px 2px 0px rgba(16, 24, 40, 0.06);
+  --shadow-theme-xs: 0px 1px 2px 0px rgba(16, 24, 40, 0.05);
+  --shadow-theme-xl: 0px 20px 24px -4px rgba(16, 24, 40, 0.08),
+    0px 8px 8px -4px rgba(16, 24, 40, 0.03);
+  --shadow-datepicker: -5px 0 0 #262d3c, 5px 0 0 #262d3c;
+  --shadow-focus-ring: 0px 0px 0px 4px rgba(70, 95, 255, 0.12);
+  --shadow-slider-navigation: 0px 1px 2px 0px rgba(16, 24, 40, 0.1),
+    0px 1px 3px 0px rgba(16, 24, 40, 0.1);
+  --shadow-tooltip: 0px 4px 6px -2px rgba(16, 24, 40, 0.05),
+    -8px 0px 20px 8px rgba(16, 24, 40, 0.05);
+
+  --drop-shadow-4xl: 0 35px 35px rgba(0, 0, 0, 0.25), 0 45px 65px rgba(0, 0, 0, 0.15);
+
+  --z-index-1: 1;
+  --z-index-9: 9;
+  --z-index-99: 99;
+  --z-index-999: 999;
+  --z-index-9999: 9999;
+  --z-index-99999: 99999;
+  --z-index-999999: 999999;
+}
+
+/*
+  The default border color has changed to `currentColor` in Tailwind CSS v4,
+  so we've added these compatibility styles to make sure everything still
+  looks the same as it did with Tailwind CSS v3.
+
+  If we ever want to remove these styles, we need to add an explicit border
+  color utility to any element that depends on these defaults.
+*/
+
+@layer base {
+  .admin-app,
+  .admin-app *,
+  .admin-app ::after,
+  .admin-app ::before,
+  .admin-app ::file-selector-button {
+    border-color: var(--color-gray-200, currentColor);
+  }
+
+  .admin-app button:not(:disabled),
+  .admin-app [role='button']:not(:disabled) {
+    cursor: pointer;
+  }
+
+  .admin-app {
+    @apply relative z-1 bg-gray-50 font-normal font-outfit;
+  }
+}
+
+@layer utilities {
+  .admin-app .menu-item {
+    @apply relative flex w-full items-center gap-3 rounded-lg px-3 py-2 font-medium text-theme-sm;
+  }
+
+  .admin-app .menu-item-active {
+    @apply bg-brand-50 text-brand-500 dark:bg-brand-500/[0.12] dark:text-brand-400;
+  }
+
+  .admin-app .menu-item-inactive {
+    @apply text-gray-700 hover:bg-gray-100 group-hover:text-gray-700 dark:text-gray-300 dark:hover:bg-white/5 dark:hover:text-gray-300;
+  }
+
+  .admin-app .menu-item-icon {
+    @apply text-gray-500 group-hover:text-gray-700 dark:text-gray-400;
+  }
+
+  .admin-app .menu-item-icon-active {
+    @apply text-brand-500 dark:text-brand-400;
+  }
+
+  .admin-app .menu-item-icon-inactive {
+    @apply text-gray-500 group-hover:text-gray-700 dark:text-gray-400 dark:group-hover:text-gray-300;
+  }
+
+  .admin-app .menu-item-arrow {
+    @apply relative;
+  }
+
+  .admin-app .menu-item-arrow-active {
+    @apply rotate-180 text-brand-500 dark:text-brand-400;
+  }
+
+  .admin-app .menu-item-arrow-inactive {
+    @apply text-gray-500 group-hover:text-gray-700 dark:text-gray-400 dark:group-hover:text-gray-300;
+  }
+
+  .admin-app .menu-dropdown-item {
+    @apply relative flex items-center gap-3 rounded-lg px-3 py-2.5 text-theme-sm font-medium;
+  }
+
+  .admin-app .menu-dropdown-item-active {
+    @apply bg-brand-50 text-brand-500 dark:bg-brand-500/[0.12] dark:text-brand-400;
+  }
+
+  .admin-app .menu-dropdown-item-inactive {
+    @apply text-gray-700 hover:bg-gray-100 dark:text-gray-300 dark:hover:bg-white/5;
+  }
+
+  .admin-app .menu-dropdown-badge {
+    @apply block rounded-full px-2.5 py-0.5 text-xs font-medium uppercase text-brand-500 dark:text-brand-400;
+  }
+
+  .admin-app .menu-dropdown-badge-active {
+    @apply bg-brand-100 dark:bg-brand-500/20;
+  }
+
+  .admin-app .menu-dropdown-badge-inactive {
+    @apply bg-brand-50 group-hover:bg-brand-100 dark:bg-brand-500/15 dark:group-hover:bg-brand-500/20;
+  }
+
+  .admin-app .no-scrollbar {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+  }
+
+  .admin-app .no-scrollbar::-webkit-scrollbar {
+    display: none;
+  }
+
+  .admin-app .custom-scrollbar::-webkit-scrollbar {
+    @apply size-1.5;
+  }
+
+  .admin-app .custom-scrollbar::-webkit-scrollbar-track {
+    @apply rounded-full;
+  }
+
+  .admin-app .custom-scrollbar::-webkit-scrollbar-thumb {
+    @apply rounded-full bg-gray-200 dark:bg-gray-700;
+  }
+}
+
+.dark .admin-app .custom-scrollbar::-webkit-scrollbar-thumb {
+  background-color: #344054;
+}
+
+@layer utilities {
+  /* For Remove Date Icon */
+  .admin-app input[type='date']::-webkit-inner-spin-button,
+.admin-app input[type='time']::-webkit-inner-spin-button,
+.admin-app input[type='date']::-webkit-calendar-picker-indicator,
+.admin-app input[type='time']::-webkit-calendar-picker-indicator {
+    display: none;
+    -webkit-appearance: none;
+  }
+}
+
+.admin-app .sidebar:hover {
+  width: 290px;
+}
+.admin-app .sidebar:hover .logo {
+  display: block;
+}
+.admin-app .sidebar:hover .logo-icon {
+  display: none;
+}
+.admin-app .sidebar:hover .sidebar-header {
+  justify-content: space-between;
+}
+.admin-app .sidebar:hover .menu-group-title {
+  display: block;
+}
+.admin-app .sidebar:hover .menu-group-icon {
+  display: none;
+}
+
+.admin-app .sidebar:hover .menu-item-text {
+  display: inline;
+}
+
+.admin-app .sidebar:hover .menu-item-arrow {
+  display: block;
+}
+
+.admin-app .sidebar:hover .menu-dropdown {
+  display: flex;
+}
+
+.admin-app .tableCheckbox:checked ~ span span {
+  @apply opacity-100;
+}
+.admin-app .tableCheckbox:checked ~ span {
+  @apply border-brand-500 bg-brand-500;
+}
+
+/* third-party libraries CSS */
+.admin-app .apexcharts-legend-text {
+  @apply !text-gray-700 dark:!text-gray-400;
+}
+
+.admin-app .apexcharts-text {
+  @apply !fill-gray-700 dark:!fill-gray-400;
+}
+
+.admin-app .apexcharts-tooltip.apexcharts-theme-light {
+  @apply gap-1 !rounded-lg !border-gray-200 p-3 !shadow-theme-sm dark:!border-gray-800 dark:!bg-gray-900;
+}
+
+.admin-app .apexcharts-legend-text {
+  @apply !pl-5 !text-gray-700 dark:!text-gray-400;
+}
+.admin-app .apexcharts-tooltip-series-group {
+  @apply !p-0;
+}
+.admin-app .apexcharts-tooltip-y-group {
+  @apply !p-0;
+}
+.admin-app .apexcharts-tooltip-title {
+  @apply !mb-0 !border-b-0 !bg-transparent !p-0 !text-[10px] !leading-4 !text-gray-800 dark:!text-white/90;
+}
+.admin-app .apexcharts-tooltip-text {
+  @apply !text-theme-xs !text-gray-700 dark:!text-white/90;
+}
+.admin-app .apexcharts-tooltip-text-y-value {
+  @apply !font-medium;
+}
+
+.admin-app .apexcharts-gridline {
+  @apply !stroke-gray-100 dark:!stroke-gray-800;
+}
+.admin-app #chartTwo .apexcharts-datalabels-group {
+  @apply !-translate-y-24;
+}
+.admin-app #chartTwo .apexcharts-datalabels-group .apexcharts-text {
+  @apply !fill-gray-800 !font-semibold dark:!fill-white/90;
+}
+
+.admin-app #chartSixteen .apexcharts-legend {
+  @apply !p-0 !pl-6;
+}
+
+.admin-app .jvm-container {
+  @apply !bg-gray-50 dark:!bg-gray-900;
+}
+.admin-app .jvm-region.jvm-element {
+  @apply !fill-gray-300 hover:!fill-brand-500 dark:!fill-gray-700 dark:hover:!fill-brand-500;
+}
+.admin-app .jvm-marker.jvm-element {
+  @apply !stroke-gray-200 dark:!stroke-gray-800;
+}
+
+.admin-app .stocks-slider-outer .swiper-button-next:after,
+.admin-app .stocks-slider-outer .swiper-button-prev:after {
+  @apply hidden;
+}
+
+.admin-app .stocks-slider-outer .swiper-button-next,
+.admin-app .stocks-slider-outer .swiper-button-prev {
+  @apply !static mt-0 h-8 w-9 rounded-full border border-gray-200 !text-gray-700 transition hover:bg-gray-100 dark:border-gray-800 dark:bg-gray-800 dark:!text-gray-400;
+}
+
+.admin-app .stocks-slider-outer .swiper-button-next.swiper-button-disabled,
+.admin-app .stocks-slider-outer .swiper-button-prev.swiper-button-disabled {
+  @apply bg-white opacity-50 dark:bg-gray-900;
+}
+
+.admin-app .stocks-slider-outer .swiper-button-next svg,
+.admin-app .stocks-slider-outer .swiper-button-prev svg {
+  @apply !h-auto !w-auto;
+}
+
+.admin-app .flatpickr-wrapper {
+  @apply w-full;
+}
+.admin-app .flatpickr-calendar {
+  @apply mt-2  !rounded-xl bg-black !p-5 !border !border-transparent dark:!border-white/5 !text-gray-500 dark:!bg-gray-900 dark:!text-gray-400 dark:!shadow-theme-xl 2xsm:!w-auto;
+}
+.admin-app .flatpickr-time input {
+  background-color: #f9fafb !important;
+}
+.admin-app .flatpickr-months .flatpickr-prev-month:hover svg,
+.admin-app .flatpickr-months .flatpickr-next-month:hover svg {
+  @apply stroke-brand-500;
+}
+.admin-app .flatpickr-calendar.arrowTop:before,
+.admin-app .flatpickr-calendar.arrowTop:after {
+  @apply hidden;
+}
+.admin-app .flatpickr-current-month .cur-month,
+.admin-app .flatpickr-current-month input.cur-year {
+  @apply !h-auto !pt-0 !text-lg !font-medium !text-gray-800 dark:!text-white/90;
+}
+
+.admin-app .flatpickr-prev-month,
+.admin-app .flatpickr-next-month {
+  @apply !p-0;
+}
+
+.admin-app .flatpickr-weekdays {
+  @apply h-auto mt-6 mb-4;
+}
+
+.admin-app .flatpickr-weekday {
+  @apply !text-theme-sm !font-medium !text-gray-500 dark:!text-gray-400;
+}
+
+.admin-app .flatpickr-day {
+  @apply !flex !items-center !text-theme-sm !font-medium !text-gray-800 dark:!text-white/90 dark:hover:!border-gray-300 dark:hover:!bg-gray-900;
+}
+.admin-app .flatpickr-day.nextMonthDay,
+.admin-app .flatpickr-day.prevMonthDay {
+  @apply !text-gray-400;
+}
+.admin-app .flatpickr-months .flatpickr-prev-month,
+.admin-app .flatpickr-months .flatpickr-next-month {
+  @apply !top-7 dark:!fill-white dark:!text-white;
+}
+.admin-app .flatpickr-months .flatpickr-prev-month.flatpickr-prev-month,
+.admin-app .flatpickr-months .flatpickr-next-month.flatpickr-prev-month {
+  @apply !left-7;
+}
+.admin-app .flatpickr-months .flatpickr-prev-month.flatpickr-next-month,
+.admin-app .flatpickr-months .flatpickr-next-month.flatpickr-next-month {
+  @apply !right-7;
+}
+.admin-app span.flatpickr-weekday,
+.admin-app .flatpickr-months .flatpickr-month {
+  @apply dark:!fill-white dark:!text-white;
+}
+.admin-app .flatpickr-day.inRange {
+  box-shadow:
+    -5px 0 0 #f9fafb,
+    5px 0 0 #f9fafb !important;
+  @apply dark:shadow-datepicker!;
+}
+.admin-app .flatpickr-day.inRange,
+.admin-app .flatpickr-day.prevMonthDay.inRange,
+.admin-app .flatpickr-day.nextMonthDay.inRange,
+.admin-app .flatpickr-day.today.inRange,
+.admin-app .flatpickr-day.prevMonthDay.today.inRange,
+.admin-app .flatpickr-day.nextMonthDay.today.inRange,
+.admin-app .flatpickr-day:hover,
+.admin-app .flatpickr-day.prevMonthDay:hover,
+.admin-app .flatpickr-day.nextMonthDay:hover,
+.admin-app .flatpickr-day:focus,
+.admin-app .flatpickr-day.prevMonthDay:focus,
+.admin-app .flatpickr-day.nextMonthDay:focus {
+  @apply !border-gray-50 !bg-gray-50 dark:!border-0 dark:!border-white/5 dark:!bg-white/5;
+}
+.admin-app .flatpickr-day.selected,
+.admin-app .flatpickr-day.startRange,
+.admin-app .flatpickr-day.selected,
+.admin-app .flatpickr-day.endRange {
+  @apply !text-white dark:!text-white;
+}
+.admin-app .flatpickr-day.selected,
+.admin-app .flatpickr-day.startRange,
+.admin-app .flatpickr-day.endRange,
+.admin-app .flatpickr-day.selected.inRange,
+.admin-app .flatpickr-day.startRange.inRange,
+.admin-app .flatpickr-day.endRange.inRange,
+.admin-app .flatpickr-day.selected:focus,
+.admin-app .flatpickr-day.startRange:focus,
+.admin-app .flatpickr-day.endRange:focus,
+.admin-app .flatpickr-day.selected:hover,
+.admin-app .flatpickr-day.startRange:hover,
+.admin-app .flatpickr-day.endRange:hover,
+.admin-app .flatpickr-day.selected.prevMonthDay,
+.admin-app .flatpickr-day.startRange.prevMonthDay,
+.admin-app .flatpickr-day.endRange.prevMonthDay,
+.admin-app .flatpickr-day.selected.nextMonthDay,
+.admin-app .flatpickr-day.startRange.nextMonthDay,
+.admin-app .flatpickr-day.endRange.nextMonthDay {
+  background: #465fff;
+  @apply !border-brand-500 !bg-brand-500 hover:!border-brand-500 hover:!bg-brand-500;
+}
+.admin-app .flatpickr-day.selected.startRange + .endRange:not(:nth-child(7n + 1)),
+.admin-app .flatpickr-day.startRange.startRange + .endRange:not(:nth-child(7n + 1)),
+.admin-app .flatpickr-day.endRange.startRange + .endRange:not(:nth-child(7n + 1)) {
+  box-shadow: -10px 0 0 #465fff;
+}
+
+.admin-app .flatpickr-months .flatpickr-prev-month svg,
+.admin-app .flatpickr-months .flatpickr-next-month svg,
+.admin-app .flatpickr-months .flatpickr-prev-month,
+.admin-app .flatpickr-months .flatpickr-next-month {
+  @apply hover:fill-none!;
+}
+.admin-app .flatpickr-months .flatpickr-prev-month:hover svg,
+.admin-app .flatpickr-months .flatpickr-next-month:hover svg {
+  fill: none !important;
+}
+
+.admin-app .flatpickr-calendar.static {
+  @apply right-0;
+}
+.admin-app .flatpickr-calendar.hasTime {
+  width: 300px !important;
+}
+.admin-app .flatpickr-calendar.hasTime .flatpickr-time {
+  border: transparent !important;
+}
+.admin-app .fc .fc-view-harness {
+  @apply max-w-full overflow-x-auto;
+  scrollbar-width: none;
+}
+.admin-app .fc .fc-view-harness::-webkit-scrollbar {
+  @apply size-1.5;
+}
+.admin-app .fc .fc-view-harness::-webkit-scrollbar-track {
+  @apply rounded-full;
+}
+.admin-app .fc .fc-view-harness::-webkit-scrollbar-thumb {
+  @apply rounded-full bg-gray-200 dark:bg-gray-700;
+}
+.dark .admin-app .fc .fc-view-harness::-webkit-scrollbar-thumb {
+  background-color: #344054;
+}
+.admin-app .fc-dayGridMonth-view.fc-view.fc-daygrid {
+  @apply min-w-[718px];
+}
+.admin-app .fc .fc-scrollgrid-section > * {
+  border-right-width: 0;
+  border-bottom-width: 0;
+}
+.admin-app .fc .fc-scrollgrid {
+  border-left-width: 0;
+}
+.admin-app .fc .fc-toolbar.fc-header-toolbar {
+  @apply flex-col gap-4 px-6 pt-6 sm:flex-row;
+}
+.admin-app .fc-button-group {
+  @apply gap-2;
+}
+.admin-app .fc-button-group .fc-button {
+  @apply flex h-10 w-10 items-center justify-center !rounded-lg border border-gray-200 bg-transparent hover:border-gray-200 hover:bg-gray-50 focus:shadow-none active:!border-gray-200 active:!bg-transparent active:!shadow-none dark:border-gray-800 dark:hover:border-gray-800 dark:hover:bg-gray-900 dark:active:!border-gray-800;
+}
+
+.admin-app .fc-button-group .fc-button.fc-prev-button:before {
+  @apply inline-block mt-1;
+  content: url("data:image/svg+xml,%3Csvg width='25' height='24' viewBox='0 0 25 24' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M16.0068 6L9.75684 12.25L16.0068 18.5' stroke='%23344054' stroke-width='1.5' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E%0A");
+}
+.admin-app .fc-button-group .fc-button.fc-next-button:before {
+  @apply inline-block mt-1;
+  content: url("data:image/svg+xml,%3Csvg width='25' height='24' viewBox='0 0 25 24' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M9.50684 19L15.7568 12.75L9.50684 6.5' stroke='%23344054' stroke-width='1.5' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E%0A");
+}
+.dark .admin-app .fc-button-group .fc-button.fc-prev-button:before {
+  content: url("data:image/svg+xml,%3Csvg width='25' height='24' viewBox='0 0 25 24' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M16.0068 6L9.75684 12.25L16.0068 18.5' stroke='%2398A2B3' stroke-width='1.5' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E%0A");
+}
+.dark .admin-app .fc-button-group .fc-button.fc-next-button:before {
+  content: url("data:image/svg+xml,%3Csvg width='25' height='24' viewBox='0 0 25 24' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M9.50684 19L15.7568 12.75L9.50684 6.5' stroke='%2398A2B3' stroke-width='1.5' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E%0A");
+}
+.admin-app .fc-button-group .fc-button .fc-icon {
+  @apply hidden;
+}
+.admin-app .fc-addEventButton-button {
+  @apply !rounded-lg !border-0 !bg-brand-500 !px-4 !py-2.5 !text-sm !font-medium hover:!bg-brand-600 focus:!shadow-none;
+}
+.admin-app .fc-toolbar-title {
+  @apply !text-lg !font-medium text-gray-800 dark:text-white/90;
+}
+.admin-app .fc-header-toolbar.fc-toolbar .fc-toolbar-chunk:last-child {
+  @apply rounded-lg bg-gray-100 p-0.5 dark:bg-gray-900;
+}
+.admin-app .fc-header-toolbar.fc-toolbar .fc-toolbar-chunk:last-child .fc-button {
+  @apply !h-auto !w-auto rounded-md !border-0 bg-transparent !px-5 !py-2 text-sm font-medium text-gray-500 hover:text-gray-700 focus:!shadow-none dark:text-gray-400;
+}
+.admin-app .fc-header-toolbar.fc-toolbar .fc-toolbar-chunk:last-child .fc-button.fc-button-active {
+  @apply text-gray-900 bg-white dark:bg-gray-800 dark:text-white;
+}
+.admin-app .fc-theme-standard th {
+  @apply !border-x-0 border-t !border-gray-200 bg-gray-50 !text-left dark:!border-gray-800 dark:bg-gray-900;
+}
+.admin-app .fc-theme-standard td,
+.admin-app .fc-theme-standard .fc-scrollgrid {
+  @apply !border-gray-200 dark:!border-gray-800;
+}
+.admin-app .fc .fc-col-header-cell-cushion {
+  @apply !px-5 !py-4 text-sm font-medium uppercase text-gray-400;
+}
+.admin-app .fc .fc-daygrid-day.fc-day-today {
+  @apply bg-transparent;
+}
+.admin-app .fc .fc-daygrid-day {
+  @apply p-2;
+}
+.admin-app .fc .fc-daygrid-day.fc-day-today .fc-scrollgrid-sync-inner {
+  @apply rounded-sm bg-gray-100 dark:bg-white/[0.03];
+}
+.admin-app .fc .fc-daygrid-day-number {
+  @apply !p-3 text-sm font-medium text-gray-700 dark:text-gray-400;
+}
+.admin-app .fc .fc-daygrid-day-top {
+  @apply !flex-row;
+}
+.admin-app .fc .fc-day-other .fc-daygrid-day-top {
+  opacity: 1;
+}
+.admin-app .fc .fc-day-other .fc-daygrid-day-top .fc-daygrid-day-number {
+  @apply text-gray-400 dark:text-white/30;
+}
+.admin-app .event-fc-color {
+  @apply rounded-lg py-2.5 pl-4 pr-3;
+}
+.admin-app .event-fc-color .fc-event-title {
+  @apply p-0 text-sm font-normal text-gray-700;
+}
+.admin-app .fc-daygrid-event-dot {
+  @apply w-1 h-5 ml-0 mr-3 border-none rounded-sm;
+}
+.admin-app .fc-event {
+  @apply focus:shadow-none;
+}
+.admin-app .fc-daygrid-event.fc-event-start {
+  @apply !ml-3;
+}
+.admin-app .event-fc-color.fc-bg-success {
+  @apply border-success-50 bg-success-50;
+}
+.admin-app .event-fc-color.fc-bg-danger {
+  @apply border-error-50 bg-error-50;
+}
+.admin-app .event-fc-color.fc-bg-primary {
+  @apply border-brand-50 bg-brand-50;
+}
+.admin-app .event-fc-color.fc-bg-warning {
+  @apply border-orange-50 bg-orange-50;
+}
+.admin-app .event-fc-color.fc-bg-success .fc-daygrid-event-dot {
+  @apply bg-success-500;
+}
+.admin-app .event-fc-color.fc-bg-danger .fc-daygrid-event-dot {
+  @apply bg-error-500;
+}
+.admin-app .event-fc-color.fc-bg-primary .fc-daygrid-event-dot {
+  @apply bg-brand-500;
+}
+.admin-app .event-fc-color.fc-bg-warning .fc-daygrid-event-dot {
+  @apply bg-orange-500;
+}
+.admin-app .fc-direction-ltr .fc-timegrid-slot-label-frame {
+  @apply px-3 py-1.5 text-left text-sm font-medium text-gray-500 dark:text-gray-400;
+}
+.admin-app .fc .fc-timegrid-axis-cushion {
+  @apply text-sm font-medium text-gray-500 dark:text-gray-400;
+}
+
+.admin-app .input-date-icon::-webkit-inner-spin-button,
+.admin-app .input-date-icon::-webkit-calendar-picker-indicator {
+  opacity: 0;
+  -webkit-appearance: none;
+}
+
+.admin-app .swiper-button-prev svg,
+.admin-app .swiper-button-next svg {
+  @apply !h-auto !w-auto;
+}
+
+.admin-app .carouselTwo .swiper-button-next:after,
+.admin-app .carouselTwo .swiper-button-prev:after,
+.admin-app .carouselFour .swiper-button-next:after,
+.admin-app .carouselFour .swiper-button-prev:after {
+  @apply hidden;
+}
+.admin-app .carouselTwo .swiper-button-next.swiper-button-disabled,
+.admin-app .carouselTwo .swiper-button-prev.swiper-button-disabled,
+.admin-app .carouselFour .swiper-button-next.swiper-button-disabled,
+.admin-app .carouselFour .swiper-button-prev.swiper-button-disabled {
+  @apply bg-white/60 opacity-100!;
+}
+.admin-app .carouselTwo .swiper-button-next,
+.admin-app .carouselTwo .swiper-button-prev,
+.admin-app .carouselFour .swiper-button-next,
+.admin-app .carouselFour .swiper-button-prev {
+  @apply h-10 w-10 rounded-full border-[0.5px] border-white/10 bg-white/90 !text-gray-700 shadow-slider-navigation backdrop-blur-[10px];
+}
+
+.admin-app .carouselTwo .swiper-button-prev,
+.admin-app .carouselFour .swiper-button-prev {
+  @apply !left-3 sm:!left-4;
+}
+
+.admin-app .carouselTwo .swiper-button-next,
+.admin-app .carouselFour .swiper-button-next {
+  @apply !right-3 sm:!right-4;
+}
+
+.admin-app .carouselThree .swiper-pagination,
+.admin-app .carouselFour .swiper-pagination {
+  @apply !bottom-3 !left-1/2 inline-flex !w-auto -translate-x-1/2 items-center gap-1.5 rounded-[40px] border-[0.5px] border-white/10 bg-white/60 px-2 py-1.5 shadow-slider-navigation backdrop-blur-[10px] sm:!bottom-5;
+}
+
+.admin-app .carouselThree .swiper-pagination-bullet,
+.admin-app .carouselFour .swiper-pagination-bullet {
+  @apply !m-0 h-2.5 w-2.5 bg-white opacity-100 shadow-theme-xs duration-200 ease-in-out;
+}
+
+.admin-app .carouselThree .swiper-pagination-bullet-active,
+.admin-app .carouselFour .swiper-pagination-bullet-active {
+  @apply w-6.5 rounded-xl;
+}
+
+.admin-app .form-check-input:checked ~ span {
+  @apply border-[6px] border-brand-500 dark:border-brand-500;
+}
+
+.admin-app .taskCheckbox:checked ~ .box span {
+  @apply opacity-100;
+}
+.admin-app .taskCheckbox:checked ~ p {
+  @apply text-gray-400 line-through;
+}
+.admin-app .taskCheckbox:checked ~ .box {
+  @apply border-brand-500 bg-brand-500 dark:border-brand-500;
+}
+
+.admin-app .task {
+  transition: all 0.2s ease; /* Smooth transition for visual effects */
+}
+
+.admin-app .task.is-dragging {
+  border-radius: 0.75rem;
+  box-shadow:
+    0px 1px 3px 0px rgba(16, 24, 40, 0.1),
+    0px 1px 2px 0px rgba(16, 24, 40, 0.06);
+  opacity: 0.8;
+  cursor: grabbing; /* Changes the cursor to indicate dragging */
+}
+
+.admin-app .custom-calendar .fc-h-event {
+  background-color: transparent;
+  border: none;
+  color: black;
+}
+
+.admin-app .social-button {
+  @apply flex h-11 w-11 items-center justify-center gap-2 rounded-full border border-gray-300 bg-white text-sm font-medium text-gray-700 shadow-theme-xs hover:bg-gray-50 hover:text-gray-800 dark:border-gray-700 dark:bg-gray-800 dark:text-gray-400 dark:hover:bg-white/[0.03] dark:hover:text-gray-200;
+}
+
+.admin-app .edit-button {
+  @apply flex w-full items-center justify-center gap-2 rounded-full border border-gray-300 bg-white px-4 py-3 text-sm font-medium text-gray-700 shadow-theme-xs hover:bg-gray-50 hover:text-gray-800 dark:border-gray-700 dark:bg-gray-800 dark:text-gray-400 dark:hover:bg-white/[0.03] dark:hover:text-gray-200 lg:inline-flex lg:w-auto;
+}

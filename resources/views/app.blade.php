@@ -38,15 +38,9 @@
 
         <link rel="preconnect" href="https://fonts.bunny.net">
         <link href="https://fonts.bunny.net/css?family=instrument-sans:400,500,600" rel="stylesheet" />
-        <link rel="stylesheet" href="/tmp/fonts/fonts.css">
-        <link rel="stylesheet" href="/tmp/fonts/font-icons.css">
-        <link rel="stylesheet" href="/tmp/css/bootstrap.min.css">
-        <link rel="stylesheet" href="/tmp/css/drift-basic.min.css">
-        <link rel="stylesheet" href="/tmp/css/photoswipe.css">
-        <link rel="stylesheet" href="/tmp/css/swiper-bundle.min.css">
-        <link rel="stylesheet" href="/tmp/css/animate.css">
+        <!-- <link rel="stylesheet" href="/tmp/fonts/fonts.css">
+        <link rel="stylesheet" href="/tmp/fonts/font-icons.css"> -->
         <link rel="stylesheet" href="https://sibforms.com/forms/end-form/build/sib-styles.css">
-        <link rel="stylesheet" href="/tmp/css/styles.css">
 
         @vite(['resources/js/app.ts', "resources/js/pages/{$page['component']}.vue"])
         @inertiaHead
